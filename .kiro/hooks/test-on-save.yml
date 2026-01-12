@@ -1,0 +1,12 @@
+# .kiro/hooks/test-on-save.yml
+trigger: "on_file_save"
+patterns:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+
+actions:
+  - name: "Run related tests"
+    command: "npm test -- --findRelatedTests {file}"
+    on_failure: "notify"

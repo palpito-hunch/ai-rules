@@ -1,0 +1,33 @@
+# .kiro/conventions.yml
+naming:
+  files: "kebab-case"
+  components: "PascalCase"
+  functions: "camelCase"
+  constants: "UPPER_SNAKE_CASE"
+  types: "PascalCase"
+
+structure:
+  component_colocation: true
+  test_placement: "adjacent"
+  import_order:
+    - "react"
+    - "external-libraries"
+    - "internal-modules"
+    - "relative-imports"
+    - "styles"
+
+patterns:
+  react:
+    - "Use functional components"
+    - "Extract custom hooks for logic"
+    - "Keep components small and focused"
+  
+  typescript:
+    - "Explicit return types for functions"
+    - "Avoid 'any' type"
+    - "Use strict mode"
+  
+  testing:
+    - "Test user behavior, not implementation"
+    - "Arrange-Act-Assert pattern"
+    - "Meaningful test descriptions"

@@ -1,0 +1,19 @@
+# .kiro/steering.yml
+project:
+  name: "My Kiro Project"
+  description: "Project description goes here"
+  version: "1.0.0"
+
+context:
+  domain: "web-application"
+  stack:
+    - "React"
+    - "TypeScript"
+    - "Node.js"
+    - "Tailwind CSS"
+  
+preferences:
+  code_style: "functional"
+  testing_framework: "jest"
+  state_management: "react-hooks"
+  documentation: "inline-and-markdown"
