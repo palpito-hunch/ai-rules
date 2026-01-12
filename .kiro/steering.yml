@@ -17,3 +17,8 @@ preferences:
   testing_framework: "jest"
   state_management: "react-hooks"
   documentation: "inline-and-markdown"
+
+standards:
+  location: ".kiro/standards/"
+  auto_load_core: true
+  config_file: ".kiro/standards-config.yml"

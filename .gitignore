@@ -5,7 +5,10 @@
 # LangGraph
 .langgraph_api/
 
-# .gitignore
+# Kiro-specific
+.kiro/standards/.cache/
+.kiro/standards/*.tmp
+
 # Dependencies
 node_modules/
 /.pnp

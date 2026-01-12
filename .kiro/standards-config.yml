@@ -1,0 +1,145 @@
+# .kiro/standards-config.yml
+# Configuration for loading development standards
+
+defaults:
+  # Standards loaded in every Kiro session
+  core_standards:
+    - standards/core/priority-framework.md
+    - standards/core/coding-standards.md
+    - standards/core/when-not-to-apply.md
+  
+  # Quick reference always available
+  quick_reference: standards/quick-reference.md
+
+contexts:
+  # Auto-load standards based on file patterns
+  services:
+    patterns: 
+      - 'src/services/**/*.ts'
+      - 'server/services/**/*.ts'
+    standards:
+      - standards/core/priority-framework.md
+      - standards/domain/errors.md
+      - standards/workflows/race-conditions.md
+    description: "Business logic with transactions and error handling"
+  
+  repositories:
+    patterns: 
+      - 'src/repositories/**/*.ts'
+      - 'server/models/**/*.ts'
+    standards:
+      - standards/core/priority-framework.md
+      - standards/workflows/race-conditions.md
+      - standards/domain/performance.md
+    description: "Data access layer with database operations"
+  
+  controllers:
+    patterns: 
+      - 'src/controllers/**/*.ts'
+      - 'server/routes/**/*.ts'
+    standards:
+      - standards/domain/errors.md
+      - standards/domain/file-organization.md
+    description: "API request handlers"
+  
+  tests:
+    patterns: 
+      - '**/*.test.ts'
+      - '**/*.spec.ts'
+      - 'src/__tests__/**/*.ts'
+    standards:
+      - standards/workflows/testing.md
+      - standards/workflows/race-conditions.md
+    description: "Test files"
+  
+  utilities:
+    patterns: 
+      - 'src/utils/**/*.ts'
+      - 'src/hooks/**/*.ts'
+    standards:
+      - standards/core/when-not-to-apply.md
+      - standards/domain/comments.md
+    description: "Utility functions and custom hooks"
+  
+  documentation:
+    patterns:
+      - 'docs/**/*.md'
+      - 'README.md'
+      - '**/*.mdx'
+    standards:
+      - standards/domain/comments.md
+    description: "Documentation files"
+
+workflows:
+  # Workflows that load specific standards
+  code_review:
+    standards:
+      - standards/workflows/code-review-checklist.md
+      - standards/workflows/race-conditions.md
+      - standards/core/priority-framework.md
+    command: "kiro review"
+  
+  feature_development:
+    standards:
+      - standards/core/priority-framework.md
+      - standards/core/coding-standards.md
+      - standards/domain/errors.md
+    command: "kiro create"
+  
+  performance_optimization:
+    standards:
+      - standards/domain/performance.md
+      - standards/core/priority-framework.md
+    command: "kiro optimize"
+  
+  refactoring:
+    standards:
+      - standards/core/when-not-to-apply.md
+      - standards/core/priority-framework.md
+    command: "kiro refactor"
+
+validation:
+  # Rules that must pass before commit
+  required:
+    - name: "ESLint"
+      command: "npm run lint"
+      fail_on_warnings: true
+    
+    - name: "TypeScript"
+      command: "tsc --noEmit"
+      fail_on_error: true
+    
+    - name: "Tests"
+      command: "npm test"
+      fail_on_error: true
+  
+  checklists:
+    # Run these checklists during validation
+    - standards/workflows/code-review-checklist.md
+    - standards/workflows/race-conditions.md
+
+red_flags:
+  # Patterns that should trigger immediate review
+  patterns:
+    - pattern: "prisma.*.(update|create|delete)"
+      not_inside: "$transaction"
+      severity: "critical"
+      message: "Database write outside transaction"
+      reference: "standards/core/coding-standards.md#transactions"
+    
+    - pattern: ".reduce("
+      without: ", \\w+\\)"
+      severity: "high"
+      message: "reduce() without initial value"
+      reference: "standards/core/coding-standards.md#variable-initialization"
+    
+    - pattern: "throw new Error\\("
+      severity: "medium"
+      message: "Generic Error instead of specific error class"
+      reference: "standards/domain/errors.md"
+    
+    - pattern: "await prisma\\..+\\.findUnique"
+      inside: "for|while"
+      severity: "critical"
+      message: "N+1 query problem"
+      reference: "standards/domain/performance.md#n1-queries"
