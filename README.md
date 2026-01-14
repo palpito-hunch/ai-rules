@@ -87,12 +87,20 @@ Backend code (if your project needs a backend).
 
 ## 🛠️ Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm start` - Start production server
-- `npm test` - Run tests
-- `npm run lint` - Lint code
-- `npm run format` - Format code with Prettier
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm start` | Start production server |
+| `npm test` | Run tests |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:ci` | Run tests with coverage |
+| `npm run lint` | Check code for linting errors |
+| `npm run lint:fix` | Auto-fix linting errors |
+| `npm run format` | Format code with Prettier |
+| `npm run format:check` | Check code formatting |
+| `npm run type-check` | Run TypeScript type checking |
+| `npm run validate` | Run all checks (lint, type-check, test) |
 
 ## 📝 Development Workflow
 
@@ -107,11 +115,14 @@ Backend code (if your project needs a backend).
 
 ## 🤝 Contributing
 
-See `.kiro/team-standards.yml` for:
-- Code review checklist
-- Git workflow
-- Commit message format
-- Pull request requirements
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed information on:
+- Development environment setup
+- Code quality tools (ESLint, Prettier, TypeScript)
+- Git hooks and commit conventions
+- Pull request process
+- CI/CD pipeline
+
+For team-specific standards, see `.kiro/team-standards.yml`.
 
 ## 📚 Documentation
 
