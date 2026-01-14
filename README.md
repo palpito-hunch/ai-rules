@@ -17,24 +17,29 @@ This template follows the recommended Kiro project structure:
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 20+ 
+
+- Node.js 20+
 - npm or yarn
+- Docker and Docker Compose (optional, for containerized development)
 
 ### Installation
 
 1. **Use this template** by clicking "Use this template" button above
 2. **Clone your new repository**
+
    ```bash
    git clone https://github.com/your-username/your-project.git
    cd your-project
    ```
 
 3. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 4. **Set up environment variables**
+
    ```bash
    cp .env.example .env
    # Edit .env with your actual values
@@ -48,6 +53,7 @@ This template follows the recommended Kiro project structure:
 ## 📁 Directory Overview
 
 ### `.kiro/`
+
 Kiro configuration files that define project context, personas, conventions, and automation hooks.
 
 - `steering.yml` - Project context and preferences
@@ -57,6 +63,7 @@ Kiro configuration files that define project context, personas, conventions, and
 - `hooks/` - Automation hooks for testing, security, and performance
 
 ### `docs/`
+
 Project documentation using industry-standard formats.
 
 - `requirements.md` - EARS format requirements
@@ -66,6 +73,7 @@ Project documentation using industry-standard formats.
 - `api/` - API documentation
 
 ### `src/`
+
 Frontend source code with clear separation of concerns.
 
 - `components/` - Reusable UI components (ui, forms, layout)
@@ -77,6 +85,7 @@ Frontend source code with clear separation of concerns.
 - `__tests__/` - Test files
 
 ### `server/`
+
 Backend code (if your project needs a backend).
 
 - `routes/` - API route handlers
@@ -87,20 +96,64 @@ Backend code (if your project needs a backend).
 
 ## 🛠️ Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm start` | Start production server |
-| `npm test` | Run tests |
-| `npm run test:watch` | Run tests in watch mode |
-| `npm run test:ci` | Run tests with coverage |
-| `npm run lint` | Check code for linting errors |
-| `npm run lint:fix` | Auto-fix linting errors |
-| `npm run format` | Format code with Prettier |
-| `npm run format:check` | Check code formatting |
-| `npm run type-check` | Run TypeScript type checking |
-| `npm run validate` | Run all checks (lint, type-check, test) |
+| Script                 | Description                             |
+| ---------------------- | --------------------------------------- |
+| `npm run dev`          | Start development server                |
+| `npm run build`        | Build for production                    |
+| `npm start`            | Start production server                 |
+| `npm test`             | Run tests                               |
+| `npm run test:watch`   | Run tests in watch mode                 |
+| `npm run test:ci`      | Run tests with coverage                 |
+| `npm run lint`         | Check code for linting errors           |
+| `npm run lint:fix`     | Auto-fix linting errors                 |
+| `npm run format`       | Format code with Prettier               |
+| `npm run format:check` | Check code formatting                   |
+| `npm run type-check`   | Run TypeScript type checking            |
+| `npm run validate`     | Run all checks (lint, type-check, test) |
+
+## 🐳 Docker
+
+### Development with Docker
+
+Start the development environment with hot reloading:
+
+```bash
+docker compose up
+```
+
+The app will be available at http://localhost:3000 with hot reloading enabled.
+
+### Production Build
+
+Test the production build locally:
+
+```bash
+docker compose --profile production up app-prod
+```
+
+### Building Images
+
+```bash
+# Development image
+docker build --target development -t kiro-app:dev .
+
+# Production image
+docker build --target runner -t kiro-app:prod .
+```
+
+### Docker Commands
+
+| Command                           | Description              |
+| --------------------------------- | ------------------------ |
+| `docker compose up`               | Start development server |
+| `docker compose up -d`            | Start in detached mode   |
+| `docker compose down`             | Stop all containers      |
+| `docker compose logs -f`          | View logs                |
+| `docker compose build --no-cache` | Rebuild images           |
+
+### Health Check
+
+The application exposes a health endpoint at `/api/health` for container orchestration.
 
 ## 📝 Development Workflow
 
@@ -116,6 +169,7 @@ Backend code (if your project needs a backend).
 ## 🤝 Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed information on:
+
 - Development environment setup
 - Code quality tools (ESLint, Prettier, TypeScript)
 - Git hooks and commit conventions
@@ -134,6 +188,7 @@ For team-specific standards, see `.kiro/team-standards.yml`.
 ## 🔒 Security
 
 Security scanning is automated via Kiro hooks:
+
 - Pre-commit secret scanning
 - Dependency auditing
 - Regular security reviews
