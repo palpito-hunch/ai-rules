@@ -1,6 +1,6 @@
 # Development Standards Quick Reference Card
 
-**For AI-Driven Development with Kira IDE**
+**For AI-Driven Development with Kiro IDE**
 
 ---
 
@@ -499,16 +499,16 @@ const calculator = new RealCalculator();
 @specs/core/when-not-to-apply.md
 
 # Create service
-@kira create service --spec=feature-spec.md
+@kiro create service --spec=feature-spec.md
 
 # Review code
-@kira review --spec=code-review.md --strict
+@kiro review --spec=code-review.md --strict
 
 # Fix race conditions
-@kira fix --spec=race-conditions.md
+@kiro fix --spec=race-conditions.md
 
 # Optimize (after profiling!)
-@kira optimize --spec=performance.md --profile-first
+@kiro optimize --spec=performance.md --profile-first
 ```
 
 ---
