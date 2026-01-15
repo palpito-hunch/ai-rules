@@ -68,6 +68,10 @@ See `.kiro/steering.yml` for full configuration.
 
 See `.kiro/conventions.yml` for full naming rules.
 
+## Version
+
+Standards version: 1.0.0
+
 ## Template Sync
 
 This project was created from a template repository. Standards are kept in sync automatically.
