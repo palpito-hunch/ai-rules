@@ -1,3 +1,8 @@
+## <small>1.1.2 (2026-01-15)</small>
+
+* fix(ci): ensure release only runs after ci passes ([c99b1ba](https://github.com/palpito-hunch/kiro-project-template/commit/c99b1ba))
+* docs: update node.js requirement to v22 in readme ([65ba8de](https://github.com/palpito-hunch/kiro-project-template/commit/65ba8de))
+
 ## <small>1.1.1 (2026-01-15)</small>
 
 * fix(ci): upgrade node.js to v22 for semantic-release compatibility ([b51b69a](https://github.com/palpito-hunch/kiro-project-template/commit/b51b69a))
