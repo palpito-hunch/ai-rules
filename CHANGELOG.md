@@ -1,3 +1,26 @@
+## 1.0.0 (2026-01-15)
+
+
+### Features
+
+* **ci:** add semantic-release for automated versioning ([26e8aab](https://github.com/palpito-hunch/kiro-project-template/commit/26e8aab4a125c7827fb2b62cea460f03b65376bc))
+* **ci:** add workflow to sync standards to downstream repos ([408c4be](https://github.com/palpito-hunch/kiro-project-template/commit/408c4beb62363aeea369312bcf289d98bc4face1))
+* **ci:** replace push-based sync with pull-based approach ([d27be92](https://github.com/palpito-hunch/kiro-project-template/commit/d27be928cee435cd6fffccea84e1a604fdb730f9))
+* **ci:** support private template repos with pat authentication ([d8eedcc](https://github.com/palpito-hunch/kiro-project-template/commit/d8eedcc7483dc82cf2f164eb5f0b02eff2cd1d02))
+* **docker:** add docker support with multi-stage builds ([#2](https://github.com/palpito-hunch/kiro-project-template/issues/2)) ([d9fd09c](https://github.com/palpito-hunch/kiro-project-template/commit/d9fd09cfcd0b162ea8f53a8a4d90933f75f15c7a))
+* initial Kiro project template structure ([c4f3648](https://github.com/palpito-hunch/kiro-project-template/commit/c4f36486b81731605d680dab5ddb25070c3ffe0c))
+* **standards:** add comprehensive development standards for AI-driven development ([f839e4f](https://github.com/palpito-hunch/kiro-project-template/commit/f839e4f4122d7e2ef3228a14150c7789b09a4e51))
+* **tooling:** add development tooling and CI/CD pipeline ([#1](https://github.com/palpito-hunch/kiro-project-template/issues/1)) ([4ad6893](https://github.com/palpito-hunch/kiro-project-template/commit/4ad6893282c9355823741ad89530a2201b3a22ac))
+
+
+### Bug Fixes
+
+* **ci:** add workflow permissions for pr access ([d559b08](https://github.com/palpito-hunch/kiro-project-template/commit/d559b08ba2786c7f7a60e0edc8c04965efa8753a))
+* **ci:** disable husky hooks during semantic-release ([2325459](https://github.com/palpito-hunch/kiro-project-template/commit/2325459857fb12dec259da5b09664bbe86c21ad5))
+* **ci:** use actions/checkout for template repo authentication ([308635d](https://github.com/palpito-hunch/kiro-project-template/commit/308635db225352c6c6d115d05ff04e05ece0a423))
+* **ci:** use x-access-token format for pat authentication ([d7f9cce](https://github.com/palpito-hunch/kiro-project-template/commit/d7f9cce7e290ca27347655c5d9a2a61a6f0ea353))
+* correct kira references to kiro in standards docs ([f0fe146](https://github.com/palpito-hunch/kiro-project-template/commit/f0fe146a3366b7ab68bbaee3217e7523f6cc4e15))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
