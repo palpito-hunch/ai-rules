@@ -222,6 +222,30 @@ on:
 
 To stop syncing, delete `.github/workflows/sync-from-template.yml` from your repo.
 
+## 🏷️ Semantic Versioning
+
+This project uses [semantic-release](https://semantic-release.gitbook.io/) for automated versioning.
+
+### How It Works
+
+1. Push to `main` triggers the release workflow
+2. Commits are analyzed to determine version bump
+3. Version is updated, changelog generated, GitHub release created
+
+### Version Bump Rules
+
+| Commit Type        | Version Bump  | Example                    |
+| ------------------ | ------------- | -------------------------- |
+| `feat:`            | Minor (1.x.0) | New feature                |
+| `fix:`             | Patch (1.0.x) | Bug fix                    |
+| `perf:`            | Patch (1.0.x) | Performance improvement    |
+| `BREAKING CHANGE:` | Major (x.0.0) | Breaking change            |
+| `docs:`, `chore:`  | No release    | Documentation, maintenance |
+
+### For Downstream Repos
+
+Each repository created from this template has its own independent version. The versioning configuration is inherited but versions are tracked separately per repo.
+
 ## 🔒 Security
 
 Security scanning is automated via Kiro hooks:
