@@ -1,3 +1,10 @@
+## <small>1.1.1 (2026-01-15)</small>
+
+* fix(ci): upgrade node.js to v22 for semantic-release compatibility ([b51b69a](https://github.com/palpito-hunch/kiro-project-template/commit/b51b69a))
+* fix(deps): upgrade eslint to v9 and fix high severity vulnerabilities ([0006f7a](https://github.com/palpito-hunch/kiro-project-template/commit/0006f7a))
+* fix(deps): upgrade semantic-release to 25.0.2 ([b462369](https://github.com/palpito-hunch/kiro-project-template/commit/b462369))
+* refactor(lint): migrate eslint config to flat config format (v9) ([2952bfc](https://github.com/palpito-hunch/kiro-project-template/commit/2952bfc))
+
 ## [1.1.0](https://github.com/palpito-hunch/kiro-project-template/compare/v1.0.0...v1.1.0) (2026-01-15)
 
 
