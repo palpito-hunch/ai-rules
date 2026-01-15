@@ -18,7 +18,7 @@ This template follows the recommended Kiro project structure:
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js 22+
 - npm or yarn
 - Docker and Docker Compose (optional, for containerized development)
 
