@@ -28,22 +28,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Checkout template repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.TEMPLATE_REPO }}
+          ref: ${{ env.TEMPLATE_BRANCH }}
+          token: ${{ secrets.TEMPLATE_PAT || github.token }}
+          path: _template
+
       - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Add template remote
-        env:
-          TEMPLATE_PAT: ${{ secrets.TEMPLATE_PAT }}
-        run: |
-          if [ -n "$TEMPLATE_PAT" ]; then
-            # Use x-access-token format (works for both classic and fine-grained PATs)
-            git remote add template https://x-access-token:${TEMPLATE_PAT}@github.com/${{ env.TEMPLATE_REPO }}.git || true
-          else
-            git remote add template https://github.com/${{ env.TEMPLATE_REPO }}.git || true
-          fi
-          git fetch template ${{ env.TEMPLATE_BRANCH }}
 
       - name: Check for existing sync PR
         id: existing-pr
@@ -69,9 +65,10 @@ jobs:
       - name: Sync standards files
         if: steps.existing-pr.outputs.exists == 'false'
         run: |
-          # Get the template files
-          git checkout template/${{ env.TEMPLATE_BRANCH }} -- .kiro/ 2>/dev/null || echo "No .kiro/ in template"
-          git checkout template/${{ env.TEMPLATE_BRANCH }} -- CLAUDE.md 2>/dev/null || echo "No CLAUDE.md in template"
+          # Copy files from template checkout
+          rm -rf .kiro/
+          cp -r _template/.kiro/ .kiro/ 2>/dev/null || echo "No .kiro/ in template"
+          cp _template/CLAUDE.md CLAUDE.md 2>/dev/null || echo "No CLAUDE.md in template"
 
       - name: Check for changes
         if: steps.existing-pr.outputs.exists == 'false'
@@ -92,7 +89,7 @@ jobs:
           git add .kiro/ CLAUDE.md
 
           # Get the template commit for reference
-          TEMPLATE_SHA=$(git rev-parse template/${{ env.TEMPLATE_BRANCH }})
+          TEMPLATE_SHA=$(git -C _template rev-parse HEAD)
 
           git commit -m "chore: sync standards from template
 
@@ -107,7 +104,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TEMPLATE_SHA=$(git rev-parse template/${{ env.TEMPLATE_BRANCH }})
+          TEMPLATE_SHA=$(git -C _template rev-parse HEAD)
 
           gh pr create \
             --title "chore: sync development standards from template" \
