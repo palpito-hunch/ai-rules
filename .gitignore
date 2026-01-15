@@ -50,3 +50,7 @@ Thumbs.db
 # Misc
 .cache/
 .temp/
+
+# Auto-generated
+*.tsbuildinfo
+next-env.d.ts
