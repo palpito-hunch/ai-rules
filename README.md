@@ -246,6 +246,43 @@ This project uses [semantic-release](https://semantic-release.gitbook.io/) for a
 
 Each repository created from this template has its own independent version. The versioning configuration is inherited but versions are tracked separately per repo.
 
+### Slack Release Notifications
+
+The release workflow can notify a Slack channel when a new version is published.
+
+#### Configuration
+
+Add these to your repository settings:
+
+| Type         | Name                     | Value                          |
+| ------------ | ------------------------ | ------------------------------ |
+| **Secret**   | `SLACK_WEBHOOK_URL`      | Slack incoming webhook URL     |
+| **Variable** | `SLACK_RELEASES_CHANNEL` | Channel name (e.g., `#releases`) |
+
+#### Creating a Slack Webhook
+
+1. Go to [Slack API: Apps](https://api.slack.com/apps)
+2. Create a new app (or use existing) → **Incoming Webhooks**
+3. Activate incoming webhooks and add one to your workspace
+4. Copy the webhook URL and add it as `SLACK_WEBHOOK_URL` secret
+
+#### Notification Format
+
+When a release is published, Slack receives a formatted message:
+
+```
+🚀 New Release Published
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Repository:  your-org/your-repo
+Version:     v1.2.0
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Released via GitHub Actions
+```
+
+#### Opting Out
+
+Notifications are disabled by default. Simply don't configure the `SLACK_RELEASES_CHANNEL` variable to skip notifications.
+
 ## 🔒 Security
 
 Security scanning is automated via Kiro hooks:
