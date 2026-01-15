@@ -4,8 +4,8 @@
 defaults:
   # Standards loaded in every Kiro session
   core_standards:
+    - standards/quick-reference.md
     - standards/core/priority-framework.md
-    - standards/core/coding-standards.md
     - standards/core/when-not-to-apply.md
 
   # Quick reference always available
@@ -18,9 +18,8 @@ contexts:
       - 'src/services/**/*.ts'
       - 'server/services/**/*.ts'
     standards:
-      - standards/core/priority-framework.md
+      - standards/quick-reference.md
       - standards/domain/errors.md
-      - standards/workflows/race-conditions.md
     description: 'Business logic with transactions and error handling'
 
   repositories:
@@ -28,8 +27,7 @@ contexts:
       - 'src/repositories/**/*.ts'
       - 'server/models/**/*.ts'
     standards:
-      - standards/core/priority-framework.md
-      - standards/workflows/race-conditions.md
+      - standards/quick-reference.md
       - standards/domain/performance.md
     description: 'Data access layer with database operations'
 
@@ -48,8 +46,8 @@ contexts:
       - '**/*.spec.ts'
       - 'src/__tests__/**/*.ts'
     standards:
-      - standards/workflows/testing.md
-      - standards/workflows/race-conditions.md
+      - standards/quick-reference.md
+      - standards/domain/testing-mocks.md
     description: 'Test files'
 
   utilities:
@@ -74,15 +72,14 @@ workflows:
   # Workflows that load specific standards
   code_review:
     standards:
-      - standards/workflows/code-review-checklist.md
-      - standards/workflows/race-conditions.md
+      - standards/quick-reference.md
       - standards/core/priority-framework.md
     command: 'kiro review'
 
   feature_development:
     standards:
+      - standards/quick-reference.md
       - standards/core/priority-framework.md
-      - standards/core/coding-standards.md
       - standards/domain/errors.md
     command: 'kiro create'
 
@@ -115,8 +112,7 @@ validation:
 
   checklists:
     # Run these checklists during validation
-    - standards/workflows/code-review-checklist.md
-    - standards/workflows/race-conditions.md
+    - standards/quick-reference.md
 
 red_flags:
   # Patterns that should trigger immediate review
@@ -125,13 +121,13 @@ red_flags:
       not_inside: '$transaction'
       severity: 'critical'
       message: 'Database write outside transaction'
-      reference: 'standards/core/coding-standards.md#transactions'
+      reference: 'standards/quick-reference.md#critical-rules'
 
     - pattern: '.reduce('
       without: ", \\w+\\)"
       severity: 'high'
       message: 'reduce() without initial value'
-      reference: 'standards/core/coding-standards.md#variable-initialization'
+      reference: 'standards/quick-reference.md#variable-initialization'
 
     - pattern: "throw new Error\\("
       severity: 'medium'

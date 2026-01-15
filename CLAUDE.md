@@ -21,7 +21,8 @@ Full decision framework: `.kiro/standards/core/priority-framework.md`
 
 | Standard          | File                                        | When to Read               |
 | ----------------- | ------------------------------------------- | -------------------------- |
-| Coding Standards  | `.kiro/standards/core/coding-standards.md`  | Always                     |
+| Quick Reference   | `.kiro/standards/quick-reference.md`        | Always (one-page summary)  |
+| Priority Framework| `.kiro/standards/core/priority-framework.md`| When standards conflict    |
 | When NOT to Apply | `.kiro/standards/core/when-not-to-apply.md` | Before adding abstractions |
 
 ## Domain-Specific Standards

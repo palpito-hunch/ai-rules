@@ -446,6 +446,144 @@ class EmailService implements IEmailService {
 
 **Why:** Interfaces are for abstraction when you need multiple implementations. If you only have one and unlikely to add more, direct dependency is simpler.
 
+### LSP (Liskov Substitution) - When to Apply and Violations to Avoid:
+
+**Principle:** Subtypes must be substitutable for their base types without altering program correctness.
+
+#### Common LSP Violations to Avoid:
+
+```typescript
+// ❌ VIOLATION - Square changes Rectangle behavior
+class Rectangle {
+  constructor(protected width: number, protected height: number) {}
+
+  setWidth(width: number): void {
+    this.width = width;
+  }
+
+  setHeight(height: number): void {
+    this.height = height;
+  }
+
+  getArea(): number {
+    return this.width * this.height;
+  }
+}
+
+class Square extends Rectangle {
+  setWidth(width: number): void {
+    this.width = width;
+    this.height = width; // Breaks LSP - unexpected side effect
+  }
+
+  setHeight(height: number): void {
+    this.width = height;
+    this.height = height; // Breaks LSP - unexpected side effect
+  }
+}
+
+// ✅ CORRECT - Use composition or separate types
+interface Shape {
+  getArea(): number;
+}
+
+class Rectangle implements Shape {
+  constructor(private width: number, private height: number) {}
+  getArea(): number { return this.width * this.height; }
+}
+
+class Square implements Shape {
+  constructor(private side: number) {}
+  getArea(): number { return this.side * this.side; }
+}
+```
+
+#### When LSP Matters Most:
+
+- **Collections of base types** - All items must behave consistently
+- **Plugin architectures** - Plugins must honor the contract
+- **Strategy patterns** - Strategies must be interchangeable
+
+**Decision Rule:** If a subclass needs to override behavior in a way that surprises callers, don't use inheritance. Use composition or separate types.
+
+### ISP (Interface Segregation) - When NOT to Split Interfaces:
+
+**Principle:** Clients should not be forced to depend on methods they don't use.
+
+#### When to Apply ISP:
+
+```typescript
+// ❌ FAT INTERFACE - Forces implementers to implement unused methods
+interface Worker {
+  work(): void;
+  eat(): void;
+  sleep(): void;
+  attendMeeting(): void;
+  writeReport(): void;
+}
+
+class Robot implements Worker {
+  work(): void { /* OK */ }
+  eat(): void { throw new Error('Robots cannot eat'); } // Forced to implement
+  sleep(): void { throw new Error('Robots cannot sleep'); } // Forced to implement
+  // ...
+}
+
+// ✅ SEGREGATED - Clients depend only on what they need
+interface Workable {
+  work(): void;
+}
+
+interface Feedable {
+  eat(): void;
+}
+
+interface Restable {
+  sleep(): void;
+}
+
+class Robot implements Workable {
+  work(): void { /* OK */ }
+}
+
+class Human implements Workable, Feedable, Restable {
+  work(): void { /* OK */ }
+  eat(): void { /* OK */ }
+  sleep(): void { /* OK */ }
+}
+```
+
+#### When NOT to Split Interfaces:
+
+```typescript
+// ✅ CORRECT - Keep together when always used together
+interface Repository<T> {
+  findById(id: string): Promise<T | null>;
+  findAll(): Promise<T[]>;
+  create(data: Partial<T>): Promise<T>;
+  update(id: string, data: Partial<T>): Promise<T>;
+  delete(id: string): Promise<void>;
+}
+
+// ❌ OVER-SEGREGATED - Creates unnecessary complexity
+interface Findable<T> {
+  findById(id: string): Promise<T | null>;
+  findAll(): Promise<T[]>;
+}
+interface Creatable<T> {
+  create(data: Partial<T>): Promise<T>;
+}
+interface Updatable<T> {
+  update(id: string, data: Partial<T>): Promise<T>;
+}
+interface Deletable {
+  delete(id: string): Promise<void>;
+}
+// Over-segregation when all repos need all methods
+```
+
+**Decision Rule:** Split interfaces when different clients need different subsets. Keep together when all clients use all methods.
+
 ---
 
 ## When NOT to Write Tests

@@ -9,47 +9,47 @@ This directory contains all development standards and best practices for this pr
 ```
 standards/
 ├── core/                   # Always-loaded core standards
-│   ├── priority-framework.md
-│   ├── coding-standards.md
-│   └── when-not-to-apply.md
+│   ├── priority-framework.md   # Decision rules, KISS, Boy Scout Rule
+│   └── when-not-to-apply.md    # When NOT to use patterns (SOLID, DRY, etc.)
 │
 ├── domain/                 # Context-specific standards
 │   ├── errors.md
 │   ├── file-organization.md
 │   ├── comments.md
-│   └── performance.md
+│   ├── performance.md
+│   ├── git-workflow.md
+│   └── testing-mocks.md
 │
-├── workflows/              # Task-specific guides
-│   ├── code-review-checklist.md
-│   ├── race-conditions.md
-│   └── testing.md
+├── workflows/              # Reserved for task-specific guides
+│   └── .gitkeep
 │
-├── quick-reference.md      # Quick lookup card
+├── quick-reference.md      # Quick lookup card (consolidated reference)
 ├── kiro-integration.md     # Kiro IDE integration guide
 └── README.md               # This file
 ```
 
 ## 🎯 Core Standards (Load First)
 
-### 1. Priority Framework (`core/priority-framework.md`)
+### 1. Quick Reference (`quick-reference.md`)
+
+One-page consolidated reference card with all standards. **Print and keep visible!**
+
+**Use when:** Always - this is your primary reference.
+
+### 2. Priority Framework (`core/priority-framework.md`)
 
 Decision-making rules for when standards conflict:
 
 - P0: Financial Safety & Type Safety
 - P1: SOLID Principles & DRY
 - P2: Performance
+- Cross-cutting: KISS, YAGNI, Boy Scout Rule
 
 **Use when:** Making trade-off decisions between standards.
 
-### 2. Coding Standards (`core/coding-standards.md`)
-
-SOLID principles, DRY, race condition prevention, and core patterns.
-
-**Use when:** Writing any production code.
-
 ### 3. When Not to Apply (`core/when-not-to-apply.md`)
 
-Negative examples showing when NOT to use patterns.
+Negative examples showing when NOT to use patterns (all SOLID principles, DRY, etc.).
 
 **Use when:** Avoiding over-engineering and premature optimization.
 
@@ -81,23 +81,13 @@ When to optimize, profiling requirements, performance patterns.
 
 ## 🔄 Workflow Guides
 
-### Code Review Checklist (`workflows/code-review-checklist.md`)
+Workflow content is consolidated in `quick-reference.md`:
 
-Comprehensive checklist for code reviews.
+- **Code Review:** See "Pre-Commit Checklist" and "Red Flags" sections
+- **Race Conditions:** See "Race Conditions" section with transaction patterns
+- **Testing:** See "Testing Requirements" and "Mock Policy" sections
 
-**Load when:** Reviewing code or preparing for review.
-
-### Race Condition Prevention (`workflows/race-conditions.md`)
-
-TOCTOU prevention, transaction patterns, concurrent operation testing.
-
-**Load when:** Working with database transactions or concurrent operations.
-
-### Testing Guidelines (`workflows/testing.md`)
-
-Test requirements, patterns, and execution strategies.
-
-**Load when:** Writing or running tests.
+The `workflows/` directory is reserved for future task-specific guides.
 
 ## ⚡ Quick Reference
 
@@ -167,19 +157,18 @@ Complete guide for using these standards with Kiro IDE:
 ### For New Developers:
 
 1. Read `quick-reference.md` (print and keep visible)
-2. Review `core/priority-framework.md` (decision rules)
-3. Read `core/coding-standards.md` (patterns)
-4. Skim `core/when-not-to-apply.md` (anti-patterns)
+2. Review `core/priority-framework.md` (decision rules, KISS, Boy Scout)
+3. Skim `core/when-not-to-apply.md` (anti-patterns for all SOLID principles)
 
 ### Before First Commit:
 
-1. Review `workflows/code-review-checklist.md`
-2. Check `workflows/race-conditions.md` if using transactions
-3. Validate against quick-reference.md checklist
+1. Review "Pre-Commit Checklist" in `quick-reference.md`
+2. Check "Race Conditions" section if using transactions
+3. Validate against "Red Flags" section
 
 ### For Code Reviews:
 
-1. Use `workflows/code-review-checklist.md` as guide
+1. Use "Pre-Commit Checklist" in `quick-reference.md` as guide
 2. Reference specific standards when commenting
 3. Link to relevant sections in review comments
 

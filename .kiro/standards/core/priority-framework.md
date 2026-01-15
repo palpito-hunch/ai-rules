@@ -222,6 +222,78 @@ const isResolved = (m: Market) => m.resolved && m.winningOutcome != null;
 
 ---
 
+#### 7. **FUNDAMENTAL - KISS (Keep It Simple, Stupid)** (Cross-cutting)
+
+**Simplicity is a prerequisite for reliability**
+
+KISS applies at all levels - prefer the simplest solution that works:
+
+- Simple functions over complex ones
+- Straightforward logic over clever tricks
+- Obvious solutions over "elegant" abstractions
+- Direct code paths over nested conditionals
+
+**Examples:**
+
+```typescript
+// ✅ KISS - Simple and direct
+function getUserDisplayName(user: User): string {
+  if (user.nickname) {
+    return user.nickname;
+  }
+  return `${user.firstName} ${user.lastName}`;
+}
+
+// ❌ Over-engineered
+function getUserDisplayName(user: User): string {
+  return [
+    user.nickname,
+    [user.firstName, user.lastName].filter(Boolean).join(' ')
+  ].find(Boolean) || 'Anonymous';
+}
+```
+
+**Decision Rule:** If you can't explain it simply, you don't understand it well enough. Refactor until it's simple.
+
+---
+
+#### 8. **FUNDAMENTAL - Boy Scout Rule** (Cross-cutting)
+
+**Leave the code cleaner than you found it**
+
+Every time you touch code:
+
+- Fix small issues you encounter (typos, unclear names, missing types)
+- Remove dead code
+- Improve unclear variable names
+- Add missing type annotations
+- Don't leave broken windows
+
+**Boundaries:**
+
+- Small improvements only - don't refactor entire modules
+- Stay within scope of your current task
+- If cleanup is large, create separate PR
+
+**Examples:**
+
+```typescript
+// Before: You're fixing a bug in this function
+function calc(u: any, m: any) {
+  // bug fix here
+  return u.balance - m.cost;
+}
+
+// After: Fixed bug AND cleaned up (Boy Scout Rule)
+function calculateRemainingBalance(user: User, market: Market): number {
+  return user.balance - market.cost;
+}
+```
+
+**Decision Rule:** Make small, incremental improvements. Don't leave code worse than you found it.
+
+---
+
 ## Decision Framework for Common Scenarios
 
 ### Scenario 1: Should I extract this duplicate code?

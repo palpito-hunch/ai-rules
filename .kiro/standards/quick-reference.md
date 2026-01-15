@@ -17,6 +17,11 @@ P1 - HIGH (Unless Conflicts with P0)
 
 P2 - MEDIUM (Only When Measured Need)
 └── Performance → Profile first, optimize only bottlenecks
+
+CROSS-CUTTING (Always Apply)
+├── KISS → Keep It Simple, Stupid - simplest solution that works
+├── YAGNI → You Aren't Gonna Need It - don't build for hypotheticals
+└── Boy Scout Rule → Leave code cleaner than you found it
 ```
 
 **Decision Rule**: When uncertain, choose safety and clarity over brevity and performance.
@@ -169,6 +174,51 @@ const market = await prisma.market.findUnique({ where: { id } });
 - Operation <100ms and infrequent
 - Would significantly reduce clarity
 - Haven't profiled to confirm bottleneck
+
+---
+
+## 🧹 KISS & Boy Scout Rule
+
+### KISS (Keep It Simple, Stupid)
+
+```typescript
+// ✅ KISS - Simple and obvious
+function isEligibleForDiscount(user: User): boolean {
+  if (user.membershipYears >= 2) {
+    return true;
+  }
+  return false;
+}
+
+// ❌ Over-clever
+const isEligible = (u: User) => u.membershipYears >= 2 ? true : false;
+// Or worse: !!(u.membershipYears >= 2)
+```
+
+### Boy Scout Rule
+
+```typescript
+// Before: You're here to fix a bug
+function calc(d: any) {
+  return d.x * d.y; // bug was here
+}
+
+// After: Fixed bug AND improved code
+function calculateArea(dimensions: Dimensions): number {
+  return dimensions.width * dimensions.height;
+}
+```
+
+**Small cleanups while you work:**
+- Fix typos in comments
+- Rename unclear variables
+- Add missing type annotations
+- Remove dead code
+
+**Don't:**
+- Refactor entire modules
+- Change unrelated code
+- Create scope creep
 
 ---
 
@@ -495,8 +545,8 @@ const calculator = new RealCalculator();
 ```bash
 # Load core specs
 @specs/core/priority-framework.md
-@specs/core/coding-standards.md
 @specs/core/when-not-to-apply.md
+@specs/quick-reference.md
 
 # Create service
 @kiro create service --spec=feature-spec.md
@@ -562,9 +612,9 @@ Before creating PR to develop:
 
 **Core (Load Always)**
 
+- `quick-reference.md` - One-page consolidated reference (this file)
 - `priority-framework.md` - Decision rules when standards conflict
-- `coding-standards.md` - SOLID, DRY, patterns
-- `when-not-to-apply.md` - When to skip patterns
+- `when-not-to-apply.md` - When to skip patterns (SOLID, DRY, etc.)
 
 **Domain Standards**
 
