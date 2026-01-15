@@ -1,3 +1,13 @@
+## 1.2.0 (2026-01-15)
+
+* feat(release): add slack notification for new releases ([64b5ef4](https://github.com/palpito-hunch/kiro-project-template/commit/64b5ef4)), closes [#releases](https://github.com/palpito-hunch/kiro-project-template/issues/releases) [#releases](https://github.com/palpito-hunch/kiro-project-template/issues/releases)
+* docs(standards): add law of demeter principle ([1272b01](https://github.com/palpito-hunch/kiro-project-template/commit/1272b01))
+* docs(standards): add missing coding principles and update references ([bc811aa](https://github.com/palpito-hunch/kiro-project-template/commit/bc811aa))
+* chore: add .gitkeep to preserve workflows directory ([4cf4f90](https://github.com/palpito-hunch/kiro-project-template/commit/4cf4f90))
+* chore: add auto-generated files to gitignore ([09fa46d](https://github.com/palpito-hunch/kiro-project-template/commit/09fa46d))
+* chore: exclude markdown files from prettier formatting ([1592e8e](https://github.com/palpito-hunch/kiro-project-template/commit/1592e8e))
+* chore: remove empty placeholder files ([f97c698](https://github.com/palpito-hunch/kiro-project-template/commit/f97c698))
+
 ## <small>1.1.2 (2026-01-15)</small>
 
 * fix(ci): ensure release only runs after ci passes ([c99b1ba](https://github.com/palpito-hunch/kiro-project-template/commit/c99b1ba))
