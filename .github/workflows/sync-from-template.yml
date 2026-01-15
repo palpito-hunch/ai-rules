@@ -38,7 +38,8 @@ jobs:
           TEMPLATE_PAT: ${{ secrets.TEMPLATE_PAT }}
         run: |
           if [ -n "$TEMPLATE_PAT" ]; then
-            git remote add template https://${TEMPLATE_PAT}@github.com/${{ env.TEMPLATE_REPO }}.git || true
+            # Use x-access-token format (works for both classic and fine-grained PATs)
+            git remote add template https://x-access-token:${TEMPLATE_PAT}@github.com/${{ env.TEMPLATE_REPO }}.git || true
           else
             git remote add template https://github.com/${{ env.TEMPLATE_REPO }}.git || true
           fi
