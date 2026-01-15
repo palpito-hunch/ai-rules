@@ -22,6 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     # Skip if this IS the template repo
     if: github.repository != 'palpito-hunch/kiro-project-template'
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v4
