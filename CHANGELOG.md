@@ -1,3 +1,10 @@
+## [1.1.0](https://github.com/palpito-hunch/kiro-project-template/compare/v1.0.0...v1.1.0) (2026-01-15)
+
+
+### Features
+
+* **hooks:** add npm audit to pre-commit hook ([c1e73e6](https://github.com/palpito-hunch/kiro-project-template/commit/c1e73e669b1aba113c1130bc4e4b10a729fd6193))
+
 ## 1.0.0 (2026-01-15)
 
 
