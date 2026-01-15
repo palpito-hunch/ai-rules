@@ -1,5 +1,0 @@
-{
-  "$schema": "./downstream-repos.schema.json",
-  "description": "List of downstream repositories to sync standards to",
-  "repos": []
-}

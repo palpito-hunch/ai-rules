@@ -185,37 +185,35 @@ For team-specific standards, see `.kiro/team-standards.yml`.
 - API documentation is in `docs/api/`
 - Inline code comments explain the "why"
 
-## 🔄 Syncing Standards to Downstream Repos
+## 🔄 Syncing Standards from Template
 
-When this template is updated, you can automatically create PRs in repositories created from it.
-
-### Setup
-
-1. **Create a Personal Access Token (PAT)** with `repo` scope
-2. **Add the PAT** as a repository secret named `DOWNSTREAM_SYNC_TOKEN`
-3. **Register downstream repos** in `.github/downstream-repos.json`:
-   ```json
-   {
-     "repos": ["your-org/service-a", "your-org/service-b"]
-   }
-   ```
+Repositories created from this template automatically inherit a workflow to sync standards updates.
 
 ### How It Works
 
-When `.kiro/` or `CLAUDE.md` changes are pushed to main:
+The `sync-from-template.yml` workflow:
 
-1. The workflow creates a branch in each downstream repo
-2. Syncs the latest standards files
-3. Opens a PR for review
+1. Runs weekly (Mondays at 9am UTC) or on-demand
+2. Fetches the latest `.kiro/` and `CLAUDE.md` from this template
+3. Creates a PR if changes are detected
 
 ### Manual Sync
 
-Trigger manually via Actions tab with optional repo filter:
+Trigger manually in your repo: **Actions** → **Sync Standards from Template** → **Run workflow**
 
+### Customization
+
+To change the sync schedule, edit `.github/workflows/sync-from-template.yml` in your repo:
+
+```yaml
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Change this cron expression
 ```
-Workflow: Sync Standards to Downstream Repos
-Input: org/specific-repo (optional)
-```
+
+### Opting Out
+
+To stop syncing, delete `.github/workflows/sync-from-template.yml` from your repo.
 
 ## 🔒 Security
 
