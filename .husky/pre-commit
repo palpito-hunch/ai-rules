@@ -1,1 +1,2 @@
+npm audit --audit-level=critical
 npx lint-staged
