@@ -586,6 +586,122 @@ interface Deletable {
 
 ---
 
+## When NOT to Apply Law of Demeter
+
+### Law of Demeter Exceptions:
+
+The Law of Demeter ("Don't talk to strangers") prevents tight coupling through method chaining. However, there are legitimate exceptions:
+
+#### 1. Fluent APIs and Builder Patterns
+
+```typescript
+// ✅ CORRECT - Fluent API designed for chaining
+const query = prisma.user
+  .findMany({ where: { active: true } })
+  .then(users => users.map(u => u.name));
+
+const result = new QueryBuilder()
+  .select('name', 'email')
+  .from('users')
+  .where('active', true)
+  .orderBy('name')
+  .build();
+
+// ✅ CORRECT - Builder pattern
+const config = new ConfigBuilder()
+  .setHost('localhost')
+  .setPort(3000)
+  .setDebug(true)
+  .build();
+```
+
+**Why:** These APIs are intentionally designed for chaining. The return type is the same object (or a wrapper), not reaching into internal structure.
+
+#### 2. Data Transfer Objects (DTOs) and Plain Data Structures
+
+```typescript
+// ✅ ACCEPTABLE - DTO with no behavior, just data
+interface ApiResponse {
+  data: {
+    user: {
+      profile: {
+        displayName: string;
+      };
+    };
+  };
+}
+
+const displayName = response.data.user.profile.displayName;
+
+// ✅ ACCEPTABLE - Configuration objects
+const timeout = config.server.http.timeout;
+```
+
+**Why:** DTOs are passive data holders with no behavior to encapsulate. They're meant to be accessed directly.
+
+#### 3. Standard Library and Framework Patterns
+
+```typescript
+// ✅ ACCEPTABLE - Standard array/stream operations
+const names = users
+  .filter(u => u.active)
+  .map(u => u.name)
+  .sort();
+
+// ✅ ACCEPTABLE - Promise chains
+const result = await fetchUser(id)
+  .then(user => user.permissions)
+  .catch(handleError);
+
+// ✅ ACCEPTABLE - Optional chaining for null safety
+const city = user?.address?.city ?? 'Unknown';
+```
+
+**Why:** These are idiomatic patterns in the language/framework. Fighting them creates worse code.
+
+#### 4. Testing and Debugging
+
+```typescript
+// ✅ ACCEPTABLE - Test assertions often need deep access
+expect(response.body.data.users[0].email).toBe('test@example.com');
+
+// ✅ ACCEPTABLE - Debug logging
+console.log(order.customer.address.formattedString);
+```
+
+**Why:** Tests need to verify internal state. Debugging needs visibility.
+
+### When Law of Demeter DOES Apply:
+
+```typescript
+// ❌ VIOLATION - Reaching through domain objects
+function calculateShipping(order: Order): number {
+  const country = order.getCustomer().getAddress().getCountry().getCode();
+  return shippingRates[country];
+}
+
+// ✅ CORRECT - Ask the order directly
+function calculateShipping(order: Order): number {
+  const country = order.getShippingCountryCode();
+  return shippingRates[country];
+}
+
+// ❌ VIOLATION - Tight coupling to internal structure
+function notifyUser(order: Order): void {
+  const email = order.getCustomer().getContactInfo().getEmail();
+  sendEmail(email, 'Order confirmed');
+}
+
+// ✅ CORRECT - Delegate notification responsibility
+function notifyUser(order: Order): void {
+  order.notifyCustomer('Order confirmed');
+}
+```
+
+**Decision Rule:** Apply Law of Demeter when reaching through domain/business objects. Skip it for fluent APIs, DTOs, standard library patterns, and testing.
+
+---
+
 ## When NOT to Write Tests
 
 ### Skip Tests For:
@@ -776,6 +892,7 @@ function calculatePrice(shares: number[]): number {
 5. **Tests:** Test your logic, not trivial operations or third-party libraries
 6. **Optimization:** Profile first, optimize only measured bottlenecks
 7. **Comments:** Explain why and non-obvious decisions, not what
+8. **Law of Demeter:** Apply to domain objects, skip for fluent APIs, DTOs, and standard patterns
 
 **Golden Rule:** Every pattern, abstraction, and optimization should add value. If it makes code more complex without clear benefit, don't apply it.
 

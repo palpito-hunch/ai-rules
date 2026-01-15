@@ -21,7 +21,8 @@ P2 - MEDIUM (Only When Measured Need)
 CROSS-CUTTING (Always Apply)
 ├── KISS → Keep It Simple, Stupid - simplest solution that works
 ├── YAGNI → You Aren't Gonna Need It - don't build for hypotheticals
-└── Boy Scout Rule → Leave code cleaner than you found it
+├── Boy Scout Rule → Leave code cleaner than you found it
+└── Law of Demeter → Don't talk to strangers - avoid method chaining
 ```
 
 **Decision Rule**: When uncertain, choose safety and clarity over brevity and performance.
@@ -219,6 +220,27 @@ function calculateArea(dimensions: Dimensions): number {
 - Refactor entire modules
 - Change unrelated code
 - Create scope creep
+
+### Law of Demeter (Don't Talk to Strangers)
+
+```typescript
+// ❌ VIOLATION - Chain of method calls (train wreck)
+const city = order.getCustomer().getAddress().getCity().getName();
+
+// ✅ CORRECT - Ask, don't reach through objects
+const city = order.getShippingCity();
+
+// ❌ VIOLATION - Reaching into nested structure
+const card = user.getWallet().getCreditCard().getDetails();
+
+// ✅ CORRECT - Delegate to the object
+const payment = user.getPreferredPaymentMethod();
+```
+
+**Exceptions (OK to chain):**
+- Fluent APIs: `query.where(...).orderBy(...).limit(10)`
+- Builder patterns: `new Builder().setX(...).setY(...).build()`
+- Data transfer objects (DTOs) with no behavior
 
 ---
 

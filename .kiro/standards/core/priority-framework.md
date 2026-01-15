@@ -294,6 +294,54 @@ function calculateRemainingBalance(user: User, market: Market): number {
 
 ---
 
+#### 9. **FUNDAMENTAL - Law of Demeter** (Cross-cutting)
+
+**Don't talk to strangers**
+
+Also known as the "principle of least knowledge." An object should only communicate with its immediate neighbors, not reach through objects to access their internals.
+
+**The Rule:** A method should only call methods on:
+- `this` (itself)
+- Its parameters
+- Objects it creates
+- Its direct component objects
+
+**Examples:**
+
+```typescript
+// ❌ VIOLATION - Reaching through objects (train wreck)
+function getCustomerCity(order: Order): string {
+  return order.getCustomer().getAddress().getCity().getName();
+}
+
+// ✅ CORRECT - Ask, don't reach
+function getCustomerCity(order: Order): string {
+  return order.getShippingCity(); // Order delegates internally
+}
+
+// ❌ VIOLATION - Chained access
+function processPayment(user: User): void {
+  const card = user.getWallet().getCreditCard().getDetails();
+  chargeCard(card);
+}
+
+// ✅ CORRECT - Direct delegation
+function processPayment(user: User): void {
+  const paymentMethod = user.getPreferredPaymentMethod();
+  chargePayment(paymentMethod);
+}
+```
+
+**Why it matters:**
+- **Reduces coupling** - Changes to internal structures don't cascade
+- **Improves encapsulation** - Objects hide their internal structure
+- **Easier testing** - Fewer dependencies to mock
+- **Better maintainability** - Changes are localized
+
+**Decision Rule:** If you're chaining more than one dot (except for fluent APIs), consider whether you're violating Law of Demeter.
+
+---
+
 ## Decision Framework for Common Scenarios
 
 ### Scenario 1: Should I extract this duplicate code?
