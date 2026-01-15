@@ -26,6 +26,7 @@ P2 - MEDIUM (Only When Measured Need)
 ## âš¡ Critical Rules (NEVER Violate)
 
 ### Financial Safety
+
 ```typescript
 // ✅ ALWAYS: All balance changes in transactions
 await prisma.$transaction(async (tx) => {
@@ -40,6 +41,7 @@ await updateBalance(id, amount);
 ```
 
 ### Race Conditions
+
 ```typescript
 // ✅ ALWAYS: Validation inside transaction
 await prisma.$transaction(async (tx) => {
@@ -57,10 +59,11 @@ await prisma.$transaction(async (tx) => {
 ```
 
 ### Variable Initialization
+
 ```typescript
 // ✅ ALWAYS: Initial value for reduce()
 const sum = array.reduce((acc, val) => acc + val, 0);
-const max = array.reduce((m, v) => v > m ? v : m, array[0]!);
+const max = array.reduce((m, v) => (v > m ? v : m), array[0]!);
 
 // ❌ NEVER: reduce() without initial value
 const sum = array.reduce((acc, val) => acc + val); // Breaks on empty array
@@ -70,25 +73,27 @@ const sum = array.reduce((acc, val) => acc + val); // Breaks on empty array
 
 ## 🚨 Red Flags (Auto-Reject in Code Review)
 
-| Pattern | Issue | Fix |
-|---------|-------|-----|
-| `await prisma.*.update()` outside `$transaction()` | Financial operation not atomic | Wrap in transaction |
-| `array.reduce(...)` with 1 parameter | Crashes on empty array | Add initial value |
-| `throw new Error('Invalid')` | Non-actionable error | Use specific error class with context |
-| `function foo(...)` without return type | Type safety | Add `: ReturnType` |
-| Database query in `for` loop | N+1 problem | Use batch query with `in` |
-| `const market = await getMarket(id)` then use in transaction | TOCTOU | Fetch inside transaction |
+| Pattern                                                      | Issue                          | Fix                                   |
+| ------------------------------------------------------------ | ------------------------------ | ------------------------------------- |
+| `await prisma.*.update()` outside `$transaction()`           | Financial operation not atomic | Wrap in transaction                   |
+| `array.reduce(...)` with 1 parameter                         | Crashes on empty array         | Add initial value                     |
+| `throw new Error('Invalid')`                                 | Non-actionable error           | Use specific error class with context |
+| `function foo(...)` without return type                      | Type safety                    | Add `: ReturnType`                    |
+| Database query in `for` loop                                 | N+1 problem                    | Use batch query with `in`             |
+| `const market = await getMarket(id)` then use in transaction | TOCTOU                         | Fetch inside transaction              |
 
 ---
 
 ## ✅ ALWAYS Do
 
 ### Transactions
+
 - ✅ All database writes in transactions
 - ✅ Fetch fresh data inside transaction
 - ✅ Related updates in same transaction
 
 ### Error Handling
+
 ```typescript
 // ✅ Structure
 throw new BusinessLogicError(
@@ -99,11 +104,13 @@ throw new BusinessLogicError(
 ```
 
 ### Types
+
 - ✅ Explicit return types: `function foo(): ReturnType`
 - ✅ Validate inputs at boundaries
 - ✅ Handle null/undefined explicitly
 
 ### Testing
+
 - ✅ Race condition tests for concurrent operations
 - ✅ Property-based tests for financial calculations
 - ✅ Integration tests for complex workflows
@@ -113,7 +120,9 @@ throw new BusinessLogicError(
 ## ❌ When NOT to Apply
 
 ### DRY
+
 **Skip if:**
+
 - Different business concepts (despite similar code)
 - Only 2 occurrences, unlikely to grow
 - Extraction reduces clarity significantly
@@ -121,12 +130,14 @@ throw new BusinessLogicError(
 ```typescript
 // ❌ DON'T extract - different concepts
 validateMarketTitle(title); // Min 5 chars
-validateOutcomeName(name);  // Min 2 chars
+validateOutcomeName(name); // Min 2 chars
 // May diverge in future
 ```
 
 ### Dependency Injection
+
 **Skip if:**
+
 - Pure calculation (no side effects)
 - Simple utility, one use case
 - Would add complexity without benefit
@@ -139,7 +150,9 @@ function calculatePercentage(value: number, total: number): number {
 ```
 
 ### Transactions
+
 **Skip if:**
+
 - Read-only operations
 - Single atomic database operation
 - Logging/analytics (eventual consistency OK)
@@ -150,7 +163,9 @@ const market = await prisma.market.findUnique({ where: { id } });
 ```
 
 ### Optimization
+
 **Skip if:**
+
 - Operation <100ms and infrequent
 - Would significantly reduce clarity
 - Haven't profiled to confirm bottleneck
@@ -160,6 +175,7 @@ const market = await prisma.market.findUnique({ where: { id } });
 ## 🔍 Common Scenarios
 
 ### Scenario: Should I extract this duplicate code?
+
 ```
 1. Same concept? NO → Don't extract
 2. Used 3+ times? NO → Wait for third use
@@ -168,6 +184,7 @@ const market = await prisma.market.findUnique({ where: { id } });
 ```
 
 ### Scenario: Should I use a transaction?
+
 ```
 1. Modifying data? NO → No transaction
 2. Financial operation? YES → USE TRANSACTION
@@ -176,6 +193,7 @@ const market = await prisma.market.findUnique({ where: { id } });
 ```
 
 ### Scenario: Should I optimize?
+
 ```
 1. N+1 or query in loop? YES → FIX IMMEDIATELY
 2. Missing index? YES → FIX IMMEDIATELY
@@ -203,6 +221,7 @@ src/
 ```
 
 **Naming:**
+
 - Files: `kebab-case.type.ts` (e.g., `market.service.ts`)
 - Classes: `PascalCase` (e.g., `MarketService`)
 - Functions: `camelCase` (e.g., `calculatePrice`)
@@ -210,6 +229,7 @@ src/
 - Booleans: `isActive`, `hasBalance`, `canTrade`
 
 **Size Limits:**
+
 - Soft: 300 lines → Consider splitting
 - Hard: 500 lines → Must split
 
@@ -218,6 +238,7 @@ src/
 ## 💬 Comments
 
 ### ✅ ALWAYS Comment
+
 - Complex algorithms (explain approach)
 - Non-obvious business rules
 - Race condition prevention strategies
@@ -235,6 +256,7 @@ await prisma.$transaction(async (tx) => {
 ```
 
 ### ❌ NEVER Comment
+
 - What code does (make code self-explanatory)
 - Variable declarations (use descriptive names)
 - Obvious operations
@@ -251,6 +273,7 @@ const totalPrice = quantity * unitPrice;
 ## ⚡ Performance
 
 ### ALWAYS Fix
+
 - N+1 query problems
 - Database queries in loops
 - Missing indexes on frequently queried columns
@@ -258,11 +281,13 @@ const totalPrice = quantity * unitPrice;
 - O(n²) when O(n) is simple
 
 ### Profile Before Optimizing
+
 - Operations <100ms
 - Infrequently called code
 - When optimization reduces clarity
 
 ### Never Optimize
+
 - Without measuring bottleneck
 - At expense of safety/correctness
 - Before verifying it's actually slow
@@ -272,28 +297,200 @@ const totalPrice = quantity * unitPrice;
 ## 🧪 Testing Requirements
 
 ### Required Tests
+
 - Unit tests for business logic
 - Integration tests for database operations
 - **Race condition tests for concurrent operations**
 - Property-based tests for financial calculations
 
 ### Race Condition Test Pattern
+
 ```typescript
 test('should prevent double resolution', async () => {
-  const attempts = Array.from({ length: 5 }, () =>
-    service.resolveMarket(marketId, outcome)
-  );
-  
+  const attempts = Array.from({ length: 5 }, () => service.resolveMarket(marketId, outcome));
+
   const results = await Promise.allSettled(attempts);
-  const successes = results.filter(r => r.status === 'fulfilled');
-  
+  const successes = results.filter((r) => r.status === 'fulfilled');
+
   expect(successes.length).toBe(1); // Only one should succeed
 });
 ```
 
 ---
 
-## 🎯 Kira IDE Quick Commands
+## 🔀 Git Workflow (MANDATORY)
+
+### Branch Strategy (Gitflow with Stages)
+
+```
+main (prod)            # Production - deployed to production environment
+├── uat                # UAT/Sandbox - deployed to staging for acceptance testing
+│   └── develop        # Development - integration branch for features
+│       ├── feature/*  # New features (e.g., feature/add-user-auth)
+│       ├── fix/*      # Bug fixes (e.g., fix/balance-validation)
+│       ├── refactor/* # Code refactoring
+│       ├── docs/*     # Documentation changes
+│       └── chore/*    # Maintenance tasks
+└── hotfix/*           # Emergency fixes (branch from main, merge to all)
+```
+
+### Environment Stages
+
+| Branch    | Environment | Purpose                          | Deploys To        |
+| --------- | ----------- | -------------------------------- | ----------------- |
+| `develop` | Development | Feature integration, dev testing | Dev server        |
+| `uat`     | UAT/Sandbox | User acceptance testing, QA      | Staging server    |
+| `main`    | Production  | Live production code             | Production server |
+
+### Release Flow
+
+```
+feature/* → develop → uat → main
+                ↓        ↓      ↓
+              (dev)   (staging) (prod)
+```
+
+1. **Feature branches** → PR to `develop` (squash merge)
+2. **develop** → PR to `uat` (merge commit, preserves history)
+3. **uat** → PR to `main` (merge commit, after QA approval)
+
+### Rules (NEVER Violate)
+
+- ❌ **No direct commits to main, uat, or develop** — ALL changes via PR
+- ✅ **Feature branches from develop** — Not from main or uat
+- ✅ **Squash merge for features** — Clean commit per feature into develop
+- ✅ **Merge commit for promotions** — develop→uat and uat→main preserve history
+- ✅ **PR requires:** Passing CI + at least 1 approval
+- ✅ **Delete feature branch after merge** — Keep repo clean
+
+### Feature Development Workflow
+
+```bash
+# 1. Create feature branch from develop
+git checkout develop && git pull origin develop
+git checkout -b feature/my-feature
+
+# 2. Work, commit (can be messy - will be squashed)
+git commit -m "wip: initial implementation"
+git commit -m "fix: address review feedback"
+
+# 3. Push and create PR to develop
+git push -u origin feature/my-feature
+# Create PR: feature/my-feature → develop
+# Select "Squash and merge"
+
+# 4. After merge, clean up
+git checkout develop && git pull origin develop
+git branch -d feature/my-feature
+```
+
+### Stage Promotion Workflow
+
+```bash
+# Promote develop to uat (after dev testing complete)
+# Create PR: develop → uat
+# Select "Create a merge commit" (NOT squash)
+# Requires: All tests passing + QA approval
+
+# Promote uat to main (after UAT sign-off)
+# Create PR: uat → main
+# Select "Create a merge commit" (NOT squash)
+# Requires: All tests passing + Product owner approval
+```
+
+### Hotfix Workflow (Emergency Only)
+
+```bash
+# 1. Branch from main
+git checkout main && git pull origin main
+git checkout -b hotfix/critical-bug
+
+# 2. Fix, test, commit
+git commit -m "fix: critical bug description"
+
+# 3. PR to main (expedited review)
+# After merge to main, also merge to uat and develop
+git checkout uat && git merge main
+git checkout develop && git merge main
+```
+
+### Commit Message (for squash commit)
+
+```
+type: short description
+
+- Detail 1
+- Detail 2
+
+Co-Authored-By: Name <email>
+```
+
+### Merge Strategy Summary
+
+| Merge Type        | Strategy     | Why                             |
+| ----------------- | ------------ | ------------------------------- |
+| feature → develop | Squash       | Clean single commit per feature |
+| develop → uat     | Merge commit | Preserve feature history for QA |
+| uat → main        | Merge commit | Full audit trail to production  |
+| hotfix → main     | Squash       | Single fix commit               |
+
+---
+
+## 🧪 Testing: Mock Policy (STRICT)
+
+### Core Principle
+
+> **Default to REAL implementations. Mocks are a last resort, not a convenience.**
+
+Real tests catch real bugs. Mocks hide integration issues and give false confidence.
+
+### ❌ NEVER Mock (Use Real Implementations)
+
+- **Database operations** — Use test database, not mocked queries
+- **Business logic/services** — Test actual behavior
+- **Internal service calls** — Don't mock your own code
+- **Validation logic** — Test real validation rules
+- **Property-based tests** — Always real implementations
+
+### ✅ Mocks Allowed ONLY When
+
+- **External third-party APIs** — Can't control their behavior
+- **Non-deterministic behavior** — Time, randomness (use `jest.useFakeTimers()`)
+- **Operations >5 seconds** — Only if truly unavoidable
+- **Hard-to-trigger failures** — Network errors, disk full, etc.
+
+### Decision Framework
+
+```
+Is it YOUR code?              YES → USE REAL IMPLEMENTATION
+Is it external/third-party?   YES → Mock is acceptable
+Is it non-deterministic?      YES → Mock is acceptable
+Is it prohibitively slow?     YES → Mock (but consider why it's slow)
+Otherwise?                    → USE REAL IMPLEMENTATION
+```
+
+### Anti-Patterns (Auto-Reject)
+
+```typescript
+// ❌ WRONG: Mocking database to avoid setup
+jest.mock('@prisma/client');
+prisma.user.findUnique.mockResolvedValue(fakeUser);
+
+// ✅ CORRECT: Use real test database
+beforeEach(async () => {
+  testUser = await prisma.user.create({ data: testUserData });
+});
+
+// ❌ WRONG: Mocking internal services
+const mockCalculator = { calculate: jest.fn().mockReturnValue(100) };
+
+// ✅ CORRECT: Use real service
+const calculator = new RealCalculator();
+```
+
+---
+
+## 🎯 Kiro IDE Quick Commands
 
 ```bash
 # Load core specs
@@ -320,14 +517,22 @@ test('should prevent double resolution', async () => {
 
 ```
 Before committing, verify:
+[ ] On a feature branch (NOT develop/uat/main)
 [ ] ESLint: 0 warnings (npm run lint:strict)
 [ ] TypeScript: no errors (tsc --noEmit)
 [ ] All tests passing (npm test)
+[ ] Tests use real implementations (no unnecessary mocks)
 [ ] All reduce() have initial values
 [ ] DB writes inside transactions
 [ ] Errors follow standards (message + code + context)
 [ ] Functions have return types
 [ ] Race condition tests for concurrent operations
+
+Before creating PR to develop:
+[ ] Branch is up to date with develop
+[ ] Commits are ready to be squashed
+[ ] PR description explains the change
+[ ] PR targets develop branch (not uat or main)
 ```
 
 ---
@@ -335,6 +540,7 @@ Before committing, verify:
 ## 🆘 When in Doubt
 
 ### Decision Framework
+
 1. **Safety first** → Choose safer option
 2. **Explicit over implicit** → Add null checks
 3. **Clarity over brevity** → Write clearer code
@@ -343,6 +549,7 @@ Before committing, verify:
 6. **Ask** → Clarify business requirements
 
 ### Quick Decisions
+
 - **Unknown nullability?** → Add explicit check
 - **Unsure about transaction?** → Use transaction (safer)
 - **DRY or not?** → Wait for third occurrence
@@ -354,32 +561,40 @@ Before committing, verify:
 ## 📚 Standards Documents Map
 
 **Core (Load Always)**
-- `ai-development-priority-framework.md` - Decision rules
+
+- `priority-framework.md` - Decision rules when standards conflict
 - `coding-standards.md` - SOLID, DRY, patterns
-- `when-not-to-apply-patterns.md` - Negative examples
+- `when-not-to-apply.md` - When to skip patterns
 
-**Domain (Load by Context)**
-- `error-message-standards.md` - Error handling
-- `file-organization-standards.md` - Project structure
-- `comment-standards.md` - Documentation
-- `performance-standards.md` - Optimization
+**Domain Standards**
 
-**Workflows (Load by Task)**
+- `git-workflow.md` - Branching, PRs, squash merge (MANDATORY)
+- `testing-mocks.md` - Mock policy (real implementations first)
+- `errors.md` - Error handling patterns
+- `file-organization.md` - Project structure
+- `comments.md` - Documentation standards
+- `performance.md` - Optimization guidelines
+
+**Workflows**
+
 - `code-review-checklist.md` - Review process
-- `race-condition-checklist.md` - Concurrent safety
-- `test-execution-guidelines.md` - Testing
+- `race-conditions.md` - Concurrent safety
+- `testing.md` - Testing guidelines
 
 ---
 
 ## 🎓 Remember
 
 **The Mantra:**
+
 > "Make it work, make it right, make it fast - in that order"
 
 **The Priority:**
+
 > Safety > Correctness > Maintainability > Performance
 
 **The Goal:**
+
 > Code that's easy to understand, modify, and doesn't lose money
 
 ---
