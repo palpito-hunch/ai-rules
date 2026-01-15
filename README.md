@@ -185,6 +185,38 @@ For team-specific standards, see `.kiro/team-standards.yml`.
 - API documentation is in `docs/api/`
 - Inline code comments explain the "why"
 
+## 🔄 Syncing Standards to Downstream Repos
+
+When this template is updated, you can automatically create PRs in repositories created from it.
+
+### Setup
+
+1. **Create a Personal Access Token (PAT)** with `repo` scope
+2. **Add the PAT** as a repository secret named `DOWNSTREAM_SYNC_TOKEN`
+3. **Register downstream repos** in `.github/downstream-repos.json`:
+   ```json
+   {
+     "repos": ["your-org/service-a", "your-org/service-b"]
+   }
+   ```
+
+### How It Works
+
+When `.kiro/` or `CLAUDE.md` changes are pushed to main:
+
+1. The workflow creates a branch in each downstream repo
+2. Syncs the latest standards files
+3. Opens a PR for review
+
+### Manual Sync
+
+Trigger manually via Actions tab with optional repo filter:
+
+```
+Workflow: Sync Standards to Downstream Repos
+Input: org/specific-repo (optional)
+```
+
 ## 🔒 Security
 
 Security scanning is automated via Kiro hooks:

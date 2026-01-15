@@ -1,0 +1,142 @@
+name: Sync Standards to Downstream Repos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.kiro/**'
+      - 'CLAUDE.md'
+  workflow_dispatch:
+    inputs:
+      repos:
+        description: 'Comma-separated list of repos to sync (leave empty for all)'
+        required: false
+        type: string
+
+jobs:
+  prepare:
+    name: Prepare Sync
+    runs-on: ubuntu-latest
+    outputs:
+      repos: ${{ steps.get-repos.outputs.repos }}
+      has_repos: ${{ steps.get-repos.outputs.has_repos }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get downstream repos
+        id: get-repos
+        run: |
+          if [ -n "${{ inputs.repos }}" ]; then
+            # Use manually specified repos
+            REPOS=$(echo '${{ inputs.repos }}' | jq -R -s -c 'split(",") | map(gsub("^\\s+|\\s+$"; ""))')
+          elif [ -f ".github/downstream-repos.json" ]; then
+            # Use repos from config file
+            REPOS=$(jq -c '.repos' .github/downstream-repos.json)
+          else
+            REPOS='[]'
+          fi
+
+          echo "repos=$REPOS" >> $GITHUB_OUTPUT
+
+          if [ "$REPOS" = "[]" ]; then
+            echo "has_repos=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_repos=true" >> $GITHUB_OUTPUT
+          fi
+
+  sync:
+    name: Sync to ${{ matrix.repo }}
+    needs: prepare
+    if: needs.prepare.outputs.has_repos == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repo: ${{ fromJson(needs.prepare.outputs.repos) }}
+    steps:
+      - name: Checkout template repo
+        uses: actions/checkout@v4
+        with:
+          path: template
+
+      - name: Checkout downstream repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.repo }}
+          token: ${{ secrets.DOWNSTREAM_SYNC_TOKEN }}
+          path: downstream
+
+      - name: Configure git
+        run: |
+          cd downstream
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create sync branch
+        id: branch
+        run: |
+          cd downstream
+          BRANCH="sync/template-standards-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BRANCH"
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Sync standards files
+        run: |
+          # Sync .kiro directory
+          rm -rf downstream/.kiro
+          cp -r template/.kiro downstream/.kiro
+
+          # Sync CLAUDE.md
+          cp template/CLAUDE.md downstream/CLAUDE.md
+
+      - name: Check for changes
+        id: changes
+        run: |
+          cd downstream
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          cd downstream
+          git add .kiro CLAUDE.md
+          git commit -m "chore: sync standards from template
+
+          Automated sync of development standards from template repository.
+
+          Source: ${{ github.repository }}@${{ github.sha }}"
+          git push -u origin ${{ steps.branch.outputs.branch }}
+
+      - name: Create pull request
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.DOWNSTREAM_SYNC_TOKEN }}
+        run: |
+          cd downstream
+          gh pr create \
+            --title "chore: sync development standards from template" \
+            --body "## Summary
+
+          Automated PR to sync development standards from the template repository.
+
+          ### Changes
+          - Updated \`.kiro/\` directory with latest standards
+          - Updated \`CLAUDE.md\` with latest AI guidance
+
+          ### Source
+          - Repository: [${{ github.repository }}](https://github.com/${{ github.repository }})
+          - Commit: [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+
+          ### Review Checklist
+          - [ ] Review changes for conflicts with local customizations
+          - [ ] Verify standards are compatible with this project
+          - [ ] Run tests to ensure nothing breaks
+
+          ---
+          🤖 This PR was automatically created by the [sync-downstream](https://github.com/${{ github.repository }}/actions/workflows/sync-downstream.yml) workflow." \
+            --base main
