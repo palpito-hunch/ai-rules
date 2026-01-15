@@ -197,6 +197,13 @@ The `sync-from-template.yml` workflow:
 2. Fetches the latest `.kiro/` and `CLAUDE.md` from this template
 3. Creates a PR if changes are detected
 
+### Private Template Setup
+
+If the template repository is private, downstream repos need a PAT to fetch from it:
+
+1. Create a PAT with `repo` scope
+2. Add it as a secret named `TEMPLATE_PAT` in each downstream repo
+
 ### Manual Sync
 
 Trigger manually in your repo: **Actions** → **Sync Standards from Template** → **Run workflow**

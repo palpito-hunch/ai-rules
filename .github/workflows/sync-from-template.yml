@@ -34,8 +34,14 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Add template remote
+        env:
+          TEMPLATE_PAT: ${{ secrets.TEMPLATE_PAT }}
         run: |
-          git remote add template https://github.com/${{ env.TEMPLATE_REPO }}.git || true
+          if [ -n "$TEMPLATE_PAT" ]; then
+            git remote add template https://${TEMPLATE_PAT}@github.com/${{ env.TEMPLATE_REPO }}.git || true
+          else
+            git remote add template https://github.com/${{ env.TEMPLATE_REPO }}.git || true
+          fi
           git fetch template ${{ env.TEMPLATE_BRANCH }}
 
       - name: Check for existing sync PR
