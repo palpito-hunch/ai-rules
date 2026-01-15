@@ -67,3 +67,26 @@ See `.kiro/steering.yml` for full configuration.
 - **Commits:** Conventional commits format
 
 See `.kiro/conventions.yml` for full naming rules.
+
+## Template Sync
+
+This project was created from a template repository. Standards are kept in sync automatically.
+
+### How It Works
+
+- `.github/workflows/sync-from-template.yml` runs weekly
+- Fetches latest `.kiro/` and `CLAUDE.md` from the template
+- Creates a PR if changes are detected
+
+### For AI Assistants
+
+When modifying `.kiro/` or `CLAUDE.md`:
+
+- **In template repo:** Changes propagate to all downstream repos via PRs
+- **In downstream repo:** Local changes may be overwritten by the next sync PR
+
+If this repo needs custom standards that differ from the template, either:
+
+1. Make changes in the template (preferred, benefits all repos)
+2. Modify locally and reject future sync PRs for those files
+3. Remove the sync workflow to fully decouple
