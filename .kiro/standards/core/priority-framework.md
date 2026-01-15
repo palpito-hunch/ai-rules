@@ -9,24 +9,26 @@ This document provides explicit guidance for AI-driven development on how to res
 ### When Requirements Conflict, Follow This Order:
 
 #### 1. **CRITICAL - Financial Safety** (P0)
+
 **Always prioritize over everything else**
 
 - Race condition prevention
-- Transaction atomicity  
+- Transaction atomicity
 - Balance consistency
 - Double-spending prevention
 - Payout accuracy
 
 **Examples:**
+
 ```typescript
 // âœ… Correct: Safety first, even if more verbose
 await prisma.$transaction(async (tx) => {
   const market = await tx.market.findUnique({ where: { id } });
   if (market.resolved) throw new MarketResolvedError();
-  
+
   const user = await tx.user.findUnique({ where: { id: userId } });
   if (user.balance < tradeCost) throw new InsufficientBalanceError();
-  
+
   // All validations inside transaction for safety
   await tx.user.update({ ... });
   await tx.position.create({ ... });
@@ -43,6 +45,7 @@ await updateMarket(id);
 ---
 
 #### 2. **CRITICAL - Type Safety** (P0)
+
 **Prevent runtime errors**
 
 - Explicit null/undefined handling
@@ -51,10 +54,11 @@ await updateMarket(id);
 - Return type declarations
 
 **Examples:**
+
 ```typescript
 // âœ… Correct: Explicit handling
 function getMarket(id: string): Market {
-  const market = markets.find(m => m.id === id);
+  const market = markets.find((m) => m.id === id);
   if (!market) {
     throw new MarketNotFoundError(id);
   }
@@ -63,7 +67,7 @@ function getMarket(id: string): Market {
 
 // âŒ Wrong: Implicit undefined
 function getMarket(id: string): Market {
-  return markets.find(m => m.id === id)!; // Dangerous!
+  return markets.find((m) => m.id === id)!; // Dangerous!
 }
 ```
 
@@ -72,6 +76,7 @@ function getMarket(id: string): Market {
 ---
 
 #### 3. **HIGH - SOLID Principles** (P1)
+
 **Long-term maintainability**
 
 - Single Responsibility
@@ -80,11 +85,13 @@ function getMarket(id: string): Market {
 - Testability
 
 **Trade-off Guidance:**
+
 - Apply when code will be modified/extended
 - Skip for one-off scripts or simple utilities
 - Defer for prototypes (but refactor before production)
 
 **Examples:**
+
 ```typescript
 // âœ… Good: DI for testability and flexibility
 class MarketService {
@@ -107,6 +114,7 @@ function calculatePercentage(value: number, total: number): number {
 ---
 
 #### 4. **HIGH - DRY (Don't Repeat Yourself)** (P1)
+
 **Single source of truth**
 
 - Extract common logic
@@ -114,23 +122,29 @@ function calculatePercentage(value: number, total: number): number {
 - Share type definitions
 
 **When to Apply:**
+
 - Logic is truly identical (not just similar)
 - Likely to change together
 - Used in 3+ places
 - Doesn't reduce readability
 
 **When NOT to Apply:**
+
 - Code happens to be similar but represents different concepts
 - Extraction creates unclear abstractions
 - Only 2 occurrences unlikely to grow
 - Would require complex parameters
 
 **Examples:**
+
 ```typescript
 // âœ… Good: Extract common validation
 function validatePositiveNumber(value: number, fieldName: string): void {
   if (value <= 0) {
-    throw new ValidationError(`${fieldName} must be positive`, 'INVALID_VALUE', { value, fieldName });
+    throw new ValidationError(`${fieldName} must be positive`, 'INVALID_VALUE', {
+      value,
+      fieldName,
+    });
   }
 }
 
@@ -158,6 +172,7 @@ function validateLiquidityParameter(param: number): void {
 ---
 
 #### 5. **MEDIUM - Performance** (P2)
+
 **Optimize when measured need exists**
 
 - Profile before optimizing
@@ -165,17 +180,20 @@ function validateLiquidityParameter(param: number): void {
 - Measure impact of changes
 
 **Always Fix:**
+
 - N+1 query problems
 - Database queries in loops
 - Missing indexes on frequently queried columns
 - O(n²) algorithms where O(n) is simple
 
 **Profile First:**
+
 - Operations <100ms
 - Infrequently called code
 - Code that would become significantly less readable
 
 **Never Optimize:**
+
 - Without measuring
 - Before verifying it's a bottleneck
 - At expense of safety or correctness
@@ -185,9 +203,11 @@ function validateLiquidityParameter(param: number): void {
 ---
 
 #### 6. **LOW - Code Brevity** (P3)
+
 **Shorter code is not always better**
 
 **Prioritize clarity over brevity:**
+
 ```typescript
 // âœ… Clear and explicit
 function isMarketResolved(market: Market): boolean {
@@ -207,6 +227,7 @@ const isResolved = (m: Market) => m.resolved && m.winningOutcome != null;
 ### Scenario 1: Should I extract this duplicate code?
 
 **Ask:**
+
 1. Is the logic truly identical, or just similar? (Different → Don't extract)
 2. Does it represent the same business concept? (Different → Don't extract)
 3. Will it change together? (No → Don't extract)
@@ -214,6 +235,7 @@ const isResolved = (m: Market) => m.resolved && m.winningOutcome != null;
 5. Does extraction reduce clarity? (Yes → Don't extract)
 
 **Example Decision:**
+
 ```typescript
 // Two validation functions that look similar:
 function validateMarketTitle(title: string): void {
@@ -238,6 +260,7 @@ function validateOutcomeName(name: string): void {
 ### Scenario 2: Should I use a transaction here?
 
 **Ask:**
+
 1. Are you modifying data? (No → No transaction needed)
 2. Are multiple related records affected? (Yes → USE TRANSACTION)
 3. Is financial data involved? (Yes → USE TRANSACTION)
@@ -247,6 +270,7 @@ function validateOutcomeName(name: string): void {
 **Decision Examples:**
 
 **Use Transaction:**
+
 ```typescript
 // Multiple related updates - MUST use transaction
 async function placeTrade(userId: string, marketId: string, amount: number) {
@@ -259,12 +283,13 @@ async function placeTrade(userId: string, marketId: string, amount: number) {
 ```
 
 **No Transaction Needed:**
+
 ```typescript
 // Read-only - no transaction needed
 async function getMarketDetails(id: string): Promise<Market> {
-  return prisma.market.findUnique({ 
+  return prisma.market.findUnique({
     where: { id },
-    include: { outcomes: true }
+    include: { outcomes: true },
   });
 }
 
@@ -272,7 +297,7 @@ async function getMarketDetails(id: string): Promise<Market> {
 async function incrementViews(id: string): Promise<void> {
   await prisma.market.update({
     where: { id },
-    data: { viewCount: { increment: 1 } }
+    data: { viewCount: { increment: 1 } },
   });
 }
 ```
@@ -282,6 +307,7 @@ async function incrementViews(id: string): Promise<void> {
 ### Scenario 3: Should I add dependency injection?
 
 **Ask:**
+
 1. Does the code have side effects? (No → Skip DI)
 2. Will it be tested? (No → Skip DI)
 3. Might implementation change? (No → Skip DI)
@@ -289,6 +315,7 @@ async function incrementViews(id: string): Promise<void> {
 5. Does DI add significant complexity? (Yes → Reconsider)
 
 **Use DI:**
+
 ```typescript
 // Service with dependencies - use DI
 class MarketService {
@@ -301,6 +328,7 @@ class MarketService {
 ```
 
 **Skip DI:**
+
 ```typescript
 // Pure calculation - no DI needed
 function calculateProbability(shares: number[], outcome: number): number {
@@ -310,9 +338,9 @@ function calculateProbability(shares: number[], outcome: number): number {
 
 // Simple utility - no DI needed
 function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('en-US', { 
-    style: 'currency', 
-    currency: 'USD' 
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
   }).format(amount);
 }
 ```
@@ -322,6 +350,7 @@ function formatCurrency(amount: number): string {
 ### Scenario 4: Should I optimize this code?
 
 **Ask:**
+
 1. Have you measured it's slow? (No → Don't optimize yet)
 2. Is it obviously inefficient? (N+1, query in loop → FIX IMMEDIATELY)
 3. Is it called frequently? (No → Probably fine)
@@ -329,6 +358,7 @@ function formatCurrency(amount: number): string {
 5. Is it <100ms? (Yes → Probably fine)
 
 **Always Fix:**
+
 ```typescript
 // âŒ ALWAYS fix N+1 query
 for (const market of markets) {
@@ -340,12 +370,13 @@ const markets = await prisma.market.findMany({ include: { creator: true } });
 ```
 
 **Profile First:**
+
 ```typescript
 // This might be fine - profile before changing
 function processMarketData(data: MarketData[]): ProcessedData[] {
   return data
-    .filter(d => d.isActive)
-    .map(d => ({ ...d, calculated: expensiveCalculation(d) }))
+    .filter((d) => d.isActive)
+    .map((d) => ({ ...d, calculated: expensiveCalculation(d) }))
     .sort((a, b) => b.score - a.score);
 }
 // Only optimize if profiling shows it's a bottleneck AND data is large
@@ -356,6 +387,7 @@ function processMarketData(data: MarketData[]): ProcessedData[] {
 ### Scenario 5: How much should I comment?
 
 **Comment:**
+
 - Complex algorithms (explain approach)
 - Non-obvious business rules
 - Race condition prevention strategies
@@ -363,6 +395,7 @@ function processMarketData(data: MarketData[]): ProcessedData[] {
 - Workarounds for external limitations
 
 **Don't Comment:**
+
 - What the code does (code should be self-explanatory)
 - Obvious operations
 - Instead of fixing unclear code
@@ -370,14 +403,14 @@ function processMarketData(data: MarketData[]): ProcessedData[] {
 **Examples:**
 
 **Good Comments:**
+
 ```typescript
 // LMSR uses logarithmic cost function to prevent market maker insolvency.
 // The liquidity parameter b controls market depth and price sensitivity.
 // Reference: Hanson (2002) "Logarithmic Market Scoring Rules"
-const cost = liquidityParameter * Math.log(
-  outcomes.reduce((sum, shares) => 
-    sum + Math.exp(shares / liquidityParameter), 0)
-);
+const cost =
+  liquidityParameter *
+  Math.log(outcomes.reduce((sum, shares) => sum + Math.exp(shares / liquidityParameter), 0));
 
 // Fetch inside transaction to prevent TOCTOU race condition.
 // Market could be resolved between check and update if fetched outside.
@@ -388,6 +421,7 @@ await prisma.$transaction(async (tx) => {
 ```
 
 **Bad Comments:**
+
 ```typescript
 // Calculate price
 const price = calculatePrice(shares, outcome);
@@ -405,13 +439,13 @@ for (const outcome of outcomes) {
 
 When two standards conflict, use this priority:
 
-| Lower Priority ↓ / Higher Priority → | Financial Safety | Type Safety | SOLID | DRY | Performance |
-|---------------------------------------|------------------|-------------|-------|-----|-------------|
-| **Financial Safety**                  | -                | -           | -     | -   | -           |
-| **Type Safety**                       | Defer            | -           | -     | -   | -           |
-| **SOLID**                             | Defer            | Defer       | -     | -   | -           |
-| **DRY**                               | Defer            | Defer       | Defer | -   | -           |
-| **Performance**                       | Defer            | Defer       | Defer | Defer | -         |
+| Lower Priority ↓ / Higher Priority → | Financial Safety | Type Safety | SOLID | DRY   | Performance |
+| ------------------------------------ | ---------------- | ----------- | ----- | ----- | ----------- |
+| **Financial Safety**                 | -                | -           | -     | -     | -           |
+| **Type Safety**                      | Defer            | -           | -     | -     | -           |
+| **SOLID**                            | Defer            | Defer       | -     | -     | -           |
+| **DRY**                              | Defer            | Defer       | Defer | -     | -           |
+| **Performance**                      | Defer            | Defer       | Defer | Defer | -           |
 
 **How to read:** If row conflicts with column, defer to column (higher priority).
 

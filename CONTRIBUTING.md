@@ -22,27 +22,33 @@ Thank you for your interest in contributing! This guide will help you get set up
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/your-username/kiro-project-template.git
    cd kiro-project-template
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
+
    This automatically sets up Husky git hooks via the `prepare` script.
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env
    # Edit .env with your values
    ```
 
 4. **Verify setup**
+
    ```bash
    npm run validate
    ```
+
    This runs linting, type checking, and tests to ensure everything is working.
 
 5. **Start development server**
@@ -69,6 +75,7 @@ npm run lint:fix
 **Configuration:** `.eslintrc.json`
 
 Includes rules for:
+
 - TypeScript (`@typescript-eslint`)
 - React and React Hooks
 - Accessibility (`jsx-a11y`)
@@ -131,16 +138,17 @@ We follow a gitflow-inspired workflow.
 
 Use the format: `type/description`
 
-| Type | Purpose |
-|------|---------|
-| `feature/` | New features |
-| `fix/` | Bug fixes |
-| `docs/` | Documentation changes |
-| `refactor/` | Code refactoring |
-| `test/` | Adding or updating tests |
-| `chore/` | Maintenance tasks |
+| Type        | Purpose                  |
+| ----------- | ------------------------ |
+| `feature/`  | New features             |
+| `fix/`      | Bug fixes                |
+| `docs/`     | Documentation changes    |
+| `refactor/` | Code refactoring         |
+| `test/`     | Adding or updating tests |
+| `chore/`    | Maintenance tasks        |
 
 **Examples:**
+
 - `feature/user-authentication`
 - `fix/login-redirect-loop`
 - `docs/api-documentation`
@@ -148,6 +156,7 @@ Use the format: `type/description`
 ### Workflow
 
 1. Create a branch from `main` (or `develop` if using full gitflow)
+
    ```bash
    git checkout -b feature/my-feature
    ```
@@ -175,19 +184,19 @@ type(scope): description
 
 ### Types
 
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | Formatting, missing semicolons, etc. |
+| Type       | Description                                             |
+| ---------- | ------------------------------------------------------- |
+| `feat`     | New feature                                             |
+| `fix`      | Bug fix                                                 |
+| `docs`     | Documentation only                                      |
+| `style`    | Formatting, missing semicolons, etc.                    |
 | `refactor` | Code change that neither fixes a bug nor adds a feature |
-| `perf` | Performance improvement |
-| `test` | Adding or updating tests |
-| `build` | Build system or external dependencies |
-| `ci` | CI configuration |
-| `chore` | Other changes that don't modify src or test files |
-| `revert` | Reverts a previous commit |
+| `perf`     | Performance improvement                                 |
+| `test`     | Adding or updating tests                                |
+| `build`    | Build system or external dependencies                   |
+| `ci`       | CI configuration                                        |
+| `chore`    | Other changes that don't modify src or test files       |
+| `revert`   | Reverts a previous commit                               |
 
 ### Examples
 
@@ -221,6 +230,7 @@ Git hooks run automatically to ensure code quality before commits and pushes.
 ### Pre-commit Hook
 
 Runs lint-staged, which executes:
+
 - ESLint (with auto-fix) on `.ts`, `.tsx`, `.js`, `.jsx` files
 - Prettier on all staged files
 
@@ -233,6 +243,7 @@ Validates commit messages against conventional commit format.
 ### Bypassing Hooks (Not Recommended)
 
 In rare cases, you can bypass hooks:
+
 ```bash
 git commit --no-verify -m "message"
 ```
@@ -244,6 +255,7 @@ Only do this for emergency fixes and ensure CI passes.
 ### Before Submitting
 
 1. Ensure all checks pass locally:
+
    ```bash
    npm run validate
    ```
@@ -272,6 +284,7 @@ Only do this for emergency fixes and ensure CI passes.
 ### Review Checklist
 
 Reviewers will check:
+
 - [ ] Code follows project conventions
 - [ ] Tests are included and passing
 - [ ] No console.log statements
@@ -285,13 +298,13 @@ Our GitHub Actions workflow runs on all PRs and pushes to `main`/`develop`.
 
 ### Jobs
 
-| Job | Description |
-|-----|-------------|
-| **Lint** | ESLint + Prettier check |
-| **Type Check** | TypeScript compilation check |
-| **Test** | Jest tests with coverage |
-| **Build** | Next.js production build |
-| **Security** | npm audit for vulnerabilities |
+| Job            | Description                   |
+| -------------- | ----------------------------- |
+| **Lint**       | ESLint + Prettier check       |
+| **Type Check** | TypeScript compilation check  |
+| **Test**       | Jest tests with coverage      |
+| **Build**      | Next.js production build      |
+| **Security**   | npm audit for vulnerabilities |
 
 ### Viewing Results
 
@@ -301,6 +314,7 @@ Our GitHub Actions workflow runs on all PRs and pushes to `main`/`develop`.
 ### Running CI Locally
 
 You can simulate CI locally:
+
 ```bash
 npm run validate && npm run build
 ```
@@ -315,6 +329,7 @@ npm run validate && npm run build
 ## Questions?
 
 If you have questions about contributing, please:
+
 1. Check existing documentation in `docs/` and `.kiro/`
 2. Open an issue for discussion
 3. Reach out to the maintainers

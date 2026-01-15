@@ -1,24 +1,24 @@
 # .kiro/steering.yml
 project:
-  name: "My Kiro Project"
-  description: "Project description goes here"
-  version: "1.0.0"
+  name: 'My Kiro Project'
+  description: 'Project description goes here'
+  version: '1.0.0'
 
 context:
-  domain: "web-application"
+  domain: 'web-application'
   stack:
-    - "React"
-    - "TypeScript"
-    - "Node.js"
-    - "Tailwind CSS"
-  
+    - 'React'
+    - 'TypeScript'
+    - 'Node.js'
+    - 'Tailwind CSS'
+
 preferences:
-  code_style: "functional"
-  testing_framework: "jest"
-  state_management: "react-hooks"
-  documentation: "inline-and-markdown"
+  code_style: 'functional'
+  testing_framework: 'jest'
+  state_management: 'react-hooks'
+  documentation: 'inline-and-markdown'
 
 standards:
-  location: ".kiro/standards/"
+  location: '.kiro/standards/'
   auto_load_core: true
-  config_file: ".kiro/standards-config.yml"
+  config_file: '.kiro/standards-config.yml'

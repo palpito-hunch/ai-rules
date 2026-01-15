@@ -17,11 +17,7 @@ const customJestConfig = {
     '^@types/(.*)$': '<rootDir>/src/types/$1',
   },
   testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
-  collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    '!src/**/*.d.ts',
-    '!src/**/*.stories.{ts,tsx}',
-  ],
+  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts', '!src/**/*.stories.{ts,tsx}'],
   coverageThreshold: {
     global: {
       branches: 70,

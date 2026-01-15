@@ -1,27 +1,33 @@
 # docs/requirements.md
+
 # Requirements (EARS Format)
 
 ## Ubiquitous Requirements
-*Requirements that apply to all operational scenarios*
+
+_Requirements that apply to all operational scenarios_
 
 - The system **shall** [requirement]
 
 ## Event-Driven Requirements
-*Requirements triggered by specific events*
+
+_Requirements triggered by specific events_
 
 - **When** [trigger event], the system **shall** [response]
 
 ## State-Driven Requirements
-*Requirements that apply in specific states*
+
+_Requirements that apply in specific states_
 
 - **While** [in specific state], the system **shall** [requirement]
 
 ## Unwanted Behaviors
-*Requirements that prevent unwanted scenarios*
+
+_Requirements that prevent unwanted scenarios_
 
 - **If** [unwanted condition], **then** the system **shall** [preventive action]
 
 ## Optional Features
-*Requirements for optional features*
+
+_Requirements for optional features_
 
 - **Where** [feature is included], the system **shall** [requirement]

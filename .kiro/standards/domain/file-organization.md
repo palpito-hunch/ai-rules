@@ -107,6 +107,7 @@ project-root/
 ### Naming Patterns
 
 #### Services
+
 ```
 market.service.ts
 trade.service.ts
@@ -115,6 +116,7 @@ notification.service.ts
 ```
 
 #### Repositories
+
 ```
 market.repository.ts
 trade.repository.ts
@@ -122,6 +124,7 @@ user.repository.ts
 ```
 
 #### Controllers
+
 ```
 market.controller.ts
 trade.controller.ts
@@ -129,6 +132,7 @@ auth.controller.ts
 ```
 
 #### Utilities
+
 ```
 lmsr.util.ts
 validation.util.ts
@@ -137,6 +141,7 @@ math.util.ts
 ```
 
 #### Types
+
 ```
 market.types.ts
 trade.types.ts
@@ -145,6 +150,7 @@ api.types.ts
 ```
 
 #### Tests
+
 ```
 market.service.test.ts        # Co-located with service
 lmsr.util.test.ts            # Co-located with util
@@ -152,6 +158,7 @@ market-integration.test.ts    # Integration test
 ```
 
 #### Errors
+
 ```
 business-logic.error.ts
 validation.error.ts
@@ -160,6 +167,7 @@ insufficient-balance.error.ts
 ```
 
 #### Middleware
+
 ```
 auth.middleware.ts
 error.middleware.ts
@@ -168,6 +176,7 @@ rate-limit.middleware.ts
 ```
 
 #### Configuration
+
 ```
 database.config.ts
 server.config.ts
@@ -185,22 +194,22 @@ environment.ts
 
 ```typescript
 // Services
-class MarketService { }
-class TradeService { }
-class UserService { }
+class MarketService {}
+class TradeService {}
+class UserService {}
 
 // Repositories
-class MarketRepository { }
-class TradeRepository { }
+class MarketRepository {}
+class TradeRepository {}
 
 // Controllers
-class MarketController { }
-class TradeController { }
+class MarketController {}
+class TradeController {}
 
 // Errors
-class BusinessLogicError extends Error { }
-class ValidationError extends Error { }
-class MarketNotFoundError extends BusinessLogicError { }
+class BusinessLogicError extends Error {}
+class ValidationError extends Error {}
+class MarketNotFoundError extends BusinessLogicError {}
 ```
 
 ### Interfaces
@@ -209,13 +218,13 @@ class MarketNotFoundError extends BusinessLogicError { }
 
 ```typescript
 // âœ… Preferred - No 'I' prefix
-interface MarketService { }
-interface TradeRepository { }
-interface PriceCalculator { }
+interface MarketService {}
+interface TradeRepository {}
+interface PriceCalculator {}
 
 // âŒ Avoid - 'I' prefix
-interface IMarketService { }
-interface ITradeRepository { }
+interface IMarketService {}
+interface ITradeRepository {}
 ```
 
 **Exception:** Use 'I' prefix only when interface and class have same name and exist in same file:
@@ -258,16 +267,16 @@ type CreateMarketDto = Omit<Market, 'id' | 'createdAt'>;
 
 ```typescript
 // âœ… Good - Clear, descriptive
-function calculateMarketPrice(shares: number[], outcome: number): number { }
-function validateTradeAmount(amount: number): void { }
-function getUserBalance(userId: string): Promise<number> { }
-function isMarketResolved(market: Market): boolean { }
+function calculateMarketPrice(shares: number[], outcome: number): number {}
+function validateTradeAmount(amount: number): void {}
+function getUserBalance(userId: string): Promise<number> {}
+function isMarketResolved(market: Market): boolean {}
 
 // âŒ Bad - Too short, unclear
-function calc(s: number[], o: number): number { }
-function validate(a: number): void { }
-function get(id: string): Promise<number> { }
-function check(m: Market): boolean { }
+function calc(s: number[], o: number): number {}
+function validate(a: number): void {}
+function get(id: string): Promise<number> {}
+function check(m: Market): boolean {}
 ```
 
 ### Variables
@@ -303,12 +312,12 @@ const API_VERSION = 'v1';
 const DATABASE_CONFIG = {
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
 };
 
 // âŒ Bad - Not constants
-const max_trade = calculateMax();  // This is calculated, use camelCase
-const MIN_amount = getMinimum();   // This is fetched, use camelCase
+const max_trade = calculateMax(); // This is calculated, use camelCase
+const MIN_amount = getMinimum(); // This is fetched, use camelCase
 ```
 
 ### Boolean Variables
@@ -335,6 +344,7 @@ const trade = !market.resolved && user.verified;
 ### Size Limits
 
 **Soft Limits (Recommend splitting):**
+
 - **Services:** 300 lines
 - **Repositories:** 200 lines
 - **Controllers:** 200 lines
@@ -342,9 +352,11 @@ const trade = !market.resolved && user.verified;
 - **Types:** 200 lines
 
 **Hard Limits (Must split):**
+
 - **Any file:** 500 lines
 
 **Exceptions:**
+
 - Complex algorithms with justification (document why)
 - Generated code
 - Configuration files
@@ -352,6 +364,7 @@ const trade = !market.resolved && user.verified;
 ### When to Split Files
 
 **Split when:**
+
 - File exceeds 300 lines
 - Class has multiple distinct responsibilities
 - File contains unrelated functions
@@ -363,45 +376,45 @@ const trade = !market.resolved && user.verified;
 // Before: market.service.ts (450 lines)
 class MarketService {
   // Creation methods (100 lines)
-  async createMarket() { }
-  async createOutcomes() { }
-  
+  async createMarket() {}
+  async createOutcomes() {}
+
   // Trading methods (150 lines)
-  async placeTrade() { }
-  async calculatePrice() { }
-  
+  async placeTrade() {}
+  async calculatePrice() {}
+
   // Resolution methods (100 lines)
-  async resolveMarket() { }
-  async distributePayouts() { }
-  
+  async resolveMarket() {}
+  async distributePayouts() {}
+
   // Analytics methods (100 lines)
-  async getMarketStats() { }
-  async getVolumeHistory() { }
+  async getMarketStats() {}
+  async getVolumeHistory() {}
 }
 
 // After: Split into focused services
 // market-creation.service.ts (120 lines)
 class MarketCreationService {
-  async createMarket() { }
-  async createOutcomes() { }
+  async createMarket() {}
+  async createOutcomes() {}
 }
 
 // market-trading.service.ts (160 lines)
 class MarketTradingService {
-  async placeTrade() { }
-  async calculatePrice() { }
+  async placeTrade() {}
+  async calculatePrice() {}
 }
 
 // market-resolution.service.ts (120 lines)
 class MarketResolutionService {
-  async resolveMarket() { }
-  async distributePayouts() { }
+  async resolveMarket() {}
+  async distributePayouts() {}
 }
 
 // market-analytics.service.ts (120 lines)
 class MarketAnalyticsService {
-  async getMarketStats() { }
-  async getVolumeHistory() { }
+  async getMarketStats() {}
+  async getVolumeHistory() {}
 }
 ```
 
@@ -528,12 +541,12 @@ import { Market, Trade, User } from '@/types';
 ```typescript
 /**
  * Market Trading Service
- * 
+ *
  * Handles all market trading operations including:
  * - Trade placement and validation
  * - Price calculations using LMSR
  * - Position management
- * 
+ *
  * @module services/market-trading
  */
 
@@ -547,22 +560,22 @@ export class MarketTradingService {
 ```typescript
 /**
  * LMSR (Logarithmic Market Scoring Rule) Implementation
- * 
+ *
  * This module implements the LMSR automated market maker algorithm
  * for prediction markets. LMSR ensures the market maker never runs
  * out of liquidity while providing continuous pricing.
- * 
+ *
  * Key concepts:
  * - Liquidity parameter (b): Controls market depth and price sensitivity
  * - Cost function: C(q) = b * ln(sum(exp(q_i / b)))
  * - Price: Marginal cost of increasing outcome shares
- * 
+ *
  * References:
- * - Hanson (2002): "Logarithmic Market Scoring Rules for Modular 
+ * - Hanson (2002): "Logarithmic Market Scoring Rules for Modular
  *   Combinatorial Information Aggregation"
- * - Chen & Pennock (2007): "A Utility Framework for Bounded-Loss 
+ * - Chen & Pennock (2007): "A Utility Framework for Bounded-Loss
  *   Market Makers"
- * 
+ *
  * @module utils/lmsr
  */
 ```
@@ -590,26 +603,26 @@ import { createTestDatabase } from '@/tests/helpers/test-database';
 describe('MarketService', () => {
   let service: MarketService;
   let testDb: TestDatabase;
-  
+
   beforeAll(async () => {
     testDb = await createTestDatabase();
     service = new MarketService(testDb.prisma);
   });
-  
+
   afterAll(async () => {
     await testDb.cleanup();
   });
-  
+
   describe('createMarket', () => {
     test('should create market with valid data', async () => {
       // Test implementation
     });
-    
+
     test('should throw error for invalid data', async () => {
       // Test implementation
     });
   });
-  
+
   describe('resolveMarket', () => {
     // More tests
   });
@@ -621,6 +634,7 @@ describe('MarketService', () => {
 ## Summary: Quick Reference
 
 ### File Names
+
 - **Services:** `market.service.ts`
 - **Repositories:** `market.repository.ts`
 - **Controllers:** `market.controller.ts`
@@ -630,19 +644,24 @@ describe('MarketService', () => {
 - **Errors:** `business-logic.error.ts`
 
 ### Class Names
+
 - **PascalCase:** `MarketService`, `TradeRepository`, `ValidationError`
 
 ### Function Names
+
 - **camelCase:** `calculatePrice`, `validateAmount`, `getUserBalance`
 
 ### Variable Names
+
 - **camelCase:** `marketPrice`, `totalVolume`, `userBalance`
 - **Booleans:** `isResolved`, `hasBalance`, `canTrade`
 
 ### Constants
+
 - **SCREAMING_SNAKE_CASE:** `MAX_TRADE_AMOUNT`, `MIN_OUTCOMES`
 
 ### File Size
+
 - **Soft limit:** 300 lines
 - **Hard limit:** 500 lines
 - **Split when exceeded**

@@ -29,33 +29,31 @@ const totalPrice = isBefore10AM ? quantity * unitPrice * 0.9 : quantity * unitPr
 ### ✅ ALWAYS Comment:
 
 #### 1. Complex Algorithms
+
 Explain the approach and why it was chosen.
 
 ```typescript
 /**
  * LMSR (Logarithmic Market Scoring Rule) price calculation
- * 
+ *
  * Uses exponential cost function to ensure market maker never runs out
- * of liquidity. The liquidity parameter b controls market depth and 
+ * of liquidity. The liquidity parameter b controls market depth and
  * price sensitivity. Higher b means more liquidity but less price movement.
- * 
+ *
  * Formula: P(outcome) = exp(q_i/b) / sum(exp(q_j/b))
- * 
- * Reference: Hanson (2002) "Logarithmic Market Scoring Rules for 
+ *
+ * Reference: Hanson (2002) "Logarithmic Market Scoring Rules for
  * Modular Combinatorial Information Aggregation"
  */
-function calculateLMSRPrice(
-  shares: number[], 
-  outcome: number, 
-  liquidityParameter: number
-): number {
-  const expShares = shares.map(s => Math.exp(s / liquidityParameter));
+function calculateLMSRPrice(shares: number[], outcome: number, liquidityParameter: number): number {
+  const expShares = shares.map((s) => Math.exp(s / liquidityParameter));
   const sumExp = expShares.reduce((sum, e) => sum + e, 0);
   return expShares[outcome] / sumExp;
 }
 ```
 
 #### 2. Non-Obvious Business Rules
+
 Explain requirements that aren't apparent from code.
 
 ```typescript
@@ -66,44 +64,45 @@ async function canPlaceTrade(user: User, market: Market): Promise<boolean> {
   if (market.liquidity > 1000 && !user.verified) {
     return false;
   }
-  
+
   // Market creator cannot trade in their own market for 24 hours
   // to prevent insider trading. SEC requirement.
   if (market.creatorId === user.id) {
-    const hoursSinceCreation = 
-      (Date.now() - market.createdAt.getTime()) / (1000 * 60 * 60);
+    const hoursSinceCreation = (Date.now() - market.createdAt.getTime()) / (1000 * 60 * 60);
     if (hoursSinceCreation < 24) {
       return false;
     }
   }
-  
+
   return true;
 }
 ```
 
 #### 3. Race Condition Prevention Strategies
+
 Explain why operations are structured to prevent race conditions.
 
 ```typescript
 async function resolveMarket(id: string, outcome: number): Promise<void> {
   // CRITICAL: All validation must happen inside transaction to prevent
-  // TOCTOU (Time-of-Check-Time-of-Use) race condition. If we check 
-  // market.resolved outside the transaction, another request could 
-  // resolve it between our check and our update, leading to double 
+  // TOCTOU (Time-of-Check-Time-of-Use) race condition. If we check
+  // market.resolved outside the transaction, another request could
+  // resolve it between our check and our update, leading to double
   // resolution and incorrect payouts.
   await prisma.$transaction(async (tx) => {
     const market = await tx.market.findUnique({ where: { id } });
-    
+
     if (market.resolved) {
       throw new MarketAlreadyResolvedError(id);
     }
-    
+
     // Resolution logic...
   });
 }
 ```
 
 #### 4. Performance Optimizations
+
 Explain why code is optimized in a specific way.
 
 ```typescript
@@ -113,12 +112,13 @@ async function getMarketDetails(ids: string[]): Promise<Market[]> {
   // Profiled on 2024-01-20, significant improvement for market list page.
   return prisma.market.findMany({
     where: { id: { in: ids } },
-    include: { outcomes: true, creator: true }
+    include: { outcomes: true, creator: true },
   });
 }
 ```
 
 #### 5. Workarounds for External Limitations
+
 Explain why code works around a library or system limitation.
 
 ```typescript
@@ -129,14 +129,15 @@ async function createMarket(data: MarketData): Promise<Market> {
   const outcomes = data.outcomes.map((name, index) => ({
     name,
     index, // Explicitly set index instead of relying on auto-increment
-    shares: new Decimal(0)
+    shares: new Decimal(0),
   }));
-  
+
   // ...
 }
 ```
 
 #### 6. Mathematical Formulas and Constants
+
 Provide references and explain the math.
 
 ```typescript
@@ -148,22 +149,19 @@ Provide references and explain the math.
 //   p = probability of winning
 //   q = probability of losing (1 - p)
 // Reference: Kelly (1956) "A New Interpretation of Information Rate"
-function calculateKellyBetSize(
-  bankroll: number,
-  odds: number,
-  winProbability: number
-): number {
+function calculateKellyBetSize(bankroll: number, odds: number, winProbability: number): number {
   const b = odds - 1;
   const p = winProbability;
   const q = 1 - p;
   const f = (b * p - q) / b;
-  
+
   // Kelly suggests betting this fraction of bankroll
   return Math.max(0, f * bankroll);
 }
 ```
 
 #### 7. Security Considerations
+
 Explain security decisions and requirements.
 
 ```typescript
@@ -173,11 +171,11 @@ async function processPayment(userId: string, amount: number): Promise<void> {
   // payment requests simultaneously to exploit stale balance checks.
   await prisma.$transaction(async (tx) => {
     const user = await tx.user.findUnique({ where: { id: userId } });
-    
+
     if (user.balance < amount) {
       throw new InsufficientBalanceError(userId, user.balance, amount);
     }
-    
+
     // Process payment...
   });
 }
@@ -250,11 +248,11 @@ function validateTradeAmount(amount: number): void {
 ```typescript
 // âŒ BAD - Comment explains confusing code
 // Get balance by finding user and accessing their balance property or 0 if not found
-const b = users.find(u => u.id === uid)?.b || 0;
+const b = users.find((u) => u.id === uid)?.b || 0;
 
 // âœ… GOOD - Clear code needs no comment
 function getUserBalance(userId: string): number {
-  const user = users.find(u => u.id === userId);
+  const user = users.find((u) => u.id === userId);
   return user?.balance ?? 0;
 }
 
@@ -281,6 +279,7 @@ if (user.role === 'ADMIN') {
 ## JSDoc for Public APIs
 
 ### Use JSDoc for:
+
 - Public API methods
 - Complex utility functions
 - Library exports
@@ -288,26 +287,26 @@ if (user.role === 'ADMIN') {
 
 ### JSDoc Format
 
-```typescript
+````typescript
 /**
  * Calculate LMSR price for specified outcome
- * 
+ *
  * Uses the Logarithmic Market Scoring Rule to calculate the current
  * price (probability) of a specific outcome based on share distribution.
- * 
+ *
  * @param shares - Current share distribution across all outcomes (must be non-empty)
  * @param outcome - Index of outcome to price (must be valid array index)
  * @param liquidityParameter - Market depth parameter b (must be positive)
  * @returns Price between 0 and 1 representing outcome probability
  * @throws {ValidationError} If inputs are invalid or array is empty
  * @throws {NumericalError} If calculation encounters overflow
- * 
+ *
  * @example
  * ```typescript
  * const price = calculateLMSRPrice([100, 50], 0, 250);
  * // Returns ~0.67 (first outcome more likely)
  * ```
- * 
+ *
  * @see {@link https://en.wikipedia.org/wiki/Logarithmic_Market_Scoring_Rule}
  */
 export function calculateLMSRPrice(
@@ -317,16 +316,16 @@ export function calculateLMSRPrice(
 ): number {
   // Implementation...
 }
-```
+````
 
 ### JSDoc Tags Reference
 
 ```typescript
 /**
  * Brief description of function
- * 
+ *
  * Detailed explanation if needed
- * 
+ *
  * @param paramName - Description of parameter
  * @returns Description of return value
  * @throws {ErrorType} Description of when error is thrown
@@ -370,12 +369,14 @@ export function calculateLMSRPrice(
 ### When to Use TODOs
 
 **Use for:**
+
 - Known technical debt
 - Planned improvements
 - Missing features
 - Performance optimizations
 
 **Don't use for:**
+
 - Bugs (create issues instead)
 - Critical problems (fix immediately)
 - Vague intentions (be specific)
@@ -385,6 +386,7 @@ export function calculateLMSRPrice(
 ## FIXME and HACK Comments
 
 ### FIXME
+
 For code that works but needs improvement.
 
 ```typescript
@@ -401,6 +403,7 @@ function validateOutcomes(outcomes: string[]): void {
 ```
 
 ### HACK
+
 For temporary solutions that should be replaced.
 
 ```typescript
@@ -422,16 +425,16 @@ const marketsWithCreators = await prisma.$queryRaw`
 ```typescript
 /**
  * Market Trading Service
- * 
+ *
  * Handles all market trading operations including trade placement,
  * price calculations, and position management.
- * 
+ *
  * Key responsibilities:
  * - Validate trade requests
  * - Calculate prices using LMSR
  * - Update user positions atomically
  * - Enforce trading limits and rules
- * 
+ *
  * @module services/market-trading
  */
 ```
@@ -441,10 +444,10 @@ const marketsWithCreators = await prisma.$queryRaw`
 ```typescript
 /**
  * Maximum trade amount in USD
- * 
+ *
  * Set to prevent market manipulation and limit platform risk.
  * Can be adjusted based on market conditions and liquidity.
- * 
+ *
  * Last updated: 2024-01-15
  * Approved by: Risk Management Team
  */
@@ -452,7 +455,7 @@ export const MAX_TRADE_AMOUNT = 10000;
 
 /**
  * Minimum number of outcomes required for a market
- * 
+ *
  * Binary markets (2 outcomes) are simplest but we support multi-outcome.
  * No maximum limit - let market creators decide complexity.
  */
@@ -470,16 +473,14 @@ Use sparingly to clarify non-obvious code.
 ```typescript
 async function calculatePayouts(market: Market): Promise<Payout[]> {
   const positions = await getPositions(market.id);
-  
+
   // Filter to winning positions only - losers get $0
-  const winningPositions = positions.filter(
-    p => p.outcomeId === market.winningOutcome
-  );
-  
-  return winningPositions.map(position => ({
+  const winningPositions = positions.filter((p) => p.outcomeId === market.winningOutcome);
+
+  return winningPositions.map((position) => ({
     userId: position.userId,
     // Each winning share pays out $1
-    amount: position.shares
+    amount: position.shares,
   }));
 }
 ```
@@ -495,10 +496,10 @@ async function calculatePayouts(market: Market): Promise<Payout[]> {
 function calculatePrice(shares: number[]): number {
   // const oldImplementation = shares[0] / shares.reduce((s, sh) => s + sh, 0);
   // return oldImplementation;
-  
+
   // const experimentalApproach = Math.log(shares[0]) / Math.log(shares.length);
   // return experimentalApproach;
-  
+
   return newImplementation(shares);
 }
 
@@ -557,21 +558,21 @@ export interface Market {
 ```typescript
 /**
  * Complex market resolution algorithm
- * 
+ *
  * This function resolves a prediction market and distributes payouts
  * to winning positions. The process must be atomic to prevent:
- * 
+ *
  * 1. Double resolution - Market gets resolved twice with different outcomes
  * 2. Partial payouts - Some users get paid, others don't (database failure)
  * 3. Balance inconsistencies - User balances don't match payout amounts
- * 
+ *
  * To ensure atomicity:
  * - All operations run in a single database transaction
  * - Fresh data is fetched within transaction scope
  * - Any error rolls back all changes
- * 
+ *
  * The payout formula is simple: Each winning share = $1
- * 
+ *
  * Example: User holds 10 shares of winning outcome
  *          → Receives $10 payout
  *          → Their balance increases by $10
@@ -606,6 +607,7 @@ Before adding a comment, ask:
 ## Examples by Category
 
 ### Algorithm Explanation ✅
+
 ```typescript
 // Use binary search for O(log n) lookup instead of linear O(n)
 // because market list can contain 10,000+ markets
@@ -613,6 +615,7 @@ const marketIndex = binarySearch(markets, targetId);
 ```
 
 ### Business Rule ✅
+
 ```typescript
 // Markets auto-resolve after 30 days of inactivity per platform policy
 // to prevent indefinitely open markets tying up user funds
@@ -622,12 +625,14 @@ if (daysSinceLastTrade > 30) {
 ```
 
 ### Obvious Statement ❌
+
 ```typescript
 // Add 1 to the counter
 counter += 1;
 ```
 
 ### Code Explanation ❌
+
 ```typescript
 // Loop through all users
 for (const user of users) {

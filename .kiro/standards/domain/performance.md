@@ -21,26 +21,30 @@ Performance optimization is important, but premature optimization wastes time an
 #### 1. N+1 Query Problems
 
 **❌ BAD - N+1 Queries**
+
 ```typescript
 async function getMarketsWithCreators(): Promise<MarketWithCreator[]> {
   const markets = await prisma.market.findMany();
-  
+
   // Creates N+1 queries: 1 for markets, then 1 per market for creator
-  return Promise.all(markets.map(async (market) => ({
-    ...market,
-    creator: await prisma.user.findUnique({ 
-      where: { id: market.creatorId } 
-    })
-  })));
+  return Promise.all(
+    markets.map(async (market) => ({
+      ...market,
+      creator: await prisma.user.findUnique({
+        where: { id: market.creatorId },
+      }),
+    }))
+  );
 }
 ```
 
 **âœ… GOOD - Single Query with Include**
+
 ```typescript
 async function getMarketsWithCreators(): Promise<MarketWithCreator[]> {
   // Single query with join
   return prisma.market.findMany({
-    include: { creator: true }
+    include: { creator: true },
   });
 }
 ```
@@ -48,45 +52,46 @@ async function getMarketsWithCreators(): Promise<MarketWithCreator[]> {
 #### 2. Database Queries in Loops
 
 **❌ BAD - Query Per Iteration**
+
 ```typescript
 async function getUserBalances(userIds: string[]): Promise<number[]> {
   const balances = [];
-  
+
   // One query per user - very slow for large arrays
   for (const userId of userIds) {
-    const user = await prisma.user.findUnique({ 
+    const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { balance: true }
+      select: { balance: true },
     });
     balances.push(user?.balance ?? 0);
   }
-  
+
   return balances;
 }
 ```
 
 **âœ… GOOD - Batch Query**
+
 ```typescript
 async function getUserBalances(userIds: string[]): Promise<number[]> {
   // Single batch query
   const users = await prisma.user.findMany({
     where: { id: { in: userIds } },
-    select: { id: true, balance: true }
+    select: { id: true, balance: true },
   });
-  
+
   // Create lookup map for O(1) access
-  const balanceMap = new Map(
-    users.map(u => [u.id, u.balance])
-  );
-  
+  const balanceMap = new Map(users.map((u) => [u.id, u.balance]));
+
   // Return in original order
-  return userIds.map(id => balanceMap.get(id) ?? 0);
+  return userIds.map((id) => balanceMap.get(id) ?? 0);
 }
 ```
 
 #### 3. Missing Database Indexes
 
 **Always add indexes for:**
+
 - Foreign keys
 - Frequently filtered columns (WHERE clauses)
 - Frequently sorted columns (ORDER BY)
@@ -107,32 +112,35 @@ CREATE INDEX idx_markets_status_created ON markets(status, created_at);
 #### 4. Loading Unnecessary Data
 
 **❌ BAD - Load Everything**
+
 ```typescript
 async function getMarketTitles(): Promise<string[]> {
   // Loads all columns when we only need title
   const markets = await prisma.market.findMany();
-  return markets.map(m => m.title);
+  return markets.map((m) => m.title);
 }
 ```
 
 **âœ… GOOD - Select Only What You Need**
+
 ```typescript
 async function getMarketTitles(): Promise<string[]> {
   // Only loads title column
   const markets = await prisma.market.findMany({
-    select: { title: true }
+    select: { title: true },
   });
-  return markets.map(m => m.title);
+  return markets.map((m) => m.title);
 }
 ```
 
 #### 5. Obvious Algorithmic Inefficiencies
 
 **❌ BAD - O(n²) When O(n) Possible**
+
 ```typescript
 function findDuplicates(items: string[]): string[] {
   const duplicates = [];
-  
+
   // O(n²) - nested loops
   for (let i = 0; i < items.length; i++) {
     for (let j = i + 1; j < items.length; j++) {
@@ -141,17 +149,18 @@ function findDuplicates(items: string[]): string[] {
       }
     }
   }
-  
+
   return duplicates;
 }
 ```
 
 **âœ… GOOD - O(n) Using Set**
+
 ```typescript
 function findDuplicates(items: string[]): string[] {
   const seen = new Set<string>();
   const duplicates = new Set<string>();
-  
+
   // O(n) - single pass
   for (const item of items) {
     if (seen.has(item)) {
@@ -159,7 +168,7 @@ function findDuplicates(items: string[]): string[] {
     }
     seen.add(item);
   }
-  
+
   return Array.from(duplicates);
 }
 ```
@@ -178,6 +187,7 @@ function findDuplicates(items: string[]): string[] {
 #### How to Profile
 
 **Node.js Built-in Profiling:**
+
 ```typescript
 // Simple timing
 const start = performance.now();
@@ -195,19 +205,23 @@ if (process.env.NODE_ENV === 'development') {
 ```
 
 **Load Testing:**
+
 ```typescript
 // Use tools like autocannon, k6, or artillery
 import autocannon from 'autocannon';
 
-autocannon({
-  url: 'http://localhost:3000/api/markets',
-  connections: 100,
-  duration: 10,
-  pipelining: 1
-}, (err, result) => {
-  console.log('Requests/sec:', result.requests.mean);
-  console.log('Latency p99:', result.latency.p99);
-});
+autocannon(
+  {
+    url: 'http://localhost:3000/api/markets',
+    connections: 100,
+    duration: 10,
+    pipelining: 1,
+  },
+  (err, result) => {
+    console.log('Requests/sec:', result.requests.mean);
+    console.log('Latency p99:', result.latency.p99);
+  }
+);
 ```
 
 ---
@@ -221,14 +235,14 @@ autocannon({
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD'
+    currency: 'USD',
   }).format(amount);
 }
 
 // âŒ UNNECESSARY - Micro-optimization adds complexity
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
-  currency: 'USD'
+  currency: 'USD',
 });
 
 function formatCurrency(amount: number): string {
@@ -244,8 +258,8 @@ function formatCurrency(amount: number): string {
 function loadConfiguration(): Config {
   const files = readdirSync('./config');
   return files
-    .filter(f => f.endsWith('.json'))
-    .map(f => JSON.parse(readFileSync(`./config/${f}`, 'utf-8')))
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => JSON.parse(readFileSync(`./config/${f}`, 'utf-8')))
     .reduce((config, file) => ({ ...config, ...file }), {});
 }
 
@@ -258,9 +272,9 @@ function loadConfiguration(): Config {
 // âœ… CLEAR - Easy to understand
 function calculateMarketStats(trades: Trade[]): MarketStats {
   const totalVolume = trades.reduce((sum, t) => sum + t.amount, 0);
-  const uniqueTraders = new Set(trades.map(t => t.userId)).size;
+  const uniqueTraders = new Set(trades.map((t) => t.userId)).size;
   const avgTradeSize = totalVolume / trades.length;
-  
+
   return { totalVolume, uniqueTraders, avgTradeSize };
 }
 
@@ -268,17 +282,17 @@ function calculateMarketStats(trades: Trade[]): MarketStats {
 function calculateMarketStats(trades: Trade[]): MarketStats {
   let totalVolume = 0;
   const traders = new Set<string>();
-  
+
   for (let i = 0, len = trades.length; i < len; i++) {
     const trade = trades[i];
     totalVolume += trade.amount;
     traders.add(trade.userId);
   }
-  
+
   return {
     totalVolume,
     uniqueTraders: traders.size,
-    avgTradeSize: totalVolume / trades.length
+    avgTradeSize: totalVolume / trades.length,
   };
 }
 // Only do this if profiling proves the first version is too slow
@@ -296,14 +310,14 @@ function calculateMarketStats(trades: Trade[]): MarketStats {
 describe('Market Query Performance', () => {
   test('should fetch 1000 markets with creators in <500ms', async () => {
     const start = performance.now();
-    
+
     const markets = await prisma.market.findMany({
       take: 1000,
-      include: { creator: true }
+      include: { creator: true },
     });
-    
+
     const duration = performance.now() - start;
-    
+
     expect(duration).toBeLessThan(500);
     expect(markets).toHaveLength(1000);
   });
@@ -319,20 +333,18 @@ describe('Concurrent Trade Performance', () => {
       userId: `user-${i}`,
       marketId: testMarketId,
       amount: 10,
-      outcome: 0
+      outcome: 0,
     }));
-    
+
     const start = performance.now();
-    
-    const results = await Promise.allSettled(
-      trades.map(t => tradeService.placeTrade(t))
-    );
-    
+
+    const results = await Promise.allSettled(trades.map((t) => tradeService.placeTrade(t)));
+
     const duration = performance.now() - start;
-    
+
     expect(duration).toBeLessThan(5000);
-    
-    const successes = results.filter(r => r.status === 'fulfilled');
+
+    const successes = results.filter((r) => r.status === 'fulfilled');
     expect(successes.length).toBeGreaterThan(90); // >90% success rate
   });
 });
@@ -343,18 +355,14 @@ describe('Concurrent Trade Performance', () => {
 ```typescript
 describe('Large Dataset Performance', () => {
   test('should calculate prices for 1000 outcomes in <1s', async () => {
-    const shares = Array.from({ length: 1000 }, () => 
-      Math.random() * 100
-    );
-    
+    const shares = Array.from({ length: 1000 }, () => Math.random() * 100);
+
     const start = performance.now();
-    
-    const prices = shares.map((_, i) => 
-      calculateLMSRPrice(shares, i, 250)
-    );
-    
+
+    const prices = shares.map((_, i) => calculateLMSRPrice(shares, i, 250));
+
     const duration = performance.now() - start;
-    
+
     expect(duration).toBeLessThan(1000);
     expect(prices).toHaveLength(1000);
   });
@@ -368,11 +376,13 @@ describe('Large Dataset Performance', () => {
 ### 1. Caching
 
 **When to cache:**
+
 - Data that's expensive to compute
 - Data that changes infrequently
 - Data that's accessed frequently
 
 **When NOT to cache:**
+
 - Data that changes frequently (user balances, market prices)
 - Data that's cheap to compute
 - Before measuring it's actually a bottleneck
@@ -383,18 +393,18 @@ describe('Large Dataset Performance', () => {
 // âœ… GOOD - Cache expensive, static data
 class MarketService {
   private marketConfigCache = new Map<string, MarketConfig>();
-  
+
   async getMarketConfig(type: string): Promise<MarketConfig> {
     // Check cache first
     if (this.marketConfigCache.has(type)) {
       return this.marketConfigCache.get(type)!;
     }
-    
+
     // Fetch and cache
     const config = await prisma.marketConfig.findUnique({
-      where: { type }
+      where: { type },
     });
-    
+
     this.marketConfigCache.set(type, config);
     return config;
   }
@@ -412,22 +422,22 @@ async function getMarkets(
   pageSize: number = 50
 ): Promise<PaginatedResult<Market>> {
   const skip = (page - 1) * pageSize;
-  
+
   const [markets, total] = await Promise.all([
     prisma.market.findMany({
       skip,
       take: pageSize,
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     }),
-    prisma.market.count()
+    prisma.market.count(),
   ]);
-  
+
   return {
     data: markets,
     page,
     pageSize,
     total,
-    totalPages: Math.ceil(total / pageSize)
+    totalPages: Math.ceil(total / pageSize),
   };
 }
 ```
@@ -439,12 +449,12 @@ async function getMarkets(
 ```typescript
 class Market {
   private _outcomes?: Outcome[];
-  
+
   // âœ… Lazy load outcomes only when accessed
   async getOutcomes(): Promise<Outcome[]> {
     if (!this._outcomes) {
       this._outcomes = await prisma.outcome.findMany({
-        where: { marketId: this.id }
+        where: { marketId: this.id },
       });
     }
     return this._outcomes;
@@ -462,7 +472,7 @@ async function updateUserBalances(updates: BalanceUpdate[]): Promise<void> {
   for (const update of updates) {
     await prisma.user.update({
       where: { id: update.userId },
-      data: { balance: update.newBalance }
+      data: { balance: update.newBalance },
     });
   }
 }
@@ -470,10 +480,10 @@ async function updateUserBalances(updates: BalanceUpdate[]): Promise<void> {
 // âœ… GOOD - Batch update
 async function updateUserBalances(updates: BalanceUpdate[]): Promise<void> {
   await prisma.$transaction(
-    updates.map(update =>
+    updates.map((update) =>
       prisma.user.update({
         where: { id: update.userId },
-        data: { balance: update.newBalance }
+        data: { balance: update.newBalance },
       })
     )
   );
@@ -487,6 +497,7 @@ async function updateUserBalances(updates: BalanceUpdate[]): Promise<void> {
 ### Required Metrics
 
 **Track these metrics:**
+
 - API endpoint response times (p50, p95, p99)
 - Database query durations
 - Cache hit rates
@@ -499,22 +510,22 @@ async function updateUserBalances(updates: BalanceUpdate[]): Promise<void> {
 // Middleware for response time tracking
 app.use((req, res, next) => {
   const start = performance.now();
-  
+
   res.on('finish', () => {
     const duration = performance.now() - start;
-    
+
     logger.info('Request completed', {
       method: req.method,
       path: req.path,
       statusCode: res.statusCode,
       duration: duration.toFixed(2),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-    
+
     // Send to monitoring service
     metrics.recordResponseTime(req.path, duration);
   });
-  
+
   next();
 });
 ```
@@ -526,17 +537,20 @@ app.use((req, res, next) => {
 ### Set Performance Targets
 
 **API Endpoints:**
+
 - List operations: <200ms (p95)
 - Detail operations: <100ms (p95)
 - Write operations: <500ms (p95)
 - Complex calculations: <1s (p95)
 
 **Database Queries:**
+
 - Simple queries: <50ms
 - Joins with indexes: <100ms
 - Aggregations: <200ms
 
 **Page Load:**
+
 - Time to Interactive: <3s
 - First Contentful Paint: <1.5s
 
@@ -549,13 +563,13 @@ if (duration > PERFORMANCE_BUDGET[endpoint]) {
     endpoint,
     duration,
     budget: PERFORMANCE_BUDGET[endpoint],
-    overage: duration - PERFORMANCE_BUDGET[endpoint]
+    overage: duration - PERFORMANCE_BUDGET[endpoint],
   });
-  
+
   // Send alert to monitoring
   alerting.send({
     severity: 'warning',
-    message: `${endpoint} exceeded performance budget`
+    message: `${endpoint} exceeded performance budget`,
   });
 }
 ```

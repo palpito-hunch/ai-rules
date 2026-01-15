@@ -1,14 +1,14 @@
 # .kiro/hooks/performance-check.yml
-trigger: "on_build"
+trigger: 'on_build'
 
 actions:
-  - name: "Bundle size check"
-    command: "npm run build"
+  - name: 'Bundle size check'
+    command: 'npm run build'
     thresholds:
-      max_bundle_size: "500kb"
-      
-  - name: "Lighthouse CI"
-    command: "lhci autorun"
+      max_bundle_size: '500kb'
+
+  - name: 'Lighthouse CI'
+    command: 'lhci autorun'
     thresholds:
       performance: 90
       accessibility: 90

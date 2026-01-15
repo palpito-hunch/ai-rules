@@ -1,10 +1,10 @@
 # .kiro/hooks/security-scan.yml
-trigger: "pre_commit"
+trigger: 'pre_commit'
 
 actions:
-  - name: "Check for secrets"
-    command: "git secrets --scan"
-    
-  - name: "Dependency audit"
-    command: "npm audit"
-    severity_threshold: "moderate"
+  - name: 'Check for secrets'
+    command: 'git secrets --scan'
+
+  - name: 'Dependency audit'
+    command: 'npm audit'
+    severity_threshold: 'moderate'

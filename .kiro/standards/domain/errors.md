@@ -24,7 +24,7 @@ Error messages must be actionable, informative, and help developers and users un
 ```typescript
 export class BusinessLogicError extends Error {
   constructor(
-    message: string,              // Human-readable description
+    message: string, // Human-readable description
     public readonly code: string, // Machine-readable error code
     public readonly context?: Record<string, any>, // Additional context
     public readonly httpStatus: number = 400
@@ -43,6 +43,7 @@ export class BusinessLogicError extends Error {
 **Pattern:** `ENTITY_ISSUE_TYPE`
 
 **Examples:**
+
 - `MARKET_NOT_FOUND`
 - `MARKET_ALREADY_RESOLVED`
 - `INSUFFICIENT_BALANCE`
@@ -51,6 +52,7 @@ export class BusinessLogicError extends Error {
 - `TRADE_AMOUNT_OUT_OF_RANGE`
 
 **Not:**
+
 - `ERR_001` (meaningless numbers)
 - `error` (too generic)
 - `marketError` (inconsistent casing)
@@ -71,6 +73,7 @@ throw new Error('Bad request');
 ```
 
 **Problems:**
+
 - No context about what input was invalid
 - No information about what operation failed
 - No clue what wasn't found
@@ -81,6 +84,7 @@ throw new Error('Bad request');
 ### âœ… Good Error Messages (Actionable and Informative)
 
 #### Example 1: Market Not Found
+
 ```typescript
 // âŒ BAD
 throw new Error('Market not found');
@@ -89,16 +93,17 @@ throw new Error('Market not found');
 throw new BusinessLogicError(
   `Market with ID '${marketId}' does not exist`,
   'MARKET_NOT_FOUND',
-  { 
+  {
     marketId,
     requestedBy: userId,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   },
   404
 );
 ```
 
 #### Example 2: Market Already Resolved
+
 ```typescript
 // âŒ BAD
 throw new Error('Cannot trade on this market');
@@ -112,13 +117,14 @@ throw new BusinessLogicError(
     marketTitle: market.title,
     resolvedAt: market.resolvedAt,
     winningOutcome: market.winningOutcome,
-    attemptedBy: userId
+    attemptedBy: userId,
   },
   409
 );
 ```
 
 #### Example 3: Insufficient Balance
+
 ```typescript
 // âŒ BAD
 throw new Error('Not enough money');
@@ -133,13 +139,14 @@ throw new BusinessLogicError(
     requiredAmount: requiredAmount,
     shortfall: shortfall,
     operation: 'place_trade',
-    marketId: marketId
+    marketId: marketId,
   },
   402
 );
 ```
 
 #### Example 4: Invalid Trade Amount
+
 ```typescript
 // âŒ BAD
 throw new Error('Invalid amount');
@@ -153,12 +160,13 @@ throw new ValidationError(
     minimum: MIN_TRADE,
     maximum: MAX_TRADE,
     marketId: marketId,
-    userId: userId
+    userId: userId,
   }
 );
 ```
 
 #### Example 5: Invalid Outcome Index
+
 ```typescript
 // âŒ BAD
 throw new Error('Invalid outcome');
@@ -173,16 +181,17 @@ throw new ValidationError(
     marketTitle: market.title,
     totalOutcomes: market.outcomes.length,
     validRange: [0, market.outcomes.length - 1],
-    availableOutcomes: market.outcomes.map(o => ({ 
-      id: o.id, 
-      name: o.name, 
-      index: o.index 
-    }))
+    availableOutcomes: market.outcomes.map((o) => ({
+      id: o.id,
+      name: o.name,
+      index: o.index,
+    })),
   }
 );
 ```
 
 #### Example 6: Concurrent Modification
+
 ```typescript
 // âŒ BAD
 throw new Error('Conflict');
@@ -197,13 +206,14 @@ throw new BusinessLogicError(
     operation: 'resolve_market',
     attemptedBy: userId,
     retryable: true,
-    suggestion: 'This is a temporary conflict. Please try again.'
+    suggestion: 'This is a temporary conflict. Please try again.',
   },
   409
 );
 ```
 
 #### Example 7: Invalid Market State
+
 ```typescript
 // âŒ BAD
 throw new Error('Market in wrong state');
@@ -218,12 +228,13 @@ throw new BusinessLogicError(
     currentState: market.status,
     requiredState: 'ACTIVE',
     operation: 'resolve',
-    allowedTransitions: ['ACTIVE -> RESOLVED']
+    allowedTransitions: ['ACTIVE -> RESOLVED'],
   }
 );
 ```
 
 #### Example 8: Missing Required Field
+
 ```typescript
 // âŒ BAD
 throw new Error('Missing field');
@@ -236,7 +247,7 @@ throw new ValidationError(
     field: 'outcomes',
     requirement: 'At least 2 outcomes',
     received: data.outcomes,
-    example: ['Yes', 'No']
+    example: ['Yes', 'No'],
   }
 );
 ```
@@ -268,7 +279,7 @@ function validateTradeAmount(amount: number): void {
       { provided: amount, minimum: 0.01 }
     );
   }
-  
+
   if (amount > MAX_TRADE_AMOUNT) {
     throw new ValidationError(
       `Trade amount ${amount} exceeds maximum allowed ${MAX_TRADE_AMOUNT}`,
@@ -276,7 +287,7 @@ function validateTradeAmount(amount: number): void {
       { provided: amount, maximum: MAX_TRADE_AMOUNT }
     );
   }
-  
+
   if (!Number.isFinite(amount)) {
     throw new ValidationError(
       `Trade amount must be a finite number, got ${amount}`,
@@ -298,28 +309,32 @@ function validateOutcomes(outcomes: string[]): void {
       { provided: outcomes, expected: 'array' }
     );
   }
-  
+
   if (outcomes.length < 2) {
     throw new ValidationError(
       `Market must have at least 2 outcomes, got ${outcomes.length}`,
       'INSUFFICIENT_OUTCOMES',
-      { 
-        provided: outcomes.length, 
+      {
+        provided: outcomes.length,
         minimum: 2,
-        receivedOutcomes: outcomes 
+        receivedOutcomes: outcomes,
       }
     );
   }
-  
-  const emptyOutcomes = outcomes.filter(o => !o || o.trim().length === 0);
+
+  const emptyOutcomes = outcomes.filter((o) => !o || o.trim().length === 0);
   if (emptyOutcomes.length > 0) {
     throw new ValidationError(
       `All outcomes must have non-empty names. Found ${emptyOutcomes.length} empty outcomes.`,
       'EMPTY_OUTCOME_NAMES',
-      { 
+      {
         totalOutcomes: outcomes.length,
         emptyCount: emptyOutcomes.length,
-        outcomes: outcomes.map((o, i) => ({ index: i, name: o, isEmpty: !o || o.trim().length === 0 }))
+        outcomes: outcomes.map((o, i) => ({
+          index: i,
+          name: o,
+          isEmpty: !o || o.trim().length === 0,
+        })),
       }
     );
   }
@@ -339,62 +354,62 @@ function translatePrismaError(error: unknown, context: Record<string, any>): Err
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     switch (error.code) {
       case 'P2002': // Unique constraint violation
-        const target = error.meta?.target as string[] || [];
+        const target = (error.meta?.target as string[]) || [];
         return new BusinessLogicError(
           `Duplicate entry: ${target.join(', ')} already exists`,
           'DUPLICATE_ENTRY',
-          { 
+          {
             ...context,
             constraintFields: target,
-            originalError: error.message 
+            originalError: error.message,
           },
           409
         );
-      
+
       case 'P2025': // Record not found
         return new BusinessLogicError(
           `Record not found for operation`,
           'RECORD_NOT_FOUND',
-          { 
+          {
             ...context,
-            originalError: error.message 
+            originalError: error.message,
           },
           404
         );
-      
+
       case 'P2034': // Transaction conflict
         return new BusinessLogicError(
           `Transaction conflict detected. Please retry your operation.`,
           'CONCURRENT_MODIFICATION_DETECTED',
-          { 
+          {
             ...context,
             retryable: true,
-            originalError: error.message 
+            originalError: error.message,
           },
           409
         );
-      
+
       default:
         return new BusinessLogicError(
           `Database operation failed: ${error.message}`,
           'DATABASE_ERROR',
-          { 
+          {
             ...context,
             prismaErrorCode: error.code,
-            originalError: error.message 
+            originalError: error.message,
           },
           500
         );
     }
   }
-  
+
   // Unknown error
   return new BusinessLogicError(
     'An unexpected error occurred',
     'INTERNAL_ERROR',
-    { 
+    {
       ...context,
-      originalError: String(error) 
+      originalError: String(error),
     },
     500
   );
@@ -404,10 +419,10 @@ function translatePrismaError(error: unknown, context: Record<string, any>): Err
 try {
   await prisma.market.create({ data: marketData });
 } catch (error) {
-  throw translatePrismaError(error, { 
+  throw translatePrismaError(error, {
     operation: 'create_market',
     userId: userId,
-    marketData: marketData 
+    marketData: marketData,
   });
 }
 ```
@@ -422,7 +437,7 @@ async function resolveMarket(id: string, outcome: number): Promise<void> {
   try {
     await prisma.$transaction(async (tx) => {
       const market = await tx.market.findUnique({ where: { id } });
-      
+
       if (market.resolved) {
         throw new BusinessLogicError(
           `Cannot resolve market: already resolved by ${market.resolvedBy} at ${market.resolvedAt} with outcome ${market.winningOutcome}`,
@@ -433,11 +448,11 @@ async function resolveMarket(id: string, outcome: number): Promise<void> {
             resolvedBy: market.resolvedBy,
             winningOutcome: market.winningOutcome,
             attemptedOutcome: outcome,
-            suggestion: 'Another user may have resolved this market concurrently'
+            suggestion: 'Another user may have resolved this market concurrently',
           }
         );
       }
-      
+
       // Resolution logic...
     });
   } catch (error) {
@@ -448,7 +463,7 @@ async function resolveMarket(id: string, outcome: number): Promise<void> {
         {
           marketId: id,
           retryable: false,
-          suggestion: 'Check market status before retrying'
+          suggestion: 'Check market status before retrying',
         }
       );
     }
@@ -467,11 +482,11 @@ async function resolveMarket(id: string, outcome: number): Promise<void> {
 interface ErrorResponse {
   success: false;
   error: {
-    message: string;       // Human-readable message
-    code: string;          // Machine-readable error code
+    message: string; // Human-readable message
+    code: string; // Machine-readable error code
     context?: Record<string, any>; // Additional context
-    timestamp: string;     // ISO 8601 timestamp
-    requestId: string;     // Unique request identifier
+    timestamp: string; // ISO 8601 timestamp
+    requestId: string; // Unique request identifier
   };
 }
 
@@ -484,22 +499,22 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
       code: (error as any).code || 'INTERNAL_ERROR',
       context: (error as any).context,
       timestamp: new Date().toISOString(),
-      requestId: req.id || generateRequestId()
-    }
+      requestId: req.id || generateRequestId(),
+    },
   };
-  
+
   const status = (error as any).httpStatus || 500;
-  
+
   // Log internal errors
   if (status >= 500) {
     logger.error('Internal server error', {
       error: error,
       requestId: errorResponse.error.requestId,
       endpoint: req.path,
-      method: req.method
+      method: req.method,
     });
   }
-  
+
   res.status(status).json(errorResponse);
 });
 ```
@@ -520,10 +535,10 @@ logger.error('Market resolution failed', {
   marketState: {
     resolved: market.resolved,
     status: market.status,
-    resolvedAt: market.resolvedAt
+    resolvedAt: market.resolvedAt,
   },
   timestamp: new Date().toISOString(),
-  stackTrace: error.stack
+  stackTrace: error.stack,
 });
 ```
 
@@ -543,11 +558,13 @@ When creating error messages, ensure:
 ### Quick Reference
 
 **Bad Error:**
+
 ```typescript
 throw new Error('Invalid input');
 ```
 
 **Good Error:**
+
 ```typescript
 throw new ValidationError(
   `Field 'amount' must be between ${MIN} and ${MAX}, got ${value}`,
