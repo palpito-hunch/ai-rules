@@ -13,11 +13,11 @@ Good comments explain **why** code exists, not **what** it does. Code should be 
 **Code tells you HOW, comments tell you WHY**
 
 ```typescript
-// âŒ BAD - States what the code does (obvious from code)
+// ❌ BAD - States what the code does (obvious from code)
 // Calculate the total price by multiplying quantity and unit price
 const totalPrice = quantity * unitPrice;
 
-// âœ… GOOD - Explains why we do it this way
+// ✅ GOOD - Explains why we do it this way
 // Apply early-bird discount for orders before 10 AM
 const totalPrice = isBefore10AM ? quantity * unitPrice * 0.9 : quantity * unitPrice;
 ```
@@ -190,7 +190,7 @@ async function processPayment(userId: string, amount: number): Promise<void> {
 #### 1. What the Code Does (Make Code Self-Explanatory Instead)
 
 ```typescript
-// âŒ BAD - Comment states the obvious
+// ❌ BAD - Comment states the obvious
 // Get the user by ID
 const user = await getUserById(userId);
 
@@ -203,7 +203,7 @@ for (const market of markets) {
 // Calculate total
 const total = items.reduce((sum, item) => sum + item.price, 0);
 
-// âœ… GOOD - Code is self-explanatory
+// ✅ GOOD - Code is self-explanatory
 const user = await getUserById(userId);
 
 for (const market of markets) {
@@ -216,14 +216,14 @@ const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
 #### 2. Variable Declarations
 
 ```typescript
-// âŒ BAD - Comment just repeats variable name
+// ❌ BAD - Comment just repeats variable name
 // The user's balance
 const userBalance = user.balance;
 
 // The market ID
 const marketId = market.id;
 
-// âœ… GOOD - Descriptive variable names need no comment
+// ✅ GOOD - Descriptive variable names need no comment
 const userBalance = user.balance;
 const marketId = market.id;
 ```
@@ -231,13 +231,13 @@ const marketId = market.id;
 #### 3. Function Names That Explain Themselves
 
 ```typescript
-// âŒ BAD - Comment duplicates function name
+// ❌ BAD - Comment duplicates function name
 // Validates the trade amount
 function validateTradeAmount(amount: number): void {
   // ...
 }
 
-// âœ… GOOD - Function name is self-documenting
+// ✅ GOOD - Function name is self-documenting
 function validateTradeAmount(amount: number): void {
   // ...
 }
@@ -246,11 +246,11 @@ function validateTradeAmount(amount: number): void {
 #### 4. To Explain Bad Code (Fix the Code Instead)
 
 ```typescript
-// âŒ BAD - Comment explains confusing code
+// ❌ BAD - Comment explains confusing code
 // Get balance by finding user and accessing their balance property or 0 if not found
 const b = users.find((u) => u.id === uid)?.b || 0;
 
-// âœ… GOOD - Clear code needs no comment
+// ✅ GOOD - Clear code needs no comment
 function getUserBalance(userId: string): number {
   const user = users.find((u) => u.id === userId);
   return user?.balance ?? 0;
@@ -262,13 +262,13 @@ const balance = getUserBalance(userId);
 #### 5. Obvious Conditionals
 
 ```typescript
-// âŒ BAD - Obvious from the condition
+// ❌ BAD - Obvious from the condition
 // Check if user is admin
 if (user.role === 'ADMIN') {
   // ...
 }
 
-// âœ… GOOD - Condition is self-explanatory
+// ✅ GOOD - Condition is self-explanatory
 if (user.role === 'ADMIN') {
   // ...
 }
@@ -492,7 +492,7 @@ async function calculatePayouts(market: Market): Promise<Payout[]> {
 ### ❌ NEVER Leave Commented-Out Code
 
 ```typescript
-// âŒ BAD - Delete it, use git history
+// ❌ BAD - Delete it, use git history
 function calculatePrice(shares: number[]): number {
   // const oldImplementation = shares[0] / shares.reduce((s, sh) => s + sh, 0);
   // return oldImplementation;
@@ -503,7 +503,7 @@ function calculatePrice(shares: number[]): number {
   return newImplementation(shares);
 }
 
-// âœ… GOOD - Clean code, use git to view history
+// ✅ GOOD - Clean code, use git to view history
 function calculatePrice(shares: number[]): number {
   return newImplementation(shares);
 }

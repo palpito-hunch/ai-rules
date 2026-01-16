@@ -13,7 +13,7 @@ This document explicitly defines when NOT to apply coding patterns and standards
 #### 1. Read-Only Operations
 
 ```typescript
-// âœ… CORRECT - No transaction needed
+// ✅ CORRECT - No transaction needed
 async function getMarketDetails(id: string): Promise<Market> {
   return prisma.market.findUnique({
     where: { id },
@@ -21,7 +21,7 @@ async function getMarketDetails(id: string): Promise<Market> {
   });
 }
 
-// âŒ UNNECESSARY - Transaction adds no value
+// ❌ UNNECESSARY - Transaction adds no value
 async function getMarketDetails(id: string): Promise<Market> {
   return prisma.$transaction(async (tx) => {
     return tx.market.findUnique({
@@ -35,7 +35,7 @@ async function getMarketDetails(id: string): Promise<Market> {
 #### 2. Single Atomic Database Operations
 
 ```typescript
-// âœ… CORRECT - Single update is already atomic
+// ✅ CORRECT - Single update is already atomic
 async function incrementMarketViews(id: string): Promise<void> {
   await prisma.market.update({
     where: { id },
@@ -43,7 +43,7 @@ async function incrementMarketViews(id: string): Promise<void> {
   });
 }
 
-// âœ… ALSO FINE - Transaction doesn't hurt but adds verbosity
+// ✅ ALSO FINE - Transaction doesn't hurt but adds verbosity
 async function incrementMarketViews(id: string): Promise<void> {
   await prisma.$transaction(async (tx) => {
     await tx.market.update({
@@ -57,7 +57,7 @@ async function incrementMarketViews(id: string): Promise<void> {
 #### 3. Logging and Analytics (Eventual Consistency Acceptable)
 
 ```typescript
-// âœ… CORRECT - Failure shouldn't block main operation
+// ✅ CORRECT - Failure shouldn't block main operation
 async function logMarketView(marketId: string, userId: string): Promise<void> {
   try {
     await prisma.analyticsEvent.create({
@@ -73,7 +73,7 @@ async function logMarketView(marketId: string, userId: string): Promise<void> {
 #### 4. Idempotent Operations That Can Safely Retry
 
 ```typescript
-// âœ… CORRECT - Idempotent upsert, safe to retry
+// ✅ CORRECT - Idempotent upsert, safe to retry
 async function updateUserPreferences(userId: string, prefs: Preferences): Promise<void> {
   await prisma.userPreference.upsert({
     where: { userId },
@@ -96,7 +96,7 @@ async function updateUserPreferences(userId: string, prefs: Preferences): Promis
 #### 1. Code Represents Different Business Concepts (Despite Similarity)
 
 ```typescript
-// âœ… CORRECT - Keep separate even though similar
+// ✅ CORRECT - Keep separate even though similar
 function validateMarketCreation(data: MarketData): void {
   if (!data.title || data.title.length < 5) {
     throw new ValidationError('Market title must be at least 5 characters');
@@ -115,7 +115,7 @@ function validateOutcomeName(name: string): void {
   }
 }
 
-// âŒ WRONG - Over-abstraction obscures different business rules
+// ❌ WRONG - Over-abstraction obscures different business rules
 function validateString(value: string, config: ValidationConfig): void {
   if (!value || value.length < config.minLength) {
     throw new ValidationError(
@@ -131,7 +131,7 @@ function validateString(value: string, config: ValidationConfig): void {
 #### 2. Only 2 Occurrences and Unlikely to Grow
 
 ```typescript
-// âœ… ACCEPTABLE - Only 2 uses, specific contexts
+// ✅ ACCEPTABLE - Only 2 uses, specific contexts
 function calculateBinaryMarketPrice(shares: [number, number]): [number, number] {
   const total = shares[0] + shares[1];
   return [shares[0] / total, shares[1] / total];
@@ -143,7 +143,7 @@ const prices = calculateBinaryMarketPrice([yesShares, noShares]);
 // In file B:
 const prices = calculateBinaryMarketPrice([yesShares, noShares]);
 
-// âŒ PREMATURE - Don't create abstraction for 2 uses
+// ❌ PREMATURE - Don't create abstraction for 2 uses
 function calculateNormalizedDistribution(values: number[]): number[] {
   // Complex generic function for what might stay 2 simple uses
 }
@@ -154,7 +154,7 @@ function calculateNormalizedDistribution(values: number[]): number[] {
 #### 3. Extraction Would Reduce Readability Significantly
 
 ```typescript
-// âœ… CORRECT - Inline is clearer
+// ✅ CORRECT - Inline is clearer
 async function resolveMarket(id: string, outcome: number): Promise<void> {
   await prisma.$transaction(async (tx) => {
     const market = await tx.market.findUnique({ where: { id } });
@@ -168,7 +168,7 @@ async function resolveMarket(id: string, outcome: number): Promise<void> {
   });
 }
 
-// âŒ WRONG - Over-abstraction makes flow harder to follow
+// ❌ WRONG - Over-abstraction makes flow harder to follow
 async function resolveMarket(id: string, outcome: number): Promise<void> {
   await performMarketOperation(
     id,
@@ -186,7 +186,7 @@ async function resolveMarket(id: string, outcome: number): Promise<void> {
 #### 4. Would Require Complex Parameters or Configuration
 
 ```typescript
-// âœ… CORRECT - Specific functions are clearer
+// ✅ CORRECT - Specific functions are clearer
 function calculateBinaryMarketCost(shares: [number, number], b: number): number {
   return b * Math.log(Math.exp(shares[0] / b) + Math.exp(shares[1] / b));
 }
@@ -195,7 +195,7 @@ function calculateMultiOutcomeCost(shares: number[], b: number): number {
   return b * Math.log(shares.reduce((sum, s) => sum + Math.exp(s / b), 0));
 }
 
-// âŒ WRONG - Complex configuration obscures simple operations
+// ❌ WRONG - Complex configuration obscures simple operations
 function calculateMarketCost(
   shares: number[],
   b: number,
@@ -221,7 +221,7 @@ function calculateMarketCost(
 #### 1. Pure Calculation Functions (No Side Effects)
 
 ```typescript
-// âœ… CORRECT - No DI needed
+// ✅ CORRECT - No DI needed
 function calculatePercentage(value: number, total: number): number {
   if (total === 0) throw new Error('Cannot divide by zero');
   return (value / total) * 100;
@@ -231,7 +231,7 @@ function calculateCompoundInterest(principal: number, rate: number, years: numbe
   return principal * Math.pow(1 + rate, years);
 }
 
-// âŒ UNNECESSARY - DI adds no value
+// ❌ UNNECESSARY - DI adds no value
 class PercentageCalculator {
   calculatePercentage(value: number, total: number): number {
     if (total === 0) throw new Error('Cannot divide by zero');
@@ -245,7 +245,7 @@ class PercentageCalculator {
 #### 2. Simple Utility Functions Used in One Place
 
 ```typescript
-// âœ… CORRECT - Simple utility, no abstraction needed
+// ✅ CORRECT - Simple utility, no abstraction needed
 function formatMarketTitle(title: string): string {
   return title.trim().replace(/\s+/g, ' ');
 }
@@ -257,7 +257,7 @@ class MarketService {
   }
 }
 
-// âŒ OVER-ENGINEERED
+// ❌ OVER-ENGINEERED
 interface TitleFormatter {
   format(title: string): string;
 }
@@ -279,14 +279,14 @@ class MarketService {
 #### 3. Configuration Objects and Constants
 
 ```typescript
-// âœ… CORRECT - Direct import is fine
+// ✅ CORRECT - Direct import is fine
 import { DATABASE_CONFIG } from './config';
 
 class DatabaseService {
   private pool = createPool(DATABASE_CONFIG);
 }
 
-// âŒ UNNECESSARY - Over-injection
+// ❌ UNNECESSARY - Over-injection
 class DatabaseService {
   constructor(private config: DatabaseConfig) {
     this.pool = createPool(config);
@@ -300,14 +300,14 @@ class DatabaseService {
 #### 4. Mathematical or Domain Algorithms with Fixed Implementation
 
 ```typescript
-// âœ… CORRECT - Algorithm is the implementation
+// ✅ CORRECT - Algorithm is the implementation
 function calculateLMSRPrice(shares: number[], outcome: number, b: number): number {
   const expShares = shares.map((s) => Math.exp(s / b));
   const sumExp = expShares.reduce((sum, e) => sum + e, 0);
   return expShares[outcome] / sumExp;
 }
 
-// âŒ OVER-ABSTRACTED - Unnecessary interface
+// ❌ OVER-ABSTRACTED - Unnecessary interface
 interface PriceCalculator {
   calculate(shares: number[], outcome: number, b: number): number;
 }
@@ -330,7 +330,7 @@ class LMSRCalculator implements PriceCalculator {
 #### 1. Tightly Coupled Operations That Always Happen Together
 
 ```typescript
-// âœ… CORRECT - Keep together when always used together
+// ✅ CORRECT - Keep together when always used together
 class MarketResolver {
   async resolve(marketId: string, outcome: number): Promise<void> {
     await prisma.$transaction(async (tx) => {
@@ -365,7 +365,7 @@ class MarketResolver {
   }
 }
 
-// âŒ OVER-SPLIT - These operations are inherently coupled
+// ❌ OVER-SPLIT - These operations are inherently coupled
 class MarketValidator {
   validateResolution() {}
 }
@@ -396,12 +396,12 @@ class MarketResolver {
 #### 1. Requirements Are Stable and Unlikely to Change
 
 ```typescript
-// âœ… CORRECT - Simple direct implementation
+// ✅ CORRECT - Simple direct implementation
 function calculateTradeFee(amount: number): number {
   return amount * 0.01; // 1% fee
 }
 
-// âŒ PREMATURE - Abstracting stable requirement
+// ❌ PREMATURE - Abstracting stable requirement
 interface FeeStrategy {
   calculate(amount: number): number;
 }
@@ -422,7 +422,7 @@ class PercentageFeeStrategy implements FeeStrategy {
 #### 1. Only One Implementation Will Ever Exist
 
 ```typescript
-// âœ… CORRECT - No interface needed if only one implementation
+// ✅ CORRECT - No interface needed if only one implementation
 class EmailService {
   async sendEmail(to: string, subject: string, body: string): Promise<void> {
     // Send email via SMTP
@@ -433,7 +433,7 @@ class UserService {
   constructor(private emailService: EmailService) {}
 }
 
-// âŒ UNNECESSARY - Interface with single implementation
+// ❌ UNNECESSARY - Interface with single implementation
 interface IEmailService {
   sendEmail(to: string, subject: string, body: string): Promise<void>;
 }
@@ -709,7 +709,7 @@ function notifyUser(order: Order): void {
 #### 1. Trivial Getters/Setters with No Logic
 
 ```typescript
-// âœ… No test needed
+// ✅ No test needed
 class User {
   constructor(
     public id: string,
@@ -725,7 +725,7 @@ class User {
 #### 2. Code That's Already Covered by Integration Tests
 
 ```typescript
-// âœ… Integration test covers this
+// ✅ Integration test covers this
 test('should create market and outcomes together', async () => {
   const market = await service.createMarket({
     title: 'Test Market',
@@ -735,20 +735,20 @@ test('should create market and outcomes together', async () => {
   expect(market.outcomes).toHaveLength(2);
 });
 
-// âŒ UNNECESSARY - Don't also unit test the outcome creation separately
+// ❌ UNNECESSARY - Don't also unit test the outcome creation separately
 // when integration test already validates the full flow
 ```
 
 #### 3. Third-Party Library Wrappers (Test Your Usage, Not the Library)
 
 ```typescript
-// âœ… Test your usage of the library
+// ✅ Test your usage of the library
 test('should format date correctly', () => {
   const formatted = formatDate(new Date('2024-01-01'));
   expect(formatted).toBe('January 1, 2024');
 });
 
-// âŒ UNNECESSARY - Don't test the library itself
+// ❌ UNNECESSARY - Don't test the library itself
 test('should verify date-fns format function works', () => {
   // Testing the library, not your code
 });
@@ -765,7 +765,7 @@ test('should verify date-fns format function works', () => {
 #### 1. Code That Runs Infrequently and Quickly
 
 ```typescript
-// âœ… FINE - Runs once at startup, takes 10ms
+// ✅ FINE - Runs once at startup, takes 10ms
 function loadConfiguration(): Config {
   const files = readdirSync('./config');
   return files
@@ -774,13 +774,13 @@ function loadConfiguration(): Config {
     .reduce((config, file) => ({ ...config, ...file }), {});
 }
 
-// âŒ PREMATURE - Don't optimize startup code that's already fast
+// ❌ PREMATURE - Don't optimize startup code that's already fast
 ```
 
 #### 2. Code That Would Become Significantly Less Readable
 
 ```typescript
-// âœ… CLEAR - Easy to understand
+// ✅ CLEAR - Easy to understand
 function calculateMarketMetrics(market: Market): Metrics {
   const totalVolume = market.trades.reduce((sum, t) => sum + t.amount, 0);
   const uniqueTraders = new Set(market.trades.map((t) => t.userId)).size;
@@ -789,7 +789,7 @@ function calculateMarketMetrics(market: Market): Metrics {
   return { totalVolume, uniqueTraders, averageTradeSize };
 }
 
-// âŒ PREMATURE - Micro-optimization that hurts readability
+// ❌ PREMATURE - Micro-optimization that hurts readability
 function calculateMarketMetrics(market: Market): Metrics {
   let totalVolume = 0;
   const traders = new Set();
@@ -810,10 +810,10 @@ function calculateMarketMetrics(market: Market): Metrics {
 #### 3. Without Measuring the Performance Impact
 
 ```typescript
-// âŒ PREMATURE - Optimizing without data
+// ❌ PREMATURE - Optimizing without data
 // "I think this might be slow, let me rewrite with a more complex algorithm"
 
-// âœ… CORRECT - Measure first
+// ✅ CORRECT - Measure first
 const start = performance.now();
 const result = processData(largeDataset);
 const duration = performance.now() - start;
@@ -830,7 +830,7 @@ console.log(`Processing took ${duration}ms`);
 #### 1. What the Code Does (Make Code Self-Explanatory Instead)
 
 ```typescript
-// âŒ BAD - Comment states the obvious
+// ❌ BAD - Comment states the obvious
 // Calculate the total price
 const totalPrice = quantity * unitPrice;
 
@@ -840,7 +840,7 @@ for (const market of markets) {
   processMarket(market);
 }
 
-// âœ… GOOD - Code is self-explanatory
+// ✅ GOOD - Code is self-explanatory
 const totalPrice = quantity * unitPrice;
 
 for (const market of markets) {
@@ -851,11 +851,11 @@ for (const market of markets) {
 #### 2. To Explain Bad Code (Fix the Code Instead)
 
 ```typescript
-// âŒ BAD - Comment explains confusing code
+// ❌ BAD - Comment explains confusing code
 // This gets the user's balance by finding the user and then getting their balance field
 const b = users.find((u) => u.id === uid)?.b || 0;
 
-// âœ… GOOD - Clear code needs no comment
+// ✅ GOOD - Clear code needs no comment
 function getUserBalance(userId: string): number {
   const user = users.find((u) => u.id === userId);
   return user?.balance ?? 0;
@@ -865,14 +865,14 @@ function getUserBalance(userId: string): number {
 #### 3. Commented-Out Code (Delete It, Use Git History)
 
 ```typescript
-// âŒ BAD - Commented out code
+// ❌ BAD - Commented out code
 function calculatePrice(shares: number[]): number {
   // const oldImplementation = shares[0] / shares.reduce((s, sh) => s + sh, 0);
   // return oldImplementation;
   return newImplementation(shares);
 }
 
-// âœ… GOOD - Delete commented code
+// ✅ GOOD - Delete commented code
 function calculatePrice(shares: number[]): number {
   return newImplementation(shares);
 }

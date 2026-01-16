@@ -38,7 +38,7 @@ async function getMarketsWithCreators(): Promise<MarketWithCreator[]> {
 }
 ```
 
-**âœ… GOOD - Single Query with Include**
+**✅ GOOD - Single Query with Include**
 
 ```typescript
 async function getMarketsWithCreators(): Promise<MarketWithCreator[]> {
@@ -70,7 +70,7 @@ async function getUserBalances(userIds: string[]): Promise<number[]> {
 }
 ```
 
-**âœ… GOOD - Batch Query**
+**✅ GOOD - Batch Query**
 
 ```typescript
 async function getUserBalances(userIds: string[]): Promise<number[]> {
@@ -98,7 +98,7 @@ async function getUserBalances(userIds: string[]): Promise<number[]> {
 - Frequently joined columns
 
 ```sql
--- âœ… Add indexes for common queries
+-- ✅ Add indexes for common queries
 CREATE INDEX idx_markets_creator_id ON markets(creator_id);
 CREATE INDEX idx_trades_market_id ON trades(market_id);
 CREATE INDEX idx_trades_user_id ON trades(user_id);
@@ -121,7 +121,7 @@ async function getMarketTitles(): Promise<string[]> {
 }
 ```
 
-**âœ… GOOD - Select Only What You Need**
+**✅ GOOD - Select Only What You Need**
 
 ```typescript
 async function getMarketTitles(): Promise<string[]> {
@@ -154,7 +154,7 @@ function findDuplicates(items: string[]): string[] {
 }
 ```
 
-**âœ… GOOD - O(n) Using Set**
+**✅ GOOD - O(n) Using Set**
 
 ```typescript
 function findDuplicates(items: string[]): string[] {
@@ -175,7 +175,7 @@ function findDuplicates(items: string[]): string[] {
 
 ---
 
-### âš ï¸ Profile Before Optimizing
+### ⚠️ Profile Before Optimizing
 
 #### When to Profile First
 
@@ -231,7 +231,7 @@ autocannon(
 #### 1. Operation is Already Fast
 
 ```typescript
-// âœ… FINE - Takes 2ms, don't optimize
+// ✅ FINE - Takes 2ms, don't optimize
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -239,7 +239,7 @@ function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-// âŒ UNNECESSARY - Micro-optimization adds complexity
+// ❌ UNNECESSARY - Micro-optimization adds complexity
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -254,7 +254,7 @@ function formatCurrency(amount: number): string {
 #### 2. Code is Called Infrequently
 
 ```typescript
-// âœ… FINE - Runs once at startup, takes 50ms
+// ✅ FINE - Runs once at startup, takes 50ms
 function loadConfiguration(): Config {
   const files = readdirSync('./config');
   return files
@@ -269,7 +269,7 @@ function loadConfiguration(): Config {
 #### 3. Optimization Significantly Reduces Clarity
 
 ```typescript
-// âœ… CLEAR - Easy to understand
+// ✅ CLEAR - Easy to understand
 function calculateMarketStats(trades: Trade[]): MarketStats {
   const totalVolume = trades.reduce((sum, t) => sum + t.amount, 0);
   const uniqueTraders = new Set(trades.map((t) => t.userId)).size;
@@ -278,7 +278,7 @@ function calculateMarketStats(trades: Trade[]): MarketStats {
   return { totalVolume, uniqueTraders, avgTradeSize };
 }
 
-// âŒ PREMATURE - Micro-optimized but harder to read
+// ❌ PREMATURE - Micro-optimized but harder to read
 function calculateMarketStats(trades: Trade[]): MarketStats {
   let totalVolume = 0;
   const traders = new Set<string>();
@@ -390,7 +390,7 @@ describe('Large Dataset Performance', () => {
 **Example:**
 
 ```typescript
-// âœ… GOOD - Cache expensive, static data
+// ✅ GOOD - Cache expensive, static data
 class MarketService {
   private marketConfigCache = new Map<string, MarketConfig>();
 
@@ -416,7 +416,7 @@ class MarketService {
 **Always paginate large result sets:**
 
 ```typescript
-// âœ… GOOD - Paginated
+// ✅ GOOD - Paginated
 async function getMarkets(
   page: number = 1,
   pageSize: number = 50
@@ -450,7 +450,7 @@ async function getMarkets(
 class Market {
   private _outcomes?: Outcome[];
 
-  // âœ… Lazy load outcomes only when accessed
+  // ✅ Lazy load outcomes only when accessed
   async getOutcomes(): Promise<Outcome[]> {
     if (!this._outcomes) {
       this._outcomes = await prisma.outcome.findMany({
@@ -467,7 +467,7 @@ class Market {
 **Process multiple items together:**
 
 ```typescript
-// âŒ BAD - Update one at a time
+// ❌ BAD - Update one at a time
 async function updateUserBalances(updates: BalanceUpdate[]): Promise<void> {
   for (const update of updates) {
     await prisma.user.update({
@@ -477,7 +477,7 @@ async function updateUserBalances(updates: BalanceUpdate[]): Promise<void> {
   }
 }
 
-// âœ… GOOD - Batch update
+// ✅ GOOD - Batch update
 async function updateUserBalances(updates: BalanceUpdate[]): Promise<void> {
   await prisma.$transaction(
     updates.map((update) =>

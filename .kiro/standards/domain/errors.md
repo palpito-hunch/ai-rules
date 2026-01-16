@@ -62,7 +62,7 @@ export class BusinessLogicError extends Error {
 
 ## Error Message Examples
 
-### âŒ Bad Error Messages (Too Generic)
+### ❌ Bad Error Messages (Too Generic)
 
 ```typescript
 throw new Error('Invalid input');
@@ -81,15 +81,15 @@ throw new Error('Bad request');
 
 ---
 
-### âœ… Good Error Messages (Actionable and Informative)
+### ✅ Good Error Messages (Actionable and Informative)
 
 #### Example 1: Market Not Found
 
 ```typescript
-// âŒ BAD
+// ❌ BAD
 throw new Error('Market not found');
 
-// âœ… GOOD
+// ✅ GOOD
 throw new BusinessLogicError(
   `Market with ID '${marketId}' does not exist`,
   'MARKET_NOT_FOUND',
@@ -105,10 +105,10 @@ throw new BusinessLogicError(
 #### Example 2: Market Already Resolved
 
 ```typescript
-// âŒ BAD
+// ❌ BAD
 throw new Error('Cannot trade on this market');
 
-// âœ… GOOD
+// ✅ GOOD
 throw new BusinessLogicError(
   `Cannot place trade: market '${market.title}' was resolved on ${market.resolvedAt} with outcome ${market.winningOutcome}`,
   'MARKET_ALREADY_RESOLVED',
@@ -126,10 +126,10 @@ throw new BusinessLogicError(
 #### Example 3: Insufficient Balance
 
 ```typescript
-// âŒ BAD
+// ❌ BAD
 throw new Error('Not enough money');
 
-// âœ… GOOD
+// ✅ GOOD
 throw new BusinessLogicError(
   `Insufficient balance: you have $${user.balance.toFixed(2)} but need $${requiredAmount.toFixed(2)} (shortfall: $${shortfall.toFixed(2)})`,
   'INSUFFICIENT_BALANCE',
@@ -148,10 +148,10 @@ throw new BusinessLogicError(
 #### Example 4: Invalid Trade Amount
 
 ```typescript
-// âŒ BAD
+// ❌ BAD
 throw new Error('Invalid amount');
 
-// âœ… GOOD
+// ✅ GOOD
 throw new ValidationError(
   `Trade amount must be between $${MIN_TRADE} and $${MAX_TRADE}, got $${amount}`,
   'TRADE_AMOUNT_OUT_OF_RANGE',
@@ -168,10 +168,10 @@ throw new ValidationError(
 #### Example 5: Invalid Outcome Index
 
 ```typescript
-// âŒ BAD
+// ❌ BAD
 throw new Error('Invalid outcome');
 
-// âœ… GOOD
+// ✅ GOOD
 throw new ValidationError(
   `Invalid outcome index ${outcomeIndex}: market '${market.title}' has ${market.outcomes.length} outcomes (valid indices: 0-${market.outcomes.length - 1})`,
   'INVALID_OUTCOME_INDEX',
@@ -193,10 +193,10 @@ throw new ValidationError(
 #### Example 6: Concurrent Modification
 
 ```typescript
-// âŒ BAD
+// ❌ BAD
 throw new Error('Conflict');
 
-// âœ… GOOD
+// ✅ GOOD
 throw new BusinessLogicError(
   `Concurrent modification detected: market '${market.title}' was modified by another operation. Please retry your request.`,
   'CONCURRENT_MODIFICATION_DETECTED',
@@ -215,10 +215,10 @@ throw new BusinessLogicError(
 #### Example 7: Invalid Market State
 
 ```typescript
-// âŒ BAD
+// ❌ BAD
 throw new Error('Market in wrong state');
 
-// âœ… GOOD
+// ✅ GOOD
 throw new BusinessLogicError(
   `Cannot resolve market: market '${market.title}' is in '${market.status}' state but must be 'ACTIVE' to resolve`,
   'INVALID_MARKET_STATE',
@@ -236,10 +236,10 @@ throw new BusinessLogicError(
 #### Example 8: Missing Required Field
 
 ```typescript
-// âŒ BAD
+// ❌ BAD
 throw new Error('Missing field');
 
-// âœ… GOOD
+// ✅ GOOD
 throw new ValidationError(
   `Required field 'outcomes' is missing or empty. Markets must have at least 2 outcomes.`,
   'MISSING_REQUIRED_FIELD',
@@ -432,7 +432,7 @@ try {
 ## Race Condition Error Messages
 
 ```typescript
-// âœ… GOOD - Specific race condition context
+// ✅ GOOD - Specific race condition context
 async function resolveMarket(id: string, outcome: number): Promise<void> {
   try {
     await prisma.$transaction(async (tx) => {

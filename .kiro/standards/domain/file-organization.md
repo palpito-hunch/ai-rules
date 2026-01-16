@@ -217,12 +217,12 @@ class MarketNotFoundError extends BusinessLogicError {}
 **Format:** PascalCase (prefer without 'I' prefix)
 
 ```typescript
-// âœ… Preferred - No 'I' prefix
+// ✅ Preferred - No 'I' prefix
 interface MarketService {}
 interface TradeRepository {}
 interface PriceCalculator {}
 
-// âŒ Avoid - 'I' prefix
+// ❌ Avoid - 'I' prefix
 interface IMarketService {}
 interface ITradeRepository {}
 ```
@@ -266,13 +266,13 @@ type CreateMarketDto = Omit<Market, 'id' | 'createdAt'>;
 **Format:** camelCase, descriptive verbs
 
 ```typescript
-// âœ… Good - Clear, descriptive
+// ✅ Good - Clear, descriptive
 function calculateMarketPrice(shares: number[], outcome: number): number {}
 function validateTradeAmount(amount: number): void {}
 function getUserBalance(userId: string): Promise<number> {}
 function isMarketResolved(market: Market): boolean {}
 
-// âŒ Bad - Too short, unclear
+// ❌ Bad - Too short, unclear
 function calc(s: number[], o: number): number {}
 function validate(a: number): void {}
 function get(id: string): Promise<number> {}
@@ -284,13 +284,13 @@ function check(m: Market): boolean {}
 **Format:** camelCase, descriptive nouns
 
 ```typescript
-// âœ… Good
+// ✅ Good
 const marketPrice = calculatePrice(shares, outcome);
 const totalVolume = trades.reduce((sum, t) => sum + t.amount, 0);
 const userBalance = await getUserBalance(userId);
 const isResolved = market.resolved;
 
-// âŒ Bad
+// ❌ Bad
 const p = calculatePrice(shares, outcome);
 const vol = trades.reduce((sum, t) => sum + t.amount, 0);
 const bal = await getUserBalance(userId);
@@ -302,20 +302,20 @@ const res = market.resolved;
 **Format:** SCREAMING_SNAKE_CASE for true constants
 
 ```typescript
-// âœ… Good - True constants
+// ✅ Good - True constants
 const MAX_TRADE_AMOUNT = 10000;
 const MIN_MARKET_OUTCOMES = 2;
 const DEFAULT_LIQUIDITY_PARAMETER = 250;
 const API_VERSION = 'v1';
 
-// âœ… Also acceptable - Configuration objects
+// ✅ Also acceptable - Configuration objects
 const DATABASE_CONFIG = {
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT || '5432'),
   database: process.env.DB_NAME,
 };
 
-// âŒ Bad - Not constants
+// ❌ Bad - Not constants
 const max_trade = calculateMax(); // This is calculated, use camelCase
 const MIN_amount = getMinimum(); // This is fetched, use camelCase
 ```
@@ -325,13 +325,13 @@ const MIN_amount = getMinimum(); // This is fetched, use camelCase
 **Format:** Use `is`, `has`, `can`, `should` prefixes
 
 ```typescript
-// âœ… Good - Clear boolean intent
+// ✅ Good - Clear boolean intent
 const isResolved = market.resolved;
 const hasBalance = user.balance > 0;
 const canTrade = !market.resolved && user.verified;
 const shouldNotify = user.preferences.notifications;
 
-// âŒ Bad - Unclear boolean intent
+// ❌ Bad - Unclear boolean intent
 const resolved = market.resolved;
 const balance = user.balance > 0;
 const trade = !market.resolved && user.verified;
@@ -477,12 +477,12 @@ import { MAX_TRADE_AMOUNT, MIN_OUTCOMES } from '@/config/constants';
 **Usage:**
 
 ```typescript
-// âœ… Good - Clean, absolute imports
+// ✅ Good - Clean, absolute imports
 import { MarketService } from '@/services/market.service';
 import { Market } from '@/types/market.types';
 import { calculatePrice } from '@/utils/lmsr.util';
 
-// âŒ Bad - Relative paths are harder to maintain
+// ❌ Bad - Relative paths are harder to maintain
 import { MarketService } from '../../../services/market.service';
 import { Market } from '../../types/market.types';
 import { calculatePrice } from '../utils/lmsr.util';

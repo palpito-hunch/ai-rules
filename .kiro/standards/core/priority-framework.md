@@ -98,7 +98,7 @@ Skip deep validation when:
 **Examples:**
 
 ```typescript
-// âœ… Correct: Safety first, even if more verbose
+// ✅ Correct: Safety first, even if more verbose
 await prisma.$transaction(async (tx) => {
   const market = await tx.market.findUnique({ where: { id } });
   if (market.resolved) throw new MarketResolvedError();
@@ -111,7 +111,7 @@ await prisma.$transaction(async (tx) => {
   await tx.position.create({ ... });
 });
 
-// âŒ Wrong: Never sacrifice safety for brevity
+// ❌ Wrong: Never sacrifice safety for brevity
 const market = await getMarket(id); // TOCTOU vulnerability!
 if (market.resolved) throw new Error();
 await updateMarket(id);
@@ -133,7 +133,7 @@ await updateMarket(id);
 **Examples:**
 
 ```typescript
-// âœ… Correct: Explicit handling
+// ✅ Correct: Explicit handling
 function getMarket(id: string): Market {
   const market = markets.find((m) => m.id === id);
   if (!market) {
@@ -142,7 +142,7 @@ function getMarket(id: string): Market {
   return market;
 }
 
-// âŒ Wrong: Implicit undefined
+// ❌ Wrong: Implicit undefined
 function getMarket(id: string): Market {
   return markets.find((m) => m.id === id)!; // Dangerous!
 }
@@ -170,7 +170,7 @@ function getMarket(id: string): Market {
 **Examples:**
 
 ```typescript
-// âœ… Good: DI for testability and flexibility
+// ✅ Good: DI for testability and flexibility
 class MarketService {
   constructor(
     private repository: MarketRepository,
@@ -178,7 +178,7 @@ class MarketService {
   ) {}
 }
 
-// âš ï¸ Acceptable for simple utility:
+// ⚠️ Acceptable for simple utility:
 function calculatePercentage(value: number, total: number): number {
   if (total === 0) throw new Error('Cannot divide by zero');
   return (value / total) * 100;
@@ -215,7 +215,7 @@ function calculatePercentage(value: number, total: number): number {
 **Examples:**
 
 ```typescript
-// âœ… Good: Extract common validation
+// ✅ Good: Extract common validation
 function validatePositiveNumber(value: number, fieldName: string): void {
   if (value <= 0) {
     throw new ValidationError(`${fieldName} must be positive`, 'INVALID_VALUE', {
@@ -225,12 +225,12 @@ function validatePositiveNumber(value: number, fieldName: string): void {
   }
 }
 
-// âŒ Wrong: Over-DRY creates confusion
+// ❌ Wrong: Over-DRY creates confusion
 function validate(value: any, rules: ValidationRule[]): void {
   // Complex generic validator that's harder to understand than specific validators
 }
 
-// âœ… Better: Specific validators even if some duplication
+// ✅ Better: Specific validators even if some duplication
 function validateTradeAmount(amount: number): void {
   if (amount <= 0 || amount > 10000) {
     throw new ValidationError('Trade amount must be between 0 and 10000');
@@ -286,12 +286,12 @@ function validateLiquidityParameter(param: number): void {
 **Prioritize clarity over brevity:**
 
 ```typescript
-// âœ… Clear and explicit
+// ✅ Clear and explicit
 function isMarketResolved(market: Market): boolean {
   return market.resolved === true && market.winningOutcome !== null;
 }
 
-// âŒ Too clever, harder to understand
+// ❌ Too clever, harder to understand
 const isResolved = (m: Market) => m.resolved && m.winningOutcome != null;
 ```
 
@@ -557,12 +557,12 @@ function formatCurrency(amount: number): string {
 **Always Fix:**
 
 ```typescript
-// âŒ ALWAYS fix N+1 query
+// ❌ ALWAYS fix N+1 query
 for (const market of markets) {
   const creator = await prisma.user.findUnique({ where: { id: market.creatorId } });
 }
 
-// âœ… Fixed
+// ✅ Fixed
 const markets = await prisma.market.findMany({ include: { creator: true } });
 ```
 

@@ -71,7 +71,7 @@ CROSS-CUTTING (Always Apply)
 
 ---
 
-## âš¡ Critical Rules (NEVER Violate)
+## ⚡ Critical Rules (NEVER Violate)
 
 ### Financial Safety
 
