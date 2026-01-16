@@ -1,3 +1,7 @@
+## <small>1.3.1 (2026-01-16)</small>
+
+* fix: correct garbled utf-8 emoji characters in standards docs ([d78e2f1](https://github.com/palpito-hunch/kiro-project-template/commit/d78e2f1))
+
 ## 1.3.0 (2026-01-16)
 
 * feat(release): add prerelease tags for develop and uat branches ([e821ae8](https://github.com/palpito-hunch/kiro-project-template/commit/e821ae8))
