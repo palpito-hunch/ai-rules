@@ -228,9 +228,32 @@ This project uses [semantic-release](https://semantic-release.gitbook.io/) for a
 
 ### How It Works
 
-1. Push to `main` triggers the release workflow
+1. Push to `develop`, `uat`, or `main` triggers the release workflow
 2. Commits are analyzed to determine version bump
-3. Version is updated, changelog generated, GitHub release created
+3. Version is tagged based on branch (prerelease or production)
+4. Changelog generated and GitHub release created
+
+### Branch Release Strategy
+
+Each branch produces different version tags:
+
+| Branch | Tag Format | Example | Purpose |
+| ------ | ---------- | ------- | ------- |
+| `develop` | `x.y.z-a.N` | `1.2.0-a.1`, `1.2.0-a.2` | Alpha releases for dev testing |
+| `uat` | `x.y.z-rc.N` | `1.2.0-rc.1`, `1.2.0-rc.2` | Release candidates for QA |
+| `main` | `x.y.z` | `1.2.0` | Production releases |
+
+### Version Flow
+
+```
+develop (1.2.0-a.1) → uat (1.2.0-rc.1) → main (1.2.0)
+         ↓                   ↓                ↓
+    Alpha builds      Release candidates   Production
+```
+
+- **Alpha (`.a.N`)**: Increments with each push to `develop`
+- **Release Candidate (`.rc.N`)**: Increments with each push to `uat`
+- **Production**: Only increments when merged to `main`
 
 ### Version Bump Rules
 

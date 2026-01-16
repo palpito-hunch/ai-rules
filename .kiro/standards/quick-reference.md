@@ -462,11 +462,20 @@ main (prod)            # Production - deployed to production environment
 feature/* → develop → uat → main
                 ↓        ↓      ↓
               (dev)   (staging) (prod)
+            v1.2.0-a.1  v1.2.0-rc.1  v1.2.0
 ```
 
 1. **Feature branches** → PR to `develop` (squash merge)
 2. **develop** → PR to `uat` (merge commit, preserves history)
 3. **uat** → PR to `main` (merge commit, after QA approval)
+
+### Version Tags
+
+| Branch | Tag Format | Example | Purpose |
+| ------ | ---------- | ------- | ------- |
+| `develop` | `x.y.z-a.N` | `1.2.0-a.1` | Alpha (dev testing) |
+| `uat` | `x.y.z-rc.N` | `1.2.0-rc.1` | Release candidate (QA) |
+| `main` | `x.y.z` | `1.2.0` | Production release |
 
 ### Rules (NEVER Violate)
 
