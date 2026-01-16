@@ -1,3 +1,10 @@
+## 1.3.0 (2026-01-16)
+
+* feat(release): add prerelease tags for develop and uat branches ([e821ae8](https://github.com/palpito-hunch/kiro-project-template/commit/e821ae8))
+* docs: add slack release notification documentation ([a21f125](https://github.com/palpito-hunch/kiro-project-template/commit/a21f125))
+* docs(standards): add approach validation before implementation ([1f312e4](https://github.com/palpito-hunch/kiro-project-template/commit/1f312e4))
+* revert: remove slack notification feature ([01cb1c2](https://github.com/palpito-hunch/kiro-project-template/commit/01cb1c2))
+
 ## 1.2.0 (2026-01-15)
 
 * feat(release): add slack notification for new releases ([64b5ef4](https://github.com/palpito-hunch/kiro-project-template/commit/64b5ef4)), closes [#releases](https://github.com/palpito-hunch/kiro-project-template/issues/releases) [#releases](https://github.com/palpito-hunch/kiro-project-template/issues/releases)
