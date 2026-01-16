@@ -29,6 +29,48 @@ CROSS-CUTTING (Always Apply)
 
 ---
 
+## 🔍 Before Implementation (Validate Approach)
+
+**Before coding, briefly verify the requested approach is appropriate:**
+
+### Quick Validation Checklist
+
+```
+1. Is this approach current?    → Check if deprecated/superseded
+2. Is there a native solution?  → Platform/framework built-in option?
+3. Is it the right abstraction? → Too low-level? Too complex?
+4. Does it already exist?       → First-party integration available?
+```
+
+### Examples
+
+| Request | Stop and Ask | Better Approach |
+|---------|--------------|-----------------|
+| "Add Slack webhook for notifications" | Is webhook the best option? | Slack GitHub App (native integration) |
+| "Write a custom date parser" | Does the platform handle this? | Use `Intl.DateTimeFormat` or `date-fns` |
+| "Create polling for real-time updates" | Is there a better pattern? | WebSockets, SSE, or push notifications |
+| "Build custom auth system" | Is there a standard solution? | OAuth, Auth0, or framework auth |
+| "Write a caching layer" | Does the framework provide this? | Redis, framework cache, CDN |
+
+### When to Pause
+
+- **Integrations**: Check if first-party app/integration exists
+- **Infrastructure**: Check if managed service is available
+- **Common patterns**: Check if framework/library handles it
+- **Security-sensitive**: Check industry-standard solutions first
+
+### How to Validate
+
+```
+1. Quick search: "[service] + [platform] integration" (e.g., "Slack GitHub integration")
+2. Check official docs for recommended approach
+3. Ask: "Is there a more modern/maintained way to do this?"
+```
+
+**Decision Rule**: Spend 2 minutes validating the approach to avoid hours of implementing the wrong solution.
+
+---
+
 ## âš¡ Critical Rules (NEVER Violate)
 
 ### Financial Safety

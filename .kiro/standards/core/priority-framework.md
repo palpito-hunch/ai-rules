@@ -4,6 +4,83 @@
 
 This document provides explicit guidance for AI-driven development on how to resolve conflicts between coding standards, when to apply patterns, and how to make trade-off decisions.
 
+---
+
+## Before Implementation: Validate the Approach
+
+**Before writing any code, spend 2 minutes validating that the requested approach is appropriate.**
+
+### Why This Matters
+
+Implementing the wrong solution wastes time and creates technical debt. A quick validation can prevent:
+- Using deprecated APIs or patterns
+- Reinventing what already exists
+- Missing better first-party solutions
+- Building overly complex solutions
+
+### Validation Checklist
+
+Before implementing, ask:
+
+1. **Is this approach current?**
+   - Is it deprecated or superseded by something better?
+   - When was it last recommended? (Patterns from 2015 may be outdated)
+
+2. **Is there a native/first-party solution?**
+   - Does the platform offer this built-in?
+   - Is there an official integration or app?
+
+3. **Is it the right level of abstraction?**
+   - Am I building too low-level when a library exists?
+   - Am I over-engineering when a simple solution works?
+
+4. **What do the official docs recommend?**
+   - Check the service's documentation for current best practices
+   - Look for "Getting Started" or "Integration" guides
+
+### Real-World Examples
+
+| Request | Problem | Better Approach |
+|---------|---------|-----------------|
+| "Add Slack webhook for GitHub notifications" | Webhooks are legacy; requires custom code, secrets management | Use Slack's GitHub App (native, maintained, richer features) |
+| "Write a JWT validation library" | Security-critical, easy to get wrong | Use established library (jose, jsonwebtoken) or framework auth |
+| "Create a custom ORM" | Massive undertaking, solved problem | Use Prisma, TypeORM, Drizzle |
+| "Build real-time updates with polling" | Inefficient, doesn't scale | Use WebSockets, Server-Sent Events, or push service |
+| "Implement custom rate limiting" | Complex edge cases | Use framework middleware or API gateway |
+
+### How to Validate Quickly
+
+```bash
+# 1. Search for native integration
+"[Service A] [Service B] integration"  # e.g., "Slack GitHub integration"
+
+# 2. Check if deprecated
+"[technology] deprecated" OR "[technology] alternative 2024"
+
+# 3. Find official recommendation
+Go to official docs → Look for "Integrations" or "Getting Started"
+```
+
+### When to Push Back
+
+If validation reveals a better approach, **ask before implementing**:
+
+> "I can implement a Slack webhook, but I noticed Slack has a native GitHub App
+> that provides richer notifications without custom code. Would you prefer to
+> use that instead?"
+
+This saves time and delivers better solutions.
+
+### Exceptions
+
+Skip deep validation when:
+- The approach is explicitly specified with reasoning
+- It's a prototype or proof-of-concept
+- The user has domain expertise and confirms the approach
+- Time-critical fix where any working solution is acceptable
+
+---
+
 ## Priority Hierarchy
 
 ### When Requirements Conflict, Follow This Order:
