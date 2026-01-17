@@ -7,18 +7,34 @@ defaults:
     - standards/quick-reference.md
     - standards/core/priority-framework.md
     - standards/core/when-not-to-apply.md
+    - standards/core/ai-behavior.md
 
   # Quick reference always available
   quick_reference: standards/quick-reference.md
 
+  # Language-specific standards
+  typescript:
+    - standards/typescript/style.md
+    - standards/typescript/architecture.md
+
 contexts:
   # Auto-load standards based on file patterns
+  typescript:
+    patterns:
+      - '**/*.ts'
+      - '**/*.tsx'
+    standards:
+      - standards/typescript/style.md
+      - standards/typescript/architecture.md
+    description: 'TypeScript files - style and architecture patterns'
+
   services:
     patterns:
       - 'src/services/**/*.ts'
       - 'server/services/**/*.ts'
     standards:
       - standards/quick-reference.md
+      - standards/typescript/architecture.md
       - standards/domain/errors.md
     description: 'Business logic with transactions and error handling'
 
@@ -28,6 +44,7 @@ contexts:
       - 'server/models/**/*.ts'
     standards:
       - standards/quick-reference.md
+      - standards/typescript/architecture.md
       - standards/domain/performance.md
     description: 'Data access layer with database operations'
 

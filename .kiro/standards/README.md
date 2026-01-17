@@ -8,11 +8,16 @@ This directory contains all development standards and best practices for this pr
 
 ```
 standards/
-├── core/                   # Always-loaded core standards
+├── core/                       # Always-loaded core standards
 │   ├── priority-framework.md   # Decision rules, KISS, Boy Scout Rule
-│   └── when-not-to-apply.md    # When NOT to use patterns (SOLID, DRY, etc.)
+│   ├── when-not-to-apply.md    # When NOT to use patterns (SOLID, DRY, etc.)
+│   └── ai-behavior.md          # AI interaction guidelines
 │
-├── domain/                 # Context-specific standards
+├── typescript/                 # TypeScript-specific standards
+│   ├── style.md                # Style rules (complements ESLint)
+│   └── architecture.md         # Architectural patterns
+│
+├── domain/                     # Context-specific standards
 │   ├── errors.md
 │   ├── file-organization.md
 │   ├── comments.md
@@ -20,12 +25,12 @@ standards/
 │   ├── git-workflow.md
 │   └── testing-mocks.md
 │
-├── workflows/              # Reserved for task-specific guides
+├── workflows/                  # Reserved for task-specific guides
 │   └── .gitkeep
 │
-├── quick-reference.md      # Quick lookup card (consolidated reference)
-├── kiro-integration.md     # Kiro IDE integration guide
-└── README.md               # This file
+├── quick-reference.md          # Quick lookup card (consolidated reference)
+├── kiro-integration.md         # Kiro IDE integration guide
+└── README.md                   # This file
 ```
 
 ## 🎯 Core Standards (Load First)
@@ -52,6 +57,45 @@ Decision-making rules for when standards conflict:
 Negative examples showing when NOT to use patterns (all SOLID principles, DRY, etc.).
 
 **Use when:** Avoiding over-engineering and premature optimization.
+
+### 4. AI Behavior Guidelines (`core/ai-behavior.md`)
+
+Guidelines for how AI assistants should interact with this codebase:
+
+- Rule hierarchy and override order
+- When to follow vs deviate from rules
+- How to handle conflicting instructions
+- Communication style and code generation behavior
+
+**Use when:** Configuring AI-assisted development or understanding AI decisions.
+
+## 🔷 TypeScript Standards
+
+### Style Guide (`typescript/style.md`)
+
+TypeScript-specific style rules that complement ESLint configuration:
+
+- Type annotations and when to use them
+- Type vs interface decisions
+- Null handling with strict TypeScript
+- Async/await patterns
+- Enums vs union types
+- Naming conventions
+
+**Use when:** Writing TypeScript code or reviewing style consistency.
+
+### Architecture Patterns (`typescript/architecture.md`)
+
+TypeScript-specific architectural patterns:
+
+- Project structure and file naming
+- Layered architecture (Controllers → Services → Repositories)
+- Service and repository patterns
+- Dependency injection approaches
+- Error handling architecture
+- React-specific patterns (if frontend)
+
+**Use when:** Designing new features, structuring services, or implementing patterns.
 
 ## 📚 Domain-Specific Standards
 
@@ -159,6 +203,7 @@ Complete guide for using these standards with Kiro IDE:
 1. Read `quick-reference.md` (print and keep visible)
 2. Review `core/priority-framework.md` (decision rules, KISS, Boy Scout)
 3. Skim `core/when-not-to-apply.md` (anti-patterns for all SOLID principles)
+4. Review `typescript/style.md` and `typescript/architecture.md` for TypeScript patterns
 
 ### Before First Commit:
 
