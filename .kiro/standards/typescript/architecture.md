@@ -6,6 +6,44 @@ TypeScript-specific architectural patterns and conventions. These complement the
 
 ---
 
+## TypeScript Configuration Reference
+
+### Compiler Options (tsconfig.json)
+
+Key compiler options that affect architecture and development:
+
+| Option | Value | Effect |
+|--------|-------|--------|
+| `strict` | `true` | Enables all strict type-checking options |
+| `noUncheckedIndexedAccess` | `true` | Array/object index access returns `T \| undefined` |
+| `exactOptionalPropertyTypes` | `true` | Optional properties can't be explicitly `undefined` |
+| `noEmit` | `true` | Type-checking only (Next.js handles compilation) |
+| `isolatedModules` | `true` | Each file must be compilable independently |
+| `moduleResolution` | `bundler` | Modern bundler-style resolution |
+
+### Strict Mode Implications
+
+With `strict: true`, these are enabled:
+
+```typescript
+// strictNullChecks: null and undefined are distinct types
+let user: User;
+user.name;  // Error: 'user' is possibly undefined
+
+// strictPropertyInitialization: class properties must be initialized
+class UserService {
+  private repository: UserRepository;  // Error: not initialized
+  // ✅ Fix: initialize in constructor or use definite assignment
+  private repository!: UserRepository;  // OK with !
+}
+
+// noImplicitAny: must explicitly type 'any' parameters
+function process(data) {}  // Error: implicit any
+function process(data: unknown) {}  // ✅ OK
+```
+
+---
+
 ## Project Structure
 
 ### Recommended Layout
@@ -44,6 +82,84 @@ Examples:
 - user.test.ts          # Test
 - use-user.ts           # Hook (React convention)
 - UserCard.tsx          # React component (PascalCase)
+```
+
+---
+
+## Path Aliases (tsconfig.json)
+
+### Configured Aliases
+
+The following path aliases are configured in `tsconfig.json`:
+
+| Alias | Maps To | Usage |
+|-------|---------|-------|
+| `@/*` | `./src/*` | General src imports |
+| `@components/*` | `./src/components/*` | React components |
+| `@hooks/*` | `./src/hooks/*` | Custom React hooks |
+| `@services/*` | `./src/services/*` | Business logic services |
+| `@utils/*` | `./src/utils/*` | Utility functions |
+| `@types/*` | `./src/types/*` | Type definitions |
+
+### Using Path Aliases
+
+```typescript
+// ❌ Avoid deep relative imports
+import { UserService } from '../../../services/user.service';
+import { Button } from '../../components/ui/Button';
+import type { User } from '../../../types/domain/user';
+
+// ✅ Use path aliases for cleaner imports
+import { UserService } from '@services/user.service';
+import { Button } from '@components/ui/Button';
+import type { User } from '@types/domain/user';
+
+// ✅ Use @/* for general src imports
+import { config } from '@/config';
+import { prisma } from '@/lib/prisma';
+```
+
+### Import Order with Aliases
+
+```typescript
+// 1. Node built-ins
+import { readFile } from 'fs/promises';
+import path from 'path';
+
+// 2. External packages
+import React from 'react';
+import { z } from 'zod';
+
+// 3. Internal aliases (in order of abstraction level)
+import { prisma } from '@/lib/prisma';
+import type { User } from '@types/domain/user';
+import { UserService } from '@services/user.service';
+import { UserRepository } from '@/repositories/user.repository';
+import { useUser } from '@hooks/use-user';
+import { Button } from '@components/ui/Button';
+import { formatDate } from '@utils/date';
+
+// 4. Relative imports (same feature/module only)
+import { helper } from './helper';
+import type { LocalConfig } from './types';
+```
+
+### When to Use Relative vs Alias Imports
+
+```typescript
+// ✅ Use aliases for cross-module imports
+// In src/pages/users/UserPage.tsx
+import { UserService } from '@services/user.service';
+import { Button } from '@components/ui/Button';
+
+// ✅ Use relative imports within the same feature/module
+// In src/services/user.service.ts
+import { validateEmail } from './user.validation';
+import type { UserServiceConfig } from './user.types';
+
+// ❌ Don't use relative imports across modules
+// In src/pages/users/UserPage.tsx
+import { UserService } from '../../services/user.service';  // Use alias instead
 ```
 
 ---
@@ -479,6 +595,16 @@ export const apiClient = new ApiClient(process.env.API_URL!);
 
 ## Summary
 
+### Configuration Quick Reference
+
+| Config | File | Key Settings |
+|--------|------|--------------|
+| TypeScript | `tsconfig.json` | `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` |
+| Path Aliases | `tsconfig.json` | `@/*`, `@components/*`, `@services/*`, `@hooks/*`, `@utils/*`, `@types/*` |
+| ESLint | `eslint.config.mjs` | Type-aware rules enabled with `project: './tsconfig.json'` |
+
+### Architecture Patterns
+
 | Pattern | When to Use |
 |---------|-------------|
 | Services | Business logic, orchestration |
@@ -489,3 +615,11 @@ export const apiClient = new ApiClient(process.env.API_URL!);
 | Feature folders | Large applications (10+ features) |
 | Hooks | React state + effects |
 | API Client | Centralized HTTP handling |
+
+### Import Guidelines
+
+| Import Type | Use When |
+|-------------|----------|
+| Path aliases (`@/*`) | Cross-module imports |
+| Relative (`./`) | Same feature/module only |
+| Type-only (`import type`) | Importing only types |
