@@ -6,7 +6,7 @@ type HealthResponse = {
   uptime: number;
 };
 
-export default function handler(req: NextApiRequest, res: NextApiResponse<HealthResponse>) {
+export default function handler(req: NextApiRequest, res: NextApiResponse<HealthResponse>): void {
   if (req.method !== 'GET') {
     res.setHeader('Allow', ['GET']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
