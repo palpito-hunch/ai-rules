@@ -17,6 +17,11 @@ standards/
 │   ├── style.md                # Style rules (complements ESLint)
 │   └── architecture.md         # Architectural patterns
 │
+├── libraries/                  # Library-specific standards
+│   ├── prisma.md               # Database operations, transactions
+│   ├── nextjs.md               # App Router, Server/Client Components
+│   └── zod.md                  # Schema validation patterns
+│
 ├── domain/                     # Context-specific standards
 │   ├── errors.md
 │   ├── file-organization.md
@@ -31,6 +36,21 @@ standards/
 ├── quick-reference.md          # Quick lookup card (consolidated reference)
 ├── kiro-integration.md         # Kiro IDE integration guide
 └── README.md                   # This file
+
+# Additional .kiro directories:
+.kiro/
+├── docs/                       # Documentation
+│   └── ai-code-generation-improvements.md
+├── memory/                     # Project memory for AI context
+│   ├── decisions.md            # Architecture Decision Records
+│   └── glossary.yml            # Domain terminology
+├── specs/                      # Feature specifications
+│   ├── features/               # Feature specs before implementation
+│   └── components/             # Component behavior specs
+├── templates/                  # Templates for specs and docs
+│   └── feature-spec.md
+└── validation/                 # AI validation rules
+    └── rules.yml
 ```
 
 ## 🎯 Core Standards (Load First)
@@ -96,6 +116,46 @@ TypeScript-specific architectural patterns:
 - React-specific patterns (if frontend)
 
 **Use when:** Designing new features, structuring services, or implementing patterns.
+
+## 📦 Library Standards
+
+### Prisma (`libraries/prisma.md`)
+
+Database operations best practices:
+
+- Transaction requirements and patterns
+- N+1 query prevention
+- Query optimization (select, pagination)
+- Error handling and common error codes
+- Type safety with generated types
+
+**Use when:** Writing database operations or reviewing data access code.
+
+### Next.js (`libraries/nextjs.md`)
+
+Next.js App Router patterns:
+
+- Server vs Client Components
+- Data fetching strategies
+- API Routes (Route Handlers)
+- Server Actions
+- Caching and revalidation
+- Metadata configuration
+
+**Use when:** Building pages, API routes, or working with Next.js features.
+
+### Zod (`libraries/zod.md`)
+
+Schema validation patterns:
+
+- Basic and complex schema definitions
+- API request validation
+- Error handling and custom messages
+- Schema composition (extend, pick, omit)
+- Type inference with `z.infer`
+- Transformations and coercion
+
+**Use when:** Validating inputs, defining API contracts, or working with forms.
 
 ## 📚 Domain-Specific Standards
 

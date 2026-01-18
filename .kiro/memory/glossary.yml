@@ -1,0 +1,154 @@
+# Domain Glossary
+# Defines terminology and concepts used throughout the codebase.
+# AI assistants should use these definitions for consistent naming and understanding.
+
+terms:
+  # Core Concepts
+  User:
+    definition: "A registered account in the system"
+    properties:
+      - id: "Unique identifier (UUID)"
+      - email: "Email address (unique)"
+      - name: "Display name"
+      - createdAt: "Account creation timestamp"
+      - updatedAt: "Last modification timestamp"
+    relations:
+      - "Has many Orders"
+      - "Has one Profile"
+
+  Profile:
+    definition: "Extended user information"
+    properties:
+      - bio: "User biography (optional)"
+      - avatar: "Profile image URL (optional)"
+    relations:
+      - "Belongs to User"
+
+  # Business Entities (customize for your domain)
+  Order:
+    definition: "A purchase transaction"
+    states:
+      - pending: "Order created, awaiting payment"
+      - confirmed: "Payment received"
+      - shipped: "Order dispatched"
+      - delivered: "Order received by customer"
+      - cancelled: "Order cancelled"
+    properties:
+      - id: "Unique identifier"
+      - userId: "Reference to User"
+      - status: "Current order state"
+      - total: "Order total amount"
+    relations:
+      - "Belongs to User"
+      - "Has many OrderItems"
+
+  OrderItem:
+    definition: "A line item within an order"
+    properties:
+      - productId: "Reference to Product"
+      - quantity: "Number of units"
+      - price: "Unit price at time of order"
+    relations:
+      - "Belongs to Order"
+      - "References Product"
+
+  Product:
+    definition: "An item available for purchase"
+    properties:
+      - id: "Unique identifier"
+      - name: "Product name"
+      - description: "Product description"
+      - price: "Current price"
+      - stock: "Available inventory"
+    states:
+      - active: "Available for purchase"
+      - inactive: "Not available"
+      - discontinued: "Permanently unavailable"
+
+# Technical Terms
+technical:
+  Service:
+    definition: "Business logic layer component"
+    responsibility: "Orchestrates business rules and operations"
+    example: "UserService, OrderService"
+    location: "src/services/"
+
+  Repository:
+    definition: "Data access layer component"
+    responsibility: "Handles database operations"
+    example: "UserRepository, OrderRepository"
+    location: "src/repositories/"
+
+  Controller:
+    definition: "HTTP/API layer component (in Next.js, these are Route Handlers)"
+    responsibility: "Handles HTTP requests and responses"
+    location: "src/pages/api/ or app/api/"
+
+  DTO:
+    definition: "Data Transfer Object"
+    responsibility: "Defines shape of data for API requests/responses"
+    note: "Use Zod schemas for validation and type inference"
+
+  Entity:
+    definition: "Domain object with identity"
+    responsibility: "Represents a business concept"
+    note: "Usually maps to a database table"
+
+# Naming Conventions
+conventions:
+  files:
+    service: "{name}.service.ts"
+    repository: "{name}.repository.ts"
+    types: "{name}.types.ts"
+    schema: "{name}.schema.ts"
+    test: "{name}.test.ts"
+    component: "{Name}.tsx"
+    hook: "use-{name}.ts"
+
+  variables:
+    boolean: "is{Adjective}, has{Noun}, can{Verb}"
+    array: "{noun}s, {noun}List"
+    handler: "handle{Event}"
+    async: "fetch{Noun}, save{Noun}, load{Noun}"
+
+  constants:
+    format: "SCREAMING_SNAKE_CASE"
+    examples:
+      - "MAX_RETRIES"
+      - "API_BASE_URL"
+      - "DEFAULT_PAGE_SIZE"
+
+# Abbreviations
+abbreviations:
+  API: "Application Programming Interface"
+  DTO: "Data Transfer Object"
+  UUID: "Universally Unique Identifier"
+  ORM: "Object-Relational Mapping"
+  SSR: "Server-Side Rendering"
+  SSG: "Static Site Generation"
+  ISR: "Incremental Static Regeneration"
+  ADR: "Architecture Decision Record"
+  CI: "Continuous Integration"
+  CD: "Continuous Deployment"
+
+# Status Values
+statuses:
+  common:
+    - active
+    - inactive
+    - pending
+    - archived
+    - deleted
+
+  order:
+    - pending
+    - confirmed
+    - shipped
+    - delivered
+    - cancelled
+    - refunded
+
+  user:
+    - active
+    - suspended
+    - deactivated
