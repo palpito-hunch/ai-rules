@@ -17,6 +17,20 @@ defaults:
     - standards/typescript/style.md
     - standards/typescript/architecture.md
 
+  # Library-specific standards
+  libraries:
+    - standards/libraries/prisma.md
+    - standards/libraries/nextjs.md
+    - standards/libraries/zod.md
+
+  # Project memory for AI context
+  memory:
+    - memory/decisions.md
+    - memory/glossary.yml
+
+  # Validation rules for AI code generation
+  validation_rules: validation/rules.yml
+
 contexts:
   # Auto-load standards based on file patterns
   typescript:
@@ -35,6 +49,8 @@ contexts:
     standards:
       - standards/quick-reference.md
       - standards/typescript/architecture.md
+      - standards/libraries/prisma.md
+      - standards/libraries/zod.md
       - standards/domain/errors.md
     description: 'Business logic with transactions and error handling'
 
@@ -45,8 +61,28 @@ contexts:
     standards:
       - standards/quick-reference.md
       - standards/typescript/architecture.md
+      - standards/libraries/prisma.md
       - standards/domain/performance.md
     description: 'Data access layer with database operations'
+
+  api_routes:
+    patterns:
+      - 'src/pages/api/**/*.ts'
+      - 'app/api/**/*.ts'
+    standards:
+      - standards/libraries/nextjs.md
+      - standards/libraries/zod.md
+      - standards/domain/errors.md
+    description: 'Next.js API routes'
+
+  pages:
+    patterns:
+      - 'src/pages/**/*.tsx'
+      - 'app/**/*.tsx'
+    standards:
+      - standards/libraries/nextjs.md
+      - standards/typescript/style.md
+    description: 'Next.js pages and components'
 
   controllers:
     patterns:
