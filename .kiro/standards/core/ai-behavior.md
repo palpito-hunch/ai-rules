@@ -195,6 +195,46 @@ When working in a specific language, load and prioritize those rules.
 
 ---
 
+## Git Workflow (Mandatory)
+
+### NEVER commit directly to main
+
+All changes must go through a feature branch and pull request:
+
+1. **Create a feature branch** before making changes
+   ```bash
+   git checkout -b feature/description-of-change
+   ```
+
+2. **Make changes and commit** to the feature branch
+   ```bash
+   git add -A && git commit -m "feat: description"
+   ```
+
+3. **Push and create a PR** for review
+   ```bash
+   git push -u origin feature/description-of-change
+   gh pr create --title "feat: description" --body "..."
+   ```
+
+4. **Merge via PR** after approval
+   ```bash
+   gh pr merge --squash --delete-branch
+   ```
+
+### Why This Matters
+
+- Provides audit trail for all changes
+- Enables code review before merging
+- Prevents accidental changes to main
+- Follows team collaboration best practices
+
+### No Exceptions
+
+Even for "small" or "quick" changes, always use a branch and PR.
+
+---
+
 ## Summary
 
 | Situation | Behavior |
@@ -205,3 +245,4 @@ When working in a specific language, load and prioritize those rules.
 | No rule exists | Use judgment, match existing patterns |
 | User gives explicit instruction | Follow it (warn if unsafe) |
 | Uncertain about preference | Ask or state assumption |
+| Making code changes | ALWAYS use feature branch + PR |
