@@ -41,7 +41,7 @@ Adopt a three-tier architecture:
 │  ├── steering/                 ← Kiro steering files                        │
 │  ├── validation/               ← Machine-readable rules                     │
 │  └── memory/                   ← ADRs, glossary                             │
-│  CLAUDE.md                     ← Entry point for Claude tools               │
+│  CLAUDE.{backend,frontend}.md  ← Template-specific Claude entry points      │
 │  CHANGELOG.md                  ← Track rule changes                         │
 │                                                                             │
 │  Versioned with semantic releases: v1.0.0, v1.1.0, v2.0.0                   │
@@ -106,7 +106,7 @@ ai-rules                          templates & projects
 .kiro/validation/**/*     ──────► .kiro/validation/**/*       (overwrite)
 .kiro/memory/**/*         ──────► .kiro/memory/**/*           (overwrite)
 .kiro/templates/**/*      ──────► .kiro/templates/**/*        (overwrite)
-CLAUDE.md                 ──────► CLAUDE.md                   (overwrite)
+CLAUDE.{type}.md          ──────► CLAUDE.md                   (template-specific)
 
                                   src/**/*                    (NOT synced)
                                   package.json                (NOT synced)
@@ -157,6 +157,6 @@ Project sync options:
 
 ## References
 
-- `CLAUDE.md` - Entry point for Claude tools
+- `CLAUDE.backend.md`, `CLAUDE.frontend.md` - Template-specific Claude entry points
 - `.kiro/steering/` - Kiro steering files
-- `.github/workflows/sync-from-template.yml` - Sync workflow
+- Templates use `.github/workflows/sync-from-ai-rules.yml` to sync standards
