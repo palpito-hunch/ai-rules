@@ -42,7 +42,7 @@ standards/
 ├── docs/                       # Documentation
 │   └── ai-code-generation-improvements.md
 ├── memory/                     # Project memory for AI context
-│   ├── decisions.md            # Architecture Decision Records
+│   ├── decisions/              # Architecture Decision Records
 │   └── glossary.yml            # Domain terminology
 ├── specs/                      # Feature specifications
 │   ├── features/               # Feature specs before implementation

@@ -83,7 +83,7 @@ Persistent context that helps AI understand project history and domain concepts.
 
 | File | Purpose |
 |------|---------|
-| `memory/decisions.md` | Architecture Decision Records (ADRs) |
+| `memory/decisions/` | Architecture Decision Records (ADRs) |
 | `memory/glossary.yml` | Domain terminology and definitions |
 
 ### Benefits

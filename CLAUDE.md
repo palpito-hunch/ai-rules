@@ -55,7 +55,7 @@ Machine-readable patterns in `.kiro/validation/rules.yml` define what to check d
 
 ## Project Memory
 
-- **ADRs**: `.kiro/memory/decisions.md` - Why architectural choices were made
+- **ADRs**: `.kiro/memory/decisions/` - Why architectural choices were made
 - **Glossary**: `.kiro/memory/glossary.yml` - Domain terminology
 
 ## Conventions

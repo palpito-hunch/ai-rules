@@ -126,7 +126,7 @@ The `.kiro/validation/rules.yml` file defines patterns for AI code validation:
 
 ### Architecture Decision Records
 
-`.kiro/memory/decisions.md` tracks architectural decisions using ADR format.
+`.kiro/memory/decisions/` contains Architecture Decision Records (ADRs) documenting significant technical decisions.
 
 ### Domain Glossary
 
