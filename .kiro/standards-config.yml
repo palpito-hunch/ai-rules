@@ -45,7 +45,6 @@ contexts:
   services:
     patterns:
       - 'src/services/**/*.ts'
-      - 'server/services/**/*.ts'
     standards:
       - standards/quick-reference.md
       - standards/typescript/architecture.md
@@ -57,7 +56,6 @@ contexts:
   repositories:
     patterns:
       - 'src/repositories/**/*.ts'
-      - 'server/models/**/*.ts'
     standards:
       - standards/quick-reference.md
       - standards/typescript/architecture.md
@@ -87,7 +85,6 @@ contexts:
   controllers:
     patterns:
       - 'src/controllers/**/*.ts'
-      - 'server/routes/**/*.ts'
     standards:
       - standards/domain/errors.md
       - standards/domain/file-organization.md
@@ -114,9 +111,9 @@ contexts:
 
   documentation:
     patterns:
-      - 'docs/**/*.md'
       - 'README.md'
       - '**/*.mdx'
+      - '.kiro/**/*.md'
     standards:
       - standards/domain/comments.md
     description: 'Documentation files'
