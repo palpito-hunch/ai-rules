@@ -9,6 +9,7 @@ This directory contains Architecture Decision Records (ADRs) documenting signifi
 | [0001](0001-semantic-versioning-with-conventional-commits.md) | Semantic Versioning with Conventional Commits | Accepted | 2024-01 |
 | [0002](0002-centralized-ai-rules-architecture.md) | Centralized AI Rules Architecture | Accepted | 2025-01 |
 | [0003](0003-manifest-based-template-sync.md) | Manifest-Based Template Sync | Accepted | 2025-01 |
+| [0004](0004-centralized-rules-for-distributed-teams.md) | Centralized Rules for Distributed Teams | Accepted | 2025-01 |
 
 ## Creating a New ADR
 
