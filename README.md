@@ -1,191 +1,166 @@
-# Kiro AI Rules
+# AI Rules
 
-AI code generation rules and standards for Kiro-driven development. This repository provides a comprehensive set of standards, templates, and configurations to guide AI code generation tools.
+Centralized AI coding standards for the organization. This repository is the **single source of truth** for all AI-assisted code generation rules used by Claude (Claude Code, Cursor, Claude.ai) and Kiro IDE.
 
-## What's Included
+## Architecture
 
 ```
-├── .kiro/                      # AI rules and standards
-│   ├── standards/              # Coding standards by category
-│   │   ├── core/               # Priority framework and core principles
-│   │   ├── typescript/         # TypeScript style and architecture
-│   │   ├── libraries/          # Library-specific standards (Prisma, Next.js, Zod)
-│   │   └── domain/             # Domain modeling and error handling
-│   ├── templates/              # Spec templates for features and components
-│   ├── specs/                  # Feature and component specifications
-│   ├── memory/                 # Project memory (ADRs, glossary)
-│   ├── validation/             # AI code validation rules
-│   └── docs/                   # Documentation and guides
-├── .mcp.json                   # MCP server configuration
-├── tsconfig.json               # Reference TypeScript config
-├── eslint.config.mjs           # Reference ESLint config
-└── package.json                # Tooling dependencies
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           ai-rules (this repo)                              │
+│                         ══════════════════════                              │
+│  Single source of truth for all AI coding standards                         │
+│                                                                             │
+│  .kiro/                                                                     │
+│  ├── standards/           ← Coding standards by category                    │
+│  ├── steering/            ← Kiro steering files                             │
+│  ├── validation/          ← Machine-readable rules                          │
+│  ├── memory/              ← ADRs, glossary                                  │
+│  └── templates/           ← Spec templates                                  │
+│  CLAUDE.{backend,frontend}.md  ← Template-specific Claude entry points      │
+│  CHANGELOG.md             ← Track rule changes                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                     │
+                                     │ sync-from-ai-rules.yml
+                                     │ (daily at 6am UTC-6)
+                    ┌────────────────┴────────────────┐
+                    ▼                                 ▼
+┌───────────────────────────────────┐ ┌───────────────────────────────────┐
+│       backend-template            │ │       frontend-template           │
+│  .kiro/        ← synced           │ │  .kiro/        ← synced           │
+│  src/          ← starter code     │ │  src/          ← starter code     │
+│  CLAUDE.md     ← from ai-rules    │ │  CLAUDE.md     ← from ai-rules    │
+└───────────────────────────────────┘ └───────────────────────────────────┘
+                    │                                 │
+                    │ gh repo create --template       │
+                    ▼                                 ▼
+          ┌─────────────────┐               ┌─────────────────┐
+          │ backend projects│               │frontend projects│
+          └─────────────────┘               └─────────────────┘
 ```
 
 ## Quick Start
 
-### Option 1: Use as Template
+### Creating a New Project
 
-1. Click "Use this template" to create a new repository
-2. Clone your new repository
-3. Install dependencies: `npm install`
-4. Start building with AI-assisted development
-
-### Option 2: Copy into Existing Project
-
-Copy the `.kiro/` directory into your project root:
+Always use GitHub's template feature:
 
 ```bash
-# Clone this repo
-git clone https://github.com/palpito-hunch/kiro-project-template.git kiro-rules
+# Backend project
+gh repo create org/my-api --template palpito-hunch/backend-template --private --clone
 
-# Copy .kiro to your project
-cp -r kiro-rules/.kiro /path/to/your/project/
-
-# Optionally copy reference configs
-cp kiro-rules/tsconfig.json /path/to/your/project/tsconfig.reference.json
-cp kiro-rules/eslint.config.mjs /path/to/your/project/eslint.reference.mjs
+# Frontend project
+gh repo create org/my-app --template palpito-hunch/frontend-template --private --clone
 ```
 
-## Standards Overview
+**Never clone templates directly** - this loses template attribution and carries git history.
 
-### Core Standards
+### Updating Rules
 
-- **Priority Framework** (`.kiro/standards/core/priority-framework.md`) - P0 (security), P1 (correctness), P2 (maintainability), P3 (efficiency)
-- **AI Behavior Guidelines** (`.kiro/standards/core/ai-behavior.md`) - How AI should interact with the codebase
+1. Make changes in this repository (ai-rules)
+2. Create a PR and merge to main
+3. Sync workflows in templates/projects will create PRs automatically
 
-### TypeScript Standards
+## What's Included
 
-- **Style Guide** (`.kiro/standards/typescript/style.md`) - Code style rules with ESLint enforcement
-- **Architecture** (`.kiro/standards/typescript/architecture.md`) - Layered architecture patterns
+### Standards (`.kiro/standards/`)
 
-### Library Standards
+| Category | Files | Description |
+|----------|-------|-------------|
+| Core | `priority-framework.md`, `ai-behavior.md`, `when-not-to-apply.md` | Universal rules for all projects |
+| TypeScript | `style.md`, `architecture.md` | Language-specific standards |
+| Libraries | `prisma.md`, `nextjs.md`, `zod.md`, etc. | Library-specific patterns |
+| Domain | `errors.md`, `testing-mocks.md` | Domain modeling standards |
 
-- **Prisma** (`.kiro/standards/libraries/prisma.md`) - Database operations, transactions, query optimization
-- **Next.js** (`.kiro/standards/libraries/nextjs.md`) - App Router, Server/Client Components, API Routes
-- **Zod** (`.kiro/standards/libraries/zod.md`) - Schema validation and type inference
+### Template-Specific Claude Files
 
-## MCP Integration
+- `CLAUDE.backend.md` - Entry point for backend projects (Prisma, Express)
+- `CLAUDE.frontend.md` - Entry point for frontend projects (Next.js, React)
 
-The `.mcp.json` file configures Model Context Protocol servers for enhanced AI capabilities:
+These get synced as `CLAUDE.md` to respective templates/projects.
 
-```json
-{
-  "mcpServers": {
-    "context7": {
-      "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp"]
-    }
-  }
-}
+### Validation Rules (`.kiro/validation/`)
+
+Machine-readable patterns in `rules.yml` for AI code validation:
+- **Critical**: Transaction requirements, floating promises
+- **High**: N+1 queries, explicit return types
+- **Medium**: Console logging, pagination
+
+### Project Memory (`.kiro/memory/`)
+
+- **ADRs**: Architecture Decision Records in `decisions/`
+- **Glossary**: Domain terminology in `glossary.yml`
+
+## Sync Flow
+
+```
+Developer updates        Automated sync           Team reviews
+rules in ai-rules       workflows run            and merges PRs
+      │                       │                        │
+      ▼                       ▼                        ▼
+ ┌─────────┐   merged    ┌──────────┐   creates   ┌──────────┐
+ │ ai-rules│ ───────────▶│  GitHub  │ ───────────▶│   PRs    │
+ │         │   to main   │ Actions  │             │ in each  │
+ └─────────┘             └──────────┘             │   repo   │
+                               │                  └──────────┘
+               ┌───────────────┼───────────────┐
+               ▼               ▼               ▼
+         backend-       frontend-        existing
+         template       template         projects
 ```
 
-**Context7** fetches up-to-date library documentation, ensuring AI has access to current APIs.
+### What Gets Synced
 
-## Reference Configurations
+| Source (ai-rules) | Destination | Behavior |
+|-------------------|-------------|----------|
+| `.kiro/standards/**` | `.kiro/standards/**` | Overwrite |
+| `.kiro/steering/**` | `.kiro/steering/**` | Overwrite |
+| `.kiro/validation/**` | `.kiro/validation/**` | Overwrite |
+| `.kiro/templates/**` | `.kiro/templates/**` | Overwrite |
+| `CLAUDE.{type}.md` | `CLAUDE.md` | Template-specific |
 
-### TypeScript (`tsconfig.json`)
+**Not synced**: `src/`, `package.json`, project-specific files
 
-A reference configuration demonstrating recommended settings:
+## Override Hierarchy
 
-- Strict type checking (`strict: true`, `noUncheckedIndexedAccess`)
-- Path aliases (`@/*`, `@components/*`, etc.)
-- Modern module resolution (`bundler`)
+1. Explicit user instruction in prompt (highest)
+2. Project-level overrides (`.kiro/steering/overrides.md`)
+3. Org rules from ai-rules (`.kiro/standards/**`)
+4. Language/framework defaults (lowest)
 
-### ESLint (`eslint.config.mjs`)
+## Semantic Versioning
 
-A reference configuration with:
+This repository uses semantic-release for automated versioning.
 
-- TypeScript-ESLint recommended rules
-- Explicit return type enforcement
-- No floating promises
-- Error class requirements
-
-To add React/Next.js support, see the commented section at the bottom of the file.
-
-## Validation Rules
-
-The `.kiro/validation/rules.yml` file defines patterns for AI code validation:
-
-- **Critical**: Transaction requirements, floating promises, error throwing
-- **High**: N+1 queries, explicit return types, Zod validation
-- **Medium**: Console logging, field selection, pagination
-
-## Templates
-
-### Feature Spec Template
-
-`.kiro/templates/feature-spec.md` provides a structured template for feature specifications:
-
-- Intent and user stories
-- Behavior scenarios (Given/When/Then)
-- Technical approach
-- Constraints and acceptance criteria
-
-## Project Memory
-
-### Architecture Decision Records
-
-`.kiro/memory/decisions/` contains Architecture Decision Records (ADRs) documenting significant technical decisions.
-
-### Domain Glossary
-
-`.kiro/memory/glossary.yml` defines domain terminology for consistent naming.
+| Commit Type | Version Bump | Example |
+|-------------|--------------|---------|
+| `feat:` | Minor (1.x.0) | New rule added |
+| `fix:` | Patch (1.0.x) | Rule clarification |
+| `BREAKING CHANGE:` | Major (x.0.0) | Breaking rule change |
+| `docs:`, `chore:` | No release | Documentation only |
 
 ## Available Scripts
 
 | Script | Description |
 |--------|-------------|
-| `npm run lint` | Check code for linting errors |
-| `npm run lint:fix` | Auto-fix linting errors |
-| `npm run format` | Format code with Prettier |
-| `npm run format:check` | Check code formatting |
-| `npm run type-check` | Run TypeScript type checking |
-| `npm run validate` | Run lint and format check |
+| `npm run format` | Format markdown/yaml with Prettier |
+| `npm run format:check` | Check formatting |
+| `npm run release` | Run semantic-release |
+| `npm run release:dry-run` | Preview next release |
 
-## Semantic Versioning
+## Related Repositories
 
-This project uses [semantic-release](https://semantic-release.gitbook.io/) for automated versioning.
+- [backend-template](https://github.com/palpito-hunch/backend-template) - Node.js/Express backend starter
+- [frontend-template](https://github.com/palpito-hunch/frontend-template) - React/Next.js frontend starter
 
-### Branch Release Strategy
+## Architecture Decision Records
 
-| Branch | Tag Format | Example | Purpose |
-|--------|------------|---------|---------|
-| `develop` | `x.y.z-a.N` | `1.2.0-a.1` | Alpha releases for dev testing |
-| `uat` | `x.y.z-rc.N` | `1.2.0-rc.1` | Release candidates for QA |
-| `main` | `x.y.z` | `1.2.0` | Production releases |
+See `.kiro/memory/decisions/` for ADRs documenting key architectural decisions:
 
-### Version Bump Rules
-
-| Commit Type | Version Bump | Example |
-|-------------|--------------|---------|
-| `feat:` | Minor (1.x.0) | New feature |
-| `fix:` | Patch (1.0.x) | Bug fix |
-| `BREAKING CHANGE:` | Major (x.0.0) | Breaking change |
-| `docs:`, `chore:` | No release | Documentation, maintenance |
-
-## Syncing Standards
-
-Repositories created from this template can sync updates via the `sync-from-template.yml` workflow:
-
-1. Runs weekly (Mondays at 9am UTC) or on-demand
-2. Fetches latest `.kiro/` from this template
-3. Creates a PR if changes are detected
-
-### Manual Sync
-
-**Actions** → **Sync Standards from Template** → **Run workflow**
-
-## Related Templates
-
-- **Backend Template**: Coming soon - Node.js/Express backend with these AI rules
-- **Frontend Template**: Coming soon - React/Next.js frontend with these AI rules
+- **ADR-0001**: Semantic versioning strategy
+- **ADR-0002**: Centralized AI rules architecture (this document reflects)
+- **ADR-0003**: Prioritization framework for coding standards
+- **ADR-0004**: Centralized rules for distributed teams
 
 ## License
 
 MIT
-
-## Acknowledgments
-
-- Built with [Kiro](https://kiro.directory) best practices
-- MCP integration via [Context7](https://context7.com)
