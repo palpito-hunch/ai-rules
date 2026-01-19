@@ -17,6 +17,7 @@ Centralized AI coding standards for the organization. This repository is the **s
 │  ├── memory/              ← ADRs, glossary                                  │
 │  └── templates/           ← Spec templates                                  │
 │  CLAUDE.{backend,frontend}.md  ← Template-specific Claude entry points      │
+│  CLAUDE.global.md         ← Org-wide Claude Code settings                   │
 │  CHANGELOG.md             ← Track rule changes                              │
 └─────────────────────────────────────────────────────────────────────────────┘
                                      │
@@ -60,6 +61,22 @@ gh repo create org/my-app --template palpito-hunch/frontend-template --private -
 2. Create a PR and merge to main
 3. Sync workflows in templates/projects will create PRs automatically
 
+### Installing Global Claude Code Settings
+
+For org-wide Claude Code behavior (applies to all repos):
+
+```bash
+# Clone ai-rules (if you haven't already)
+git clone https://github.com/palpito-hunch/ai-rules.git ~/ai-rules
+
+# Run the install script
+~/ai-rules/scripts/install.sh
+```
+
+This creates a symlink from `~/.claude/CLAUDE.md` to `CLAUDE.global.md`, so:
+- All Claude Code sessions use org-wide settings
+- Updates propagate automatically when you `git pull`
+
 ## What's Included
 
 ### Standards (`.kiro/standards/`)
@@ -71,12 +88,13 @@ gh repo create org/my-app --template palpito-hunch/frontend-template --private -
 | Libraries | `prisma.md`, `nextjs.md`, `zod.md`, etc. | Library-specific patterns |
 | Domain | `errors.md`, `testing-mocks.md` | Domain modeling standards |
 
-### Template-Specific Claude Files
+### Claude Files
 
-- `CLAUDE.backend.md` - Entry point for backend projects (Prisma, Express)
-- `CLAUDE.frontend.md` - Entry point for frontend projects (Next.js, React)
-
-These get synced as `CLAUDE.md` to respective templates/projects.
+| File | Purpose | Destination |
+|------|---------|-------------|
+| `CLAUDE.global.md` | Org-wide settings for all repos | `~/.claude/CLAUDE.md` (via install script) |
+| `CLAUDE.backend.md` | Backend project rules | Synced as `CLAUDE.md` to backend projects |
+| `CLAUDE.frontend.md` | Frontend project rules | Synced as `CLAUDE.md` to frontend projects |
 
 ### Validation Rules (`.kiro/validation/`)
 
