@@ -1,15 +1,15 @@
-# Contributing to Kiro Project Template
+# Contributing to Kiro AI Rules
 
-Thank you for your interest in contributing! This guide will help you get set up and understand our development workflow.
+Thank you for your interest in contributing! This guide covers how to propose changes to AI coding standards, templates, and configurations.
 
 ## Table of Contents
 
 - [Development Setup](#development-setup)
+- [What Can I Contribute?](#what-can-i-contribute)
 - [Code Quality Tools](#code-quality-tools)
 - [Git Workflow](#git-workflow)
 - [Commit Conventions](#commit-conventions)
 - [Pull Request Process](#pull-request-process)
-- [CI/CD Pipeline](#cicd-pipeline)
 
 ## Development Setup
 
@@ -24,7 +24,7 @@ Thank you for your interest in contributing! This guide will help you get set up
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/kiro-project-template.git
+   git clone https://github.com/palpito-hunch/kiro-project-template.git
    cd kiro-project-template
    ```
 
@@ -36,33 +36,43 @@ Thank you for your interest in contributing! This guide will help you get set up
 
    This automatically sets up Husky git hooks via the `prepare` script.
 
-3. **Set up environment variables**
-
-   ```bash
-   cp .env.example .env
-   # Edit .env with your values
-   ```
-
-4. **Verify setup**
+3. **Verify setup**
 
    ```bash
    npm run validate
    ```
 
-   This runs linting, type checking, and tests to ensure everything is working.
+## What Can I Contribute?
 
-5. **Start development server**
-   ```bash
-   npm run dev
-   ```
+### Standards (`.kiro/standards/`)
+
+- Improve existing coding standards
+- Add new library-specific standards
+- Fix errors or inconsistencies
+- Add examples and clarifications
+
+### Templates (`.kiro/templates/`)
+
+- Improve feature spec template
+- Add new templates for common patterns
+
+### Validation Rules (`.kiro/validation/`)
+
+- Add new validation rules for AI code generation
+- Improve pattern matching accuracy
+- Fix false positives/negatives
+
+### Reference Configs
+
+- Update TypeScript or ESLint configurations
+- Add missing rules or options
+- Improve documentation comments
 
 ## Code Quality Tools
 
-We use several tools to maintain code quality. These run automatically via git hooks, but you can also run them manually.
-
 ### ESLint
 
-Lints TypeScript and React code for errors and best practices.
+Validates TypeScript code in the `.kiro/` directory.
 
 ```bash
 # Check for issues
@@ -71,15 +81,6 @@ npm run lint
 # Auto-fix issues
 npm run lint:fix
 ```
-
-**Configuration:** `.eslintrc.json`
-
-Includes rules for:
-
-- TypeScript (`@typescript-eslint`)
-- React and React Hooks
-- Accessibility (`jsx-a11y`)
-- Next.js best practices
 
 ### Prettier
 
@@ -93,34 +94,13 @@ npm run format
 npm run format:check
 ```
 
-**Configuration:** `.prettierrc`
-
 ### TypeScript
 
-Type checks the codebase without emitting files.
+Type checks the codebase.
 
 ```bash
 npm run type-check
 ```
-
-### Jest
-
-Runs unit and integration tests.
-
-```bash
-# Run tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run tests with coverage (CI)
-npm run test:ci
-```
-
-**Configuration:** `jest.config.js`
-
-Coverage thresholds are set to 70% for branches, functions, lines, and statements.
 
 ### Run All Checks
 
@@ -128,44 +108,39 @@ Coverage thresholds are set to 70% for branches, functions, lines, and statement
 npm run validate
 ```
 
-This runs `lint`, `type-check`, and `test:ci` sequentially.
-
 ## Git Workflow
-
-We follow a gitflow-inspired workflow.
 
 ### Branch Naming
 
 Use the format: `type/description`
 
-| Type        | Purpose                  |
-| ----------- | ------------------------ |
-| `feature/`  | New features             |
-| `fix/`      | Bug fixes                |
-| `docs/`     | Documentation changes    |
-| `refactor/` | Code refactoring         |
-| `test/`     | Adding or updating tests |
-| `chore/`    | Maintenance tasks        |
+| Type        | Purpose                       |
+| ----------- | ----------------------------- |
+| `feature/`  | New standards or templates    |
+| `fix/`      | Corrections to existing rules |
+| `docs/`     | Documentation improvements    |
+| `refactor/` | Restructuring without changes |
+| `chore/`    | Maintenance tasks             |
 
 **Examples:**
 
-- `feature/user-authentication`
-- `fix/login-redirect-loop`
-- `docs/api-documentation`
+- `feature/react-query-standards`
+- `fix/prisma-transaction-rule`
+- `docs/improve-examples`
 
 ### Workflow
 
-1. Create a branch from `main` (or `develop` if using full gitflow)
+1. Create a branch from `main`
 
    ```bash
-   git checkout -b feature/my-feature
+   git checkout -b feature/my-changes
    ```
 
 2. Make your changes with atomic commits
 
 3. Push and create a pull request
    ```bash
-   git push -u origin feature/my-feature
+   git push -u origin feature/my-changes
    ```
 
 ## Commit Conventions
@@ -184,34 +159,25 @@ type(scope): description
 
 ### Types
 
-| Type       | Description                                             |
-| ---------- | ------------------------------------------------------- |
-| `feat`     | New feature                                             |
-| `fix`      | Bug fix                                                 |
-| `docs`     | Documentation only                                      |
-| `style`    | Formatting, missing semicolons, etc.                    |
-| `refactor` | Code change that neither fixes a bug nor adds a feature |
-| `perf`     | Performance improvement                                 |
-| `test`     | Adding or updating tests                                |
-| `build`    | Build system or external dependencies                   |
-| `ci`       | CI configuration                                        |
-| `chore`    | Other changes that don't modify src or test files       |
-| `revert`   | Reverts a previous commit                               |
+| Type       | Description                              |
+| ---------- | ---------------------------------------- |
+| `feat`     | New standard, template, or rule          |
+| `fix`      | Correction to existing content           |
+| `docs`     | Documentation only                       |
+| `refactor` | Restructuring without changing behavior  |
+| `chore`    | Maintenance tasks                        |
 
 ### Examples
 
 ```bash
-# Feature
-git commit -m "feat(auth): add password reset functionality"
+# New standard
+git commit -m "feat(standards): add React Query standards"
 
-# Bug fix
-git commit -m "fix(api): handle null response from user endpoint"
+# Fix to existing rule
+git commit -m "fix(validation): correct transaction-required pattern"
 
 # Documentation
-git commit -m "docs: update API documentation for v2 endpoints"
-
-# Breaking change
-git commit -m "feat(api)!: change authentication to use JWT tokens"
+git commit -m "docs: improve TypeScript style examples"
 ```
 
 ### Rules
@@ -220,35 +186,6 @@ git commit -m "feat(api)!: change authentication to use JWT tokens"
 - Subject must be lowercase
 - No period at the end of subject
 - Maximum header length: 100 characters
-
-**Configuration:** `commitlint.config.js`
-
-## Git Hooks
-
-Git hooks run automatically to ensure code quality before commits and pushes.
-
-### Pre-commit Hook
-
-Runs lint-staged, which executes:
-
-- ESLint (with auto-fix) on `.ts`, `.tsx`, `.js`, `.jsx` files
-- Prettier on all staged files
-
-**Configuration:** `.lintstagedrc.json`
-
-### Commit-msg Hook
-
-Validates commit messages against conventional commit format.
-
-### Bypassing Hooks (Not Recommended)
-
-In rare cases, you can bypass hooks:
-
-```bash
-git commit --no-verify -m "message"
-```
-
-Only do this for emergency fixes and ensure CI passes.
 
 ## Pull Request Process
 
@@ -260,11 +197,12 @@ Only do this for emergency fixes and ensure CI passes.
    npm run validate
    ```
 
-2. Update documentation if needed
+2. If adding standards, ensure they include:
+   - Clear rationale for each rule
+   - Good and bad examples
+   - References to ESLint/TypeScript enforcement where applicable
 
-3. Add or update tests for your changes
-
-4. Rebase on latest main if needed:
+3. Rebase on latest main if needed:
    ```bash
    git fetch origin
    git rebase origin/main
@@ -275,61 +213,24 @@ Only do this for emergency fixes and ensure CI passes.
 - Clear title following commit conventions
 - Description explaining:
   - What changes were made
-  - Why the changes were needed
-  - How to test the changes
-- Link to related issue (if applicable)
+  - Why the changes improve AI code generation
+  - Any tradeoffs or considerations
 - All CI checks passing
-- At least 2 approvals (see `.kiro/team-standards.yml`)
 
 ### Review Checklist
 
 Reviewers will check:
 
-- [ ] Code follows project conventions
-- [ ] Tests are included and passing
-- [ ] No console.log statements
-- [ ] Documentation is updated
-- [ ] Accessibility considerations addressed
-- [ ] No security vulnerabilities introduced
-
-## CI/CD Pipeline
-
-Our GitHub Actions workflow runs on all PRs and pushes to `main`/`develop`.
-
-### Jobs
-
-| Job            | Description                   |
-| -------------- | ----------------------------- |
-| **Lint**       | ESLint + Prettier check       |
-| **Type Check** | TypeScript compilation check  |
-| **Test**       | Jest tests with coverage      |
-| **Build**      | Next.js production build      |
-| **Security**   | npm audit for vulnerabilities |
-
-### Viewing Results
-
-- Check the "Checks" tab on your PR
-- All jobs must pass before merging
-
-### Running CI Locally
-
-You can simulate CI locally:
-
-```bash
-npm run validate && npm run build
-```
-
-## Additional Resources
-
-- [Project Standards](.kiro/standards/) - Detailed coding standards
-- [Team Standards](.kiro/team-standards.yml) - Collaboration guidelines
-- [Conventions](.kiro/conventions.yml) - Naming and style conventions
-- [Quick Reference](.kiro/standards/quick-reference.md) - One-page developer guide
+- [ ] Standards are clear and actionable
+- [ ] Examples demonstrate the rule effectively
+- [ ] No contradictions with existing standards
+- [ ] Validation rules have correct patterns
+- [ ] Documentation is well-formatted
 
 ## Questions?
 
-If you have questions about contributing, please:
+If you have questions about contributing:
 
-1. Check existing documentation in `docs/` and `.kiro/`
+1. Check existing documentation in `.kiro/`
 2. Open an issue for discussion
 3. Reach out to the maintainers
