@@ -1,3 +1,24 @@
+## 1.4.0 (2026-01-19)
+
+* feat(ai): add AI code generation improvements (#3) ([4638649](https://github.com/palpito-hunch/ai-rules/commit/4638649)), closes [#3](https://github.com/palpito-hunch/ai-rules/issues/3)
+* feat(claude): add template-specific claude files (#12) ([03a3541](https://github.com/palpito-hunch/ai-rules/commit/03a3541)), closes [#12](https://github.com/palpito-hunch/ai-rules/issues/12)
+* feat(lint): align eslint and typescript config with coding standards ([ceadf93](https://github.com/palpito-hunch/ai-rules/commit/ceadf93))
+* feat(release): restore semantic versioning for ai-rules (#18) ([765f572](https://github.com/palpito-hunch/ai-rules/commit/765f572)), closes [#18](https://github.com/palpito-hunch/ai-rules/issues/18)
+* feat(standards): add AI behavior guidelines and TypeScript standards ([660b6bd](https://github.com/palpito-hunch/ai-rules/commit/660b6bd))
+* feat(steering): add Kiro steering files that reference standards (#5) ([f56084f](https://github.com/palpito-hunch/ai-rules/commit/f56084f)), closes [#5](https://github.com/palpito-hunch/ai-rules/issues/5)
+* feat(sync): add manifest-based template sync (#11) ([48a66ec](https://github.com/palpito-hunch/ai-rules/commit/48a66ec)), closes [#11](https://github.com/palpito-hunch/ai-rules/issues/11)
+* chore: remove irrelevant workflows and generic claude.md (#15) ([5e46bb7](https://github.com/palpito-hunch/ai-rules/commit/5e46bb7)), closes [#15](https://github.com/palpito-hunch/ai-rules/issues/15)
+* chore: simplify npm config for documentation repo (#17) ([b2ccec7](https://github.com/palpito-hunch/ai-rules/commit/b2ccec7)), closes [#17](https://github.com/palpito-hunch/ai-rules/issues/17)
+* docs: add git workflow rule to CLAUDE.md and ai-behavior.md (#6) ([8867382](https://github.com/palpito-hunch/ai-rules/commit/8867382)), closes [#6](https://github.com/palpito-hunch/ai-rules/issues/6)
+* docs(adr): add adr-0004 centralized rules for distributed teams (#13) ([bcf86fa](https://github.com/palpito-hunch/ai-rules/commit/bcf86fa)), closes [#13](https://github.com/palpito-hunch/ai-rules/issues/13)
+* docs(adr): add centralized ai rules architecture decision (#9) ([59ac208](https://github.com/palpito-hunch/ai-rules/commit/59ac208)), closes [#9](https://github.com/palpito-hunch/ai-rules/issues/9)
+* docs(claude): add mandatory rule for creating projects from templates (#14) ([65e6243](https://github.com/palpito-hunch/ai-rules/commit/65e6243)), closes [#14](https://github.com/palpito-hunch/ai-rules/issues/14)
+* docs(standards): add eslint and typescript config examples ([b2f7416](https://github.com/palpito-hunch/ai-rules/commit/b2f7416))
+* refactor: convert to AI rules-only repository (#4) ([cc99d7e](https://github.com/palpito-hunch/ai-rules/commit/cc99d7e)), closes [#4](https://github.com/palpito-hunch/ai-rules/issues/4)
+* refactor(adr): split adrs into separate files per industry standard (#10) ([d1477c3](https://github.com/palpito-hunch/ai-rules/commit/d1477c3)), closes [#10](https://github.com/palpito-hunch/ai-rules/issues/10)
+* fix: remove outdated directory patterns from standards-config.yml (#7) ([cc44c1c](https://github.com/palpito-hunch/ai-rules/commit/cc44c1c)), closes [#7](https://github.com/palpito-hunch/ai-rules/issues/7)
+* fix(husky): remove npm audit from pre-commit hook (#8) ([aec97a9](https://github.com/palpito-hunch/ai-rules/commit/aec97a9)), closes [#8](https://github.com/palpito-hunch/ai-rules/issues/8)
+
 ## <small>1.3.1 (2026-01-16)</small>
 
 * fix: correct garbled utf-8 emoji characters in standards docs ([d78e2f1](https://github.com/palpito-hunch/kiro-project-template/commit/d78e2f1))
