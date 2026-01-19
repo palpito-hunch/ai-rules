@@ -273,28 +273,16 @@ Related documentation
 
 | ADR | File | Decision |
 |-----|------|----------|
-| ADR-001 | `0001-use-nextjs-app-router.md` | Use Next.js App Router |
-| ADR-002 | `0002-use-prisma-for-database.md` | Use Prisma for Database |
-| ADR-003 | `0003-layered-architecture.md` | Layered Architecture |
-| ADR-004 | `0004-zod-for-runtime-validation.md` | Zod for Validation |
-| ADR-005 | `0005-strict-typescript-configuration.md` | Strict TypeScript |
-| ADR-006 | `0006-eslint-with-type-aware-rules.md` | ESLint Type-Aware Rules |
-| ADR-007 | `0007-semantic-versioning-with-conventional-commits.md` | Semantic Versioning |
-| ADR-008 | `0008-centralized-ai-rules-architecture.md` | Centralized AI Rules Architecture |
+| ADR-001 | `0001-semantic-versioning-with-conventional-commits.md` | Semantic Versioning |
+| ADR-002 | `0002-centralized-ai-rules-architecture.md` | Centralized AI Rules Architecture |
+
+> **Note**: Technology-specific decisions (Next.js, Prisma, Zod, etc.) are documented in library standards (`.kiro/standards/libraries/`) rather than ADRs, as they are guidelines for projects using these rules, not decisions about this repository.
 
 ### How It Helps
 
-Without ADRs:
-```typescript
-// AI might generate raw SQL (doesn't know Prisma is preferred)
-const users = await db.query('SELECT * FROM users WHERE id = ?', [id]);
-```
-
-With ADRs:
-```typescript
-// AI knows Prisma is the standard
-const user = await prisma.user.findUnique({ where: { id } });
-```
+ADRs document decisions about the ai-rules repository itself:
+- How the repo is versioned (semantic versioning)
+- How rules are organized and distributed (centralized architecture)
 
 ---
 

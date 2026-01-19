@@ -1,4 +1,4 @@
-# ADR-0007: Semantic Versioning with Conventional Commits
+# ADR-0001: Semantic Versioning with Conventional Commits
 
 **Date**: 2024-01
 **Status**: Accepted

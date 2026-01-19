@@ -1,4 +1,4 @@
-# ADR-0008: Centralized AI Rules Architecture
+# ADR-0002: Centralized AI Rules Architecture
 
 **Date**: 2025-01
 **Status**: Accepted
