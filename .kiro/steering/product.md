@@ -1,15 +1,16 @@
 # Product Overview
 
-This is a Kiro-structured project template for modern web applications. It provides a well-organized foundation for building React-based web apps with Next.js, following best practices for code quality, testing, and documentation.
+This is an AI code generation standards repository. It provides coding standards, validation rules, and templates that both Claude and Kiro IDE use to generate consistent, high-quality code.
 
 ## Purpose
 
-Serves as a starting point for new projects with pre-configured tooling, standardized structure, and automated workflows for development, testing, and deployment.
+Provides a single source of truth for AI-assisted code generation rules. Projects copy the `.kiro/` directory and `CLAUDE.md` to inherit these standards.
 
 ## Key Features
 
-- Modern React/Next.js web application
-- Full-stack capable (frontend + optional backend)
-- Docker-ready for containerized deployment
-- Automated versioning with semantic-release
-- Comprehensive testing and code quality tools
+- Comprehensive coding standards for TypeScript projects
+- Library-specific best practices (Prisma, Next.js, Zod)
+- Machine-readable validation rules for AI code generation
+- Feature specification templates for spec-driven development
+- Priority framework for resolving conflicting standards
+- Architecture Decision Records (ADRs) and domain glossary
