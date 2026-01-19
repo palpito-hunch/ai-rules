@@ -1,3 +1,8 @@
+## 1.6.0 (2026-01-19)
+
+* feat(claude): add global claude code settings and install script (#22) ([902c40c](https://github.com/palpito-hunch/ai-rules/commit/902c40c)), closes [#22](https://github.com/palpito-hunch/ai-rules/issues/22)
+* docs: update readme to reflect current architecture (#21) ([aefdfe6](https://github.com/palpito-hunch/ai-rules/commit/aefdfe6)), closes [#21](https://github.com/palpito-hunch/ai-rules/issues/21)
+
 ## 1.5.0 (2026-01-19)
 
 * feat(rules): add mandatory adr compliance rule (#20) ([8d31fbf](https://github.com/palpito-hunch/ai-rules/commit/8d31fbf)), closes [#20](https://github.com/palpito-hunch/ai-rules/issues/20)
