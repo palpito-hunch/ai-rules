@@ -43,6 +43,16 @@ templates:
 # Validation and templates:
 #   - validation/rules.yml
 #   - templates/*
+
+# CLAUDE.md handling:
+# ─────────────────────────────────────────
+# Template-specific CLAUDE files are used to provide relevant
+# content for each template type. The sync workflow:
+#   1. Looks for CLAUDE.<template_type>.md (e.g., CLAUDE.backend.md)
+#   2. Falls back to CLAUDE.md if template-specific file doesn't exist
+#   3. Copies the appropriate file AS CLAUDE.md in the target repo
 #
-# Entry points:
-#   - CLAUDE.md
+# Template-specific files:
+#   - CLAUDE.backend.md → backend templates (Prisma, Express references)
+#   - CLAUDE.frontend.md → frontend templates (Next.js, React references)
+#   - CLAUDE.md → fallback/generic (references all libraries)
