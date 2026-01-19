@@ -1,0 +1,48 @@
+# Sync Manifest for Template Repositories
+#
+# This file defines which files are excluded when syncing to each template type.
+# By default, all files in .kiro/ are synced. Use 'exclude' to filter out
+# files that don't apply to a specific template.
+#
+# See ADR-0003 for details: .kiro/memory/decisions/0003-manifest-based-template-sync.md
+
+templates:
+  backend:
+    description: 'Node.js + Express + Prisma backend projects'
+    exclude:
+      # Frontend framework standards
+      - standards/libraries/nextjs.md
+      - steering/nextjs-standards.md
+
+  frontend:
+    description: 'Next.js + React frontend projects'
+    exclude:
+      # Backend/database standards
+      - standards/libraries/prisma.md
+      - steering/prisma-standards.md
+
+# Shared files (synced to ALL templates):
+# ─────────────────────────────────────────
+# Core standards:
+#   - standards/core/*
+#   - standards/quick-reference.md
+#
+# TypeScript standards:
+#   - standards/typescript/*
+#   - steering/typescript-standards.md
+#
+# Domain standards:
+#   - standards/domain/*
+#   - steering/error-standards.md
+#   - steering/testing-standards.md
+#
+# Shared library standards:
+#   - standards/libraries/zod.md
+#   - steering/zod-standards.md
+#
+# Validation and templates:
+#   - validation/rules.yml
+#   - templates/*
+#
+# Entry points:
+#   - CLAUDE.md
