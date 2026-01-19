@@ -88,3 +88,14 @@ See `.kiro/steering.yml` for project-specific settings (stack, preferences).
 2. **Fail explicitly** - Descriptive errors with context, never silent failures
 3. **One pattern at a time** - Don't combine patterns unnecessarily
 4. **Measure before optimizing** - No premature optimization
+
+## Git Workflow (Mandatory)
+
+**NEVER commit directly to main.** All changes must go through a feature branch and PR:
+
+1. Create a feature branch: `git checkout -b feature/description`
+2. Make changes and commit to the branch
+3. Push and create a PR: `gh pr create`
+4. Merge via PR after approval: `gh pr merge --squash --delete-branch`
+
+No exceptions, even for small changes.
