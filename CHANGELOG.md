@@ -1,3 +1,8 @@
+## 1.5.0 (2026-01-19)
+
+* feat(rules): add mandatory adr compliance rule (#20) ([8d31fbf](https://github.com/palpito-hunch/ai-rules/commit/8d31fbf)), closes [#20](https://github.com/palpito-hunch/ai-rules/issues/20)
+* docs(adr): update adr-002 to reflect current architecture (#19) ([42a03f0](https://github.com/palpito-hunch/ai-rules/commit/42a03f0)), closes [#19](https://github.com/palpito-hunch/ai-rules/issues/19)
+
 ## 1.4.0 (2026-01-19)
 
 * feat(ai): add AI code generation improvements (#3) ([4638649](https://github.com/palpito-hunch/ai-rules/commit/4638649)), closes [#3](https://github.com/palpito-hunch/ai-rules/issues/3)
