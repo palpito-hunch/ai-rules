@@ -25,7 +25,7 @@ defaults:
 
   # Project memory for AI context
   memory:
-    - memory/decisions.md
+    - memory/decisions/
     - memory/glossary.yml
 
   # Validation rules for AI code generation

@@ -241,59 +241,48 @@ A structured template for defining features before implementation. Based on Tess
 
 Two files provide persistent context that helps AI understand the project's history and domain.
 
-### File: `.kiro/memory/decisions.md`
+### Directory: `.kiro/memory/decisions/`
 
 ### What It Is
 
-Architecture Decision Records (ADRs) documenting significant technical decisions.
+Architecture Decision Records (ADRs) in separate files documenting significant technical decisions.
 
-### Structure of Each Decision
+### Structure of Each Decision File
 
 ```markdown
-## ADR-001: [Title]
+# ADR-XXXX: [Title]
 
 **Date**: YYYY-MM
-**Status**: Accepted
+**Status**: Proposed | Accepted | Deprecated | Superseded
 
-### Context
+## Context
 Why was this decision needed?
 
-### Decision
+## Decision
 What was decided?
 
-### Consequences
+## Consequences
 **Positive:** Benefits
 **Negative:** Trade-offs
 
-### References
+## References
 Related documentation
 ```
 
 ### Decisions Documented
 
-| ADR | Decision | Why It Matters |
-|-----|----------|----------------|
-| ADR-001 | Use Next.js App Router | AI generates App Router code, not Pages Router |
-| ADR-002 | Use Prisma | AI uses Prisma patterns, not raw SQL |
-| ADR-003 | Layered Architecture | AI creates proper service/repository separation |
-| ADR-004 | Zod for Validation | AI adds Zod schemas, not manual validation |
-| ADR-005 | Strict TypeScript | AI uses strict types, handles undefined |
-| ADR-006 | ESLint Type-Aware Rules | AI generates code that passes linting |
-| ADR-007 | Semantic Versioning | AI writes proper commit messages |
+| ADR | File | Decision |
+|-----|------|----------|
+| ADR-001 | `0001-semantic-versioning-with-conventional-commits.md` | Semantic Versioning |
+| ADR-002 | `0002-centralized-ai-rules-architecture.md` | Centralized AI Rules Architecture |
+
+> **Note**: Technology-specific decisions (Next.js, Prisma, Zod, etc.) are documented in library standards (`.kiro/standards/libraries/`) rather than ADRs, as they are guidelines for projects using these rules, not decisions about this repository.
 
 ### How It Helps
 
-Without ADRs:
-```typescript
-// AI might generate raw SQL (doesn't know Prisma is preferred)
-const users = await db.query('SELECT * FROM users WHERE id = ?', [id]);
-```
-
-With ADRs:
-```typescript
-// AI knows Prisma is the standard
-const user = await prisma.user.findUnique({ where: { id } });
-```
+ADRs document decisions about the ai-rules repository itself:
+- How the repo is versioned (semantic versioning)
+- How rules are organized and distributed (centralized architecture)
 
 ---
 
@@ -411,7 +400,7 @@ defaults:
     - standards/libraries/zod.md
 
   memory:
-    - memory/decisions.md
+    - memory/decisions/
     - memory/glossary.yml
 
   validation_rules: validation/rules.yml
@@ -516,7 +505,7 @@ Added documentation for all new directories:
 | Aspect | Before | After |
 |--------|--------|-------|
 | **Library APIs** | May hallucinate methods | Uses documented patterns from library specs |
-| **Architecture** | Inconsistent structure | Follows decisions.md patterns |
+| **Architecture** | Inconsistent structure | Follows ADR patterns in decisions/ |
 | **Naming** | Varies by generation | Consistent per glossary.yml |
 | **Validation** | Often missing | Zod schemas per zod.md |
 | **Database** | May have N+1 issues | Correct queries per prisma.md |
@@ -545,7 +534,7 @@ Added documentation for all new directories:
 │   ├── ai-code-generation-improvements.md  # Recommendations
 │   └── whats-new-guide.md                  # This document
 ├── memory/
-│   ├── decisions.md                        # Architecture decisions
+│   ├── decisions/                          # Architecture decisions (ADRs)
 │   └── glossary.yml                        # Domain terminology
 ├── specs/
 │   ├── features/                           # Feature specs
@@ -571,6 +560,6 @@ Added documentation for all new directories:
 | Building pages/routes | `libraries/nextjs.md` |
 | Input validation | `libraries/zod.md` |
 | New feature | `templates/feature-spec.md` |
-| Understanding "why" | `memory/decisions.md` |
+| Understanding "why" | `memory/decisions/` |
 | Naming questions | `memory/glossary.yml` |
 | Code review | `validation/rules.yml` |
