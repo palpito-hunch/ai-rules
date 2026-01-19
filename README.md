@@ -1,287 +1,191 @@
-# Kiro Project Template
+# Kiro AI Rules
 
-A well-structured project template following Kiro best practices for modern web development.
+AI code generation rules and standards for Kiro-driven development. This repository provides a comprehensive set of standards, templates, and configurations to guide AI code generation tools.
 
-## 🏗️ Project Structure
-
-This template follows the recommended Kiro project structure:
+## What's Included
 
 ```
-├── .kiro/                  # Kiro configuration and automation
-├── docs/                   # Project documentation (EARS requirements, ADRs)
-├── src/                    # Frontend source code
-├── server/                 # Backend code
-└── Configuration files
+├── .kiro/                      # AI rules and standards
+│   ├── standards/              # Coding standards by category
+│   │   ├── core/               # Priority framework and core principles
+│   │   ├── typescript/         # TypeScript style and architecture
+│   │   ├── libraries/          # Library-specific standards (Prisma, Next.js, Zod)
+│   │   └── domain/             # Domain modeling and error handling
+│   ├── templates/              # Spec templates for features and components
+│   ├── specs/                  # Feature and component specifications
+│   ├── memory/                 # Project memory (ADRs, glossary)
+│   ├── validation/             # AI code validation rules
+│   └── docs/                   # Documentation and guides
+├── .mcp.json                   # MCP server configuration
+├── tsconfig.json               # Reference TypeScript config
+├── eslint.config.mjs           # Reference ESLint config
+└── package.json                # Tooling dependencies
 ```
 
-## 🚀 Getting Started
+## Quick Start
 
-### Prerequisites
+### Option 1: Use as Template
 
-- Node.js 22+
-- npm or yarn
-- Docker and Docker Compose (optional, for containerized development)
+1. Click "Use this template" to create a new repository
+2. Clone your new repository
+3. Install dependencies: `npm install`
+4. Start building with AI-assisted development
 
-### Installation
+### Option 2: Copy into Existing Project
 
-1. **Use this template** by clicking "Use this template" button above
-2. **Clone your new repository**
-
-   ```bash
-   git clone https://github.com/your-username/your-project.git
-   cd your-project
-   ```
-
-3. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-4. **Set up environment variables**
-
-   ```bash
-   cp .env.example .env
-   # Edit .env with your actual values
-   ```
-
-5. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-## 📁 Directory Overview
-
-### `.kiro/`
-
-Kiro configuration files that define project context, personas, conventions, and automation hooks.
-
-- `steering.yml` - Project context and preferences
-- `personas.yml` - AI agent personalities for different roles
-- `conventions.yml` - Code style and naming patterns
-- `team-standards.yml` - Collaboration and review standards
-- `hooks/` - Automation hooks for testing, security, and performance
-
-### `docs/`
-
-Project documentation using industry-standard formats.
-
-- `requirements.md` - EARS format requirements
-- `design.md` - Architecture and design decisions
-- `tasks.md` - Implementation roadmap
-- `adr/` - Architecture Decision Records
-- `api/` - API documentation
-
-### `src/`
-
-Frontend source code with clear separation of concerns.
-
-- `components/` - Reusable UI components (ui, forms, layout)
-- `pages/` - Page-level components
-- `hooks/` - Custom React hooks
-- `services/` - API clients and external services
-- `utils/` - Utility functions
-- `types/` - TypeScript type definitions
-- `__tests__/` - Test files
-
-### `server/`
-
-Backend code (if your project needs a backend).
-
-- `routes/` - API route handlers
-- `middleware/` - Express middleware
-- `models/` - Data models
-- `services/` - Business logic layer
-- `__tests__/` - Backend tests
-
-## 🛠️ Available Scripts
-
-| Script                 | Description                             |
-| ---------------------- | --------------------------------------- |
-| `npm run dev`          | Start development server                |
-| `npm run build`        | Build for production                    |
-| `npm start`            | Start production server                 |
-| `npm test`             | Run tests                               |
-| `npm run test:watch`   | Run tests in watch mode                 |
-| `npm run test:ci`      | Run tests with coverage                 |
-| `npm run lint`         | Check code for linting errors           |
-| `npm run lint:fix`     | Auto-fix linting errors                 |
-| `npm run format`       | Format code with Prettier               |
-| `npm run format:check` | Check code formatting                   |
-| `npm run type-check`   | Run TypeScript type checking            |
-| `npm run validate`     | Run all checks (lint, type-check, test) |
-
-## 🐳 Docker
-
-### Development with Docker
-
-Start the development environment with hot reloading:
+Copy the `.kiro/` directory into your project root:
 
 ```bash
-docker compose up
+# Clone this repo
+git clone https://github.com/palpito-hunch/kiro-project-template.git kiro-rules
+
+# Copy .kiro to your project
+cp -r kiro-rules/.kiro /path/to/your/project/
+
+# Optionally copy reference configs
+cp kiro-rules/tsconfig.json /path/to/your/project/tsconfig.reference.json
+cp kiro-rules/eslint.config.mjs /path/to/your/project/eslint.reference.mjs
 ```
 
-The app will be available at http://localhost:3000 with hot reloading enabled.
+## Standards Overview
 
-### Production Build
+### Core Standards
 
-Test the production build locally:
+- **Priority Framework** (`.kiro/standards/core/priority-framework.md`) - P0 (security), P1 (correctness), P2 (maintainability), P3 (efficiency)
+- **AI Behavior Guidelines** (`.kiro/standards/core/ai-behavior.md`) - How AI should interact with the codebase
 
-```bash
-docker compose --profile production up app-prod
+### TypeScript Standards
+
+- **Style Guide** (`.kiro/standards/typescript/style.md`) - Code style rules with ESLint enforcement
+- **Architecture** (`.kiro/standards/typescript/architecture.md`) - Layered architecture patterns
+
+### Library Standards
+
+- **Prisma** (`.kiro/standards/libraries/prisma.md`) - Database operations, transactions, query optimization
+- **Next.js** (`.kiro/standards/libraries/nextjs.md`) - App Router, Server/Client Components, API Routes
+- **Zod** (`.kiro/standards/libraries/zod.md`) - Schema validation and type inference
+
+## MCP Integration
+
+The `.mcp.json` file configures Model Context Protocol servers for enhanced AI capabilities:
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    }
+  }
+}
 ```
 
-### Building Images
+**Context7** fetches up-to-date library documentation, ensuring AI has access to current APIs.
 
-```bash
-# Development image
-docker build --target development -t kiro-app:dev .
+## Reference Configurations
 
-# Production image
-docker build --target runner -t kiro-app:prod .
-```
+### TypeScript (`tsconfig.json`)
 
-### Docker Commands
+A reference configuration demonstrating recommended settings:
 
-| Command                           | Description              |
-| --------------------------------- | ------------------------ |
-| `docker compose up`               | Start development server |
-| `docker compose up -d`            | Start in detached mode   |
-| `docker compose down`             | Stop all containers      |
-| `docker compose logs -f`          | View logs                |
-| `docker compose build --no-cache` | Rebuild images           |
+- Strict type checking (`strict: true`, `noUncheckedIndexedAccess`)
+- Path aliases (`@/*`, `@components/*`, etc.)
+- Modern module resolution (`bundler`)
 
-### Health Check
+### ESLint (`eslint.config.mjs`)
 
-The application exposes a health endpoint at `/api/health` for container orchestration.
+A reference configuration with:
 
-## 📝 Development Workflow
+- TypeScript-ESLint recommended rules
+- Explicit return type enforcement
+- No floating promises
+- Error class requirements
 
-1. **Check requirements** in `docs/requirements.md`
-2. **Review design** in `docs/design.md`
-3. **Pick a task** from `docs/tasks.md`
-4. **Create a branch** following naming convention: `type/description`
-5. **Write code** following conventions in `.kiro/conventions.yml`
-6. **Write tests** alongside your code
-7. **Commit** using conventional commits format
-8. **Submit PR** with description linking to the task
+To add React/Next.js support, see the commented section at the bottom of the file.
 
-## 🤝 Contributing
+## Validation Rules
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed information on:
+The `.kiro/validation/rules.yml` file defines patterns for AI code validation:
 
-- Development environment setup
-- Code quality tools (ESLint, Prettier, TypeScript)
-- Git hooks and commit conventions
-- Pull request process
-- CI/CD pipeline
+- **Critical**: Transaction requirements, floating promises, error throwing
+- **High**: N+1 queries, explicit return types, Zod validation
+- **Medium**: Console logging, field selection, pagination
 
-For team-specific standards, see `.kiro/team-standards.yml`.
+## Templates
 
-## 📚 Documentation
+### Feature Spec Template
 
-- Requirements are documented in EARS format
-- Architecture decisions are recorded as ADRs
-- API documentation is in `docs/api/`
-- Inline code comments explain the "why"
+`.kiro/templates/feature-spec.md` provides a structured template for feature specifications:
 
-## 🔄 Syncing Standards from Template
+- Intent and user stories
+- Behavior scenarios (Given/When/Then)
+- Technical approach
+- Constraints and acceptance criteria
 
-Repositories created from this template automatically inherit a workflow to sync standards updates.
+## Project Memory
 
-### How It Works
+### Architecture Decision Records
 
-The `sync-from-template.yml` workflow:
+`.kiro/memory/decisions.md` tracks architectural decisions using ADR format.
 
-1. Runs weekly (Mondays at 9am UTC) or on-demand
-2. Fetches the latest `.kiro/` and `CLAUDE.md` from this template
-3. Creates a PR if changes are detected
+### Domain Glossary
 
-### Private Template Setup
+`.kiro/memory/glossary.yml` defines domain terminology for consistent naming.
 
-If the template repository is private, downstream repos need a PAT to fetch from it:
+## Available Scripts
 
-1. Create a PAT with `repo` scope
-2. Add it as a secret named `TEMPLATE_PAT` in each downstream repo
+| Script | Description |
+|--------|-------------|
+| `npm run lint` | Check code for linting errors |
+| `npm run lint:fix` | Auto-fix linting errors |
+| `npm run format` | Format code with Prettier |
+| `npm run format:check` | Check code formatting |
+| `npm run type-check` | Run TypeScript type checking |
+| `npm run validate` | Run lint and format check |
 
-### Manual Sync
-
-Trigger manually in your repo: **Actions** → **Sync Standards from Template** → **Run workflow**
-
-### Customization
-
-To change the sync schedule, edit `.github/workflows/sync-from-template.yml` in your repo:
-
-```yaml
-on:
-  schedule:
-    - cron: '0 9 * * 1' # Change this cron expression
-```
-
-### Opting Out
-
-To stop syncing, delete `.github/workflows/sync-from-template.yml` from your repo.
-
-## 🏷️ Semantic Versioning
+## Semantic Versioning
 
 This project uses [semantic-release](https://semantic-release.gitbook.io/) for automated versioning.
 
-### How It Works
-
-1. Push to `develop`, `uat`, or `main` triggers the release workflow
-2. Commits are analyzed to determine version bump
-3. Version is tagged based on branch (prerelease or production)
-4. Changelog generated and GitHub release created
-
 ### Branch Release Strategy
 
-Each branch produces different version tags:
-
 | Branch | Tag Format | Example | Purpose |
-| ------ | ---------- | ------- | ------- |
-| `develop` | `x.y.z-a.N` | `1.2.0-a.1`, `1.2.0-a.2` | Alpha releases for dev testing |
-| `uat` | `x.y.z-rc.N` | `1.2.0-rc.1`, `1.2.0-rc.2` | Release candidates for QA |
+|--------|------------|---------|---------|
+| `develop` | `x.y.z-a.N` | `1.2.0-a.1` | Alpha releases for dev testing |
+| `uat` | `x.y.z-rc.N` | `1.2.0-rc.1` | Release candidates for QA |
 | `main` | `x.y.z` | `1.2.0` | Production releases |
-
-### Version Flow
-
-```
-develop (1.2.0-a.1) → uat (1.2.0-rc.1) → main (1.2.0)
-         ↓                   ↓                ↓
-    Alpha builds      Release candidates   Production
-```
-
-- **Alpha (`.a.N`)**: Increments with each push to `develop`
-- **Release Candidate (`.rc.N`)**: Increments with each push to `uat`
-- **Production**: Only increments when merged to `main`
 
 ### Version Bump Rules
 
-| Commit Type        | Version Bump  | Example                    |
-| ------------------ | ------------- | -------------------------- |
-| `feat:`            | Minor (1.x.0) | New feature                |
-| `fix:`             | Patch (1.0.x) | Bug fix                    |
-| `perf:`            | Patch (1.0.x) | Performance improvement    |
-| `BREAKING CHANGE:` | Major (x.0.0) | Breaking change            |
-| `docs:`, `chore:`  | No release    | Documentation, maintenance |
+| Commit Type | Version Bump | Example |
+|-------------|--------------|---------|
+| `feat:` | Minor (1.x.0) | New feature |
+| `fix:` | Patch (1.0.x) | Bug fix |
+| `BREAKING CHANGE:` | Major (x.0.0) | Breaking change |
+| `docs:`, `chore:` | No release | Documentation, maintenance |
 
-### For Downstream Repos
+## Syncing Standards
 
-Each repository created from this template has its own independent version. The versioning configuration is inherited but versions are tracked separately per repo.
+Repositories created from this template can sync updates via the `sync-from-template.yml` workflow:
 
-## 🔒 Security
+1. Runs weekly (Mondays at 9am UTC) or on-demand
+2. Fetches latest `.kiro/` from this template
+3. Creates a PR if changes are detected
 
-Security scanning is automated via Kiro hooks:
+### Manual Sync
 
-- Pre-commit secret scanning
-- Dependency auditing
-- Regular security reviews
+**Actions** → **Sync Standards from Template** → **Run workflow**
 
-## 📄 License
+## Related Templates
 
-[Your License Here]
+- **Backend Template**: Coming soon - Node.js/Express backend with these AI rules
+- **Frontend Template**: Coming soon - React/Next.js frontend with these AI rules
 
-## 🙏 Acknowledgments
+## License
+
+MIT
+
+## Acknowledgments
 
 - Built with [Kiro](https://kiro.directory) best practices
-- Structure inspired by modern web development standards
+- MCP integration via [Context7](https://context7.com)
