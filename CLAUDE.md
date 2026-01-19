@@ -89,6 +89,27 @@ See `.kiro/steering.yml` for project-specific settings (stack, preferences).
 3. **One pattern at a time** - Don't combine patterns unnecessarily
 4. **Measure before optimizing** - No premature optimization
 
+## Creating New Projects (Mandatory)
+
+**ALWAYS use GitHub's template feature** when creating projects from organization templates:
+
+```bash
+# Correct - uses GitHub template feature
+gh repo create org/new-project --template org/backend-template --private --clone
+
+# Wrong - cloning loses template attribution and carries git history
+git clone org/backend-template new-project  # DON'T DO THIS
+```
+
+Available templates:
+- `palpito-hunch/backend-template` - Node.js + Express + Prisma backend
+- `palpito-hunch/frontend-template` - Next.js + React + Tailwind frontend
+
+Benefits of `--template`:
+- Clean git history (starts fresh)
+- GitHub shows "generated from" attribution
+- Proper template repository relationship
+
 ## Git Workflow (Mandatory)
 
 **NEVER commit directly to main.** All changes must go through a feature branch and PR:
