@@ -85,6 +85,12 @@ Common documentation touchpoints:
 - Using `any` type instead of proper TypeScript types
 - Prisma operations outside transactions (when multiple writes)
 - N+1 query patterns
+- SQL/command injection vulnerabilities (string concatenation in queries)
+- Missing authentication/authorization checks on endpoints
+- Hardcoded secrets or credentials in code
+- Missing rate limiting on public endpoints
+- `dangerouslySetInnerHTML` without DOMPurify sanitization
+- Storing auth tokens in localStorage/sessionStorage (use httpOnly cookies)
 
 ## Key Principles
 
