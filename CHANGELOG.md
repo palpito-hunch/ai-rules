@@ -1,3 +1,7 @@
+## 1.8.0 (2026-01-20)
+
+* feat(security): add owasp and security standards (#24) ([d3448df](https://github.com/palpito-hunch/ai-rules/commit/d3448df)), closes [#24](https://github.com/palpito-hunch/ai-rules/issues/24)
+
 ## 1.7.0 (2026-01-20)
 
 * feat(install): add mcp credentials setup to install script (#23) ([7b0cdb6](https://github.com/palpito-hunch/ai-rules/commit/7b0cdb6)), closes [#23](https://github.com/palpito-hunch/ai-rules/issues/23)
