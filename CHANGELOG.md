@@ -1,3 +1,7 @@
+## 1.7.0 (2026-01-20)
+
+* feat(install): add mcp credentials setup to install script (#23) ([7b0cdb6](https://github.com/palpito-hunch/ai-rules/commit/7b0cdb6)), closes [#23](https://github.com/palpito-hunch/ai-rules/issues/23)
+
 ## 1.6.0 (2026-01-19)
 
 * feat(claude): add global claude code settings and install script (#22) ([902c40c](https://github.com/palpito-hunch/ai-rules/commit/902c40c)), closes [#22](https://github.com/palpito-hunch/ai-rules/issues/22)
