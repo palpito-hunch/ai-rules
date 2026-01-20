@@ -1,3 +1,7 @@
+## 1.9.0 (2026-01-20)
+
+* feat(security): add security red flags to global claude settings (#25) ([3d91222](https://github.com/palpito-hunch/ai-rules/commit/3d91222)), closes [#25](https://github.com/palpito-hunch/ai-rules/issues/25)
+
 ## 1.8.0 (2026-01-20)
 
 * feat(security): add owasp and security standards (#24) ([d3448df](https://github.com/palpito-hunch/ai-rules/commit/d3448df)), closes [#24](https://github.com/palpito-hunch/ai-rules/issues/24)
