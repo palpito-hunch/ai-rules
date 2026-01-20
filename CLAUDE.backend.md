@@ -29,6 +29,10 @@ Full framework: `.kiro/standards/core/priority-framework.md`
 - N+1 query patterns
 - Missing return type annotations on public functions
 - Floating promises (unhandled async)
+- SQL/command injection vulnerabilities (string concatenation in queries)
+- Missing authentication/authorization checks on endpoints
+- Hardcoded secrets or credentials in code
+- Missing rate limiting on public endpoints
 
 ## Key Standards
 
@@ -47,6 +51,21 @@ Full framework: `.kiro/standards/core/priority-framework.md`
 | ------- | --------------------------------------- | ---------------------- |
 | Prisma  | `.kiro/standards/libraries/prisma.md`   | Database operations    |
 | Zod     | `.kiro/standards/libraries/zod.md`      | Schema validation      |
+
+## Security Standards (P0 Priority)
+
+| Standard | File                                           | When to Use                    |
+| -------- | ---------------------------------------------- | ------------------------------ |
+| OWASP    | `.kiro/standards/security/owasp.md`            | Security vulnerability checks  |
+| API      | `.kiro/standards/security/api-security.md`     | Rate limiting, auth, headers   |
+| Input    | `.kiro/standards/security/input-validation.md` | Validating/sanitizing input    |
+
+### Security Checklist (Every Endpoint)
+- [ ] Authentication middleware applied
+- [ ] Authorization/ownership validated
+- [ ] Input validated with Zod
+- [ ] Rate limiting configured
+- [ ] No sensitive data in error responses
 
 ## Validation Rules
 

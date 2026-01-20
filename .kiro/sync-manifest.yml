@@ -13,6 +13,8 @@ templates:
       # Frontend framework standards
       - standards/libraries/nextjs.md
       - steering/nextjs-standards.md
+      # Frontend-specific security
+      - standards/security/frontend-security.md
 
   frontend:
     description: 'Next.js + React frontend projects'
@@ -20,6 +22,8 @@ templates:
       # Backend/database standards
       - standards/libraries/prisma.md
       - steering/prisma-standards.md
+      # Backend-specific security
+      - standards/security/api-security.md
 
 # Shared files (synced to ALL templates):
 # ─────────────────────────────────────────

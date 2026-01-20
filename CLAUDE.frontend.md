@@ -29,6 +29,11 @@ Full framework: `.kiro/standards/core/priority-framework.md`
 - Floating promises (unhandled async)
 - Using `any` type instead of proper TypeScript types
 - Missing key prop in React list rendering
+- `dangerouslySetInnerHTML` without DOMPurify sanitization
+- Missing `rel="noopener noreferrer"` on external links
+- Storing auth tokens in localStorage/sessionStorage (use httpOnly cookies)
+- User-provided URLs in `href` without protocol validation
+- Missing CSP headers in Next.js config
 
 ## Key Standards
 
@@ -47,6 +52,22 @@ Full framework: `.kiro/standards/core/priority-framework.md`
 | ------- | --------------------------------------- | ---------------------- |
 | Next.js | `.kiro/standards/libraries/nextjs.md`   | Next.js features       |
 | Zod     | `.kiro/standards/libraries/zod.md`      | Schema validation      |
+
+## Security Standards (P0 Priority)
+
+| Standard | File                                           | When to Use                    |
+| -------- | ---------------------------------------------- | ------------------------------ |
+| OWASP    | `.kiro/standards/security/owasp.md`            | Security vulnerability checks  |
+| Frontend | `.kiro/standards/security/frontend-security.md`| XSS, CSP, secure storage       |
+| Input    | `.kiro/standards/security/input-validation.md` | Validating/sanitizing input    |
+
+### Security Checklist (Every Component)
+- [ ] No `dangerouslySetInnerHTML` without sanitization
+- [ ] External links have `rel="noopener noreferrer"`
+- [ ] User URLs validated before use in `href`
+- [ ] Auth tokens stored in httpOnly cookies only
+- [ ] No sensitive data in localStorage/sessionStorage
+- [ ] CSRF token included for mutations
 
 ## Validation Rules
 
