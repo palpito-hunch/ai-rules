@@ -99,6 +99,40 @@ Common documentation touchpoints:
 3. **One pattern at a time** - Don't combine patterns unnecessarily
 4. **Measure before optimizing** - No premature optimization
 
+## Debugging & RCA Approach
+
+### Before Starting
+
+1. **Clarify the symptom** - What's the expected vs actual behavior?
+2. **Gather context** - When did it start? What changed? Who's affected?
+3. **Reproduce first** - Confirm you can trigger the issue reliably
+
+### Investigation
+
+1. **Form a hypothesis** - State what you think is wrong and why
+2. **Test systematically** - One variable at a time, don't shotgun
+3. **Follow the data** - Logs, traces, state inspection—not guesses
+4. **Document dead ends** - Note what was ruled out and why
+
+### Resolution
+
+1. **Identify root cause** - Not just the symptom, the underlying why
+2. **Propose fix** - Explain the change and why it addresses the root cause
+3. **Verify** - Confirm the fix works and doesn't break other things
+
+### Expected Artifacts
+
+- Root cause summary (1-2 sentences)
+- Fix with explanation
+- Test that reproduces the bug (when feasible)
+- Follow-up items (monitoring, related issues, tech debt)
+
+### Principles
+
+- **Don't guess** - If unsure, investigate more before changing code
+- **Smallest fix first** - Address the root cause, don't refactor the world
+- **Ask before assuming** - Clarify unknowns rather than filling gaps with assumptions
+
 ## Organization Resources
 
 - **AI Rules**: https://github.com/palpito-hunch/ai-rules
