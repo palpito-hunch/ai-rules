@@ -126,6 +126,18 @@ Common documentation touchpoints:
 - Fix with explanation
 - Test that reproduces the bug (when feasible)
 - Follow-up items (monitoring, related issues, tech debt)
+- **Prevention rule in ai-rules repo** (mandatory - see below)
+
+### Capturing Learnings (Mandatory)
+
+**The RCA process is not complete until a rule has been added to the ai-rules repository that addresses the issue.**
+
+Every debugging session should result in either:
+- A new rule (if not covered by existing standards)
+- An updated rule (if existing standards need strengthening)
+- A red flag entry (if it's a "never do this" pattern)
+
+This ensures the same class of bug doesn't recur and builds organizational knowledge over time.
 
 ### Principles
 

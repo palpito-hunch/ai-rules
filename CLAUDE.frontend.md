@@ -37,14 +37,15 @@ Full framework: `.kiro/standards/core/priority-framework.md`
 
 ## Key Standards
 
-| Category   | File                                         | When to Use                |
-| ---------- | -------------------------------------------- | -------------------------- |
-| Quick Ref  | `.kiro/standards/quick-reference.md`         | Always                     |
-| Priorities | `.kiro/standards/core/priority-framework.md` | Resolving conflicts        |
-| Anti-patterns | `.kiro/standards/core/when-not-to-apply.md` | Before adding abstractions |
-| TypeScript | `.kiro/standards/typescript/style.md`        | Writing TypeScript         |
-| Errors     | `.kiro/standards/domain/errors.md`           | Error handling             |
-| Testing    | `.kiro/standards/domain/testing-mocks.md`    | Writing tests              |
+| Category      | File                                           | When to Use                |
+| ------------- | ---------------------------------------------- | -------------------------- |
+| Quick Ref     | `.kiro/standards/quick-reference.md`           | Always                     |
+| Priorities    | `.kiro/standards/core/priority-framework.md`   | Resolving conflicts        |
+| Anti-patterns | `.kiro/standards/core/when-not-to-apply.md`    | Before adding abstractions |
+| Debugging     | `.kiro/standards/core/debugging-rca.md`        | Investigating issues       |
+| TypeScript    | `.kiro/standards/typescript/style.md`          | Writing TypeScript         |
+| Errors        | `.kiro/standards/domain/errors.md`             | Error handling             |
+| Testing       | `.kiro/standards/domain/testing-mocks.md`      | Writing tests              |
 
 ## Library Standards
 
