@@ -1,3 +1,7 @@
+## 1.10.0 (2026-01-21)
+
+* feat(global): add debugging and rca guidelines (#26) ([127fa7c](https://github.com/palpito-hunch/ai-rules/commit/127fa7c)), closes [#26](https://github.com/palpito-hunch/ai-rules/issues/26)
+
 ## 1.9.0 (2026-01-20)
 
 * feat(security): add security red flags to global claude settings (#25) ([3d91222](https://github.com/palpito-hunch/ai-rules/commit/3d91222)), closes [#25](https://github.com/palpito-hunch/ai-rules/issues/25)
