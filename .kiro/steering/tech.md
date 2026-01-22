@@ -1,3 +1,7 @@
+---
+inclusion: always
+---
+
 # Tech Stack
 
 This repository contains reference configurations. Projects using these standards may have different stacks.
