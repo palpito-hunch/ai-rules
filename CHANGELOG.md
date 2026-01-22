@@ -1,3 +1,7 @@
+## <small>1.10.1 (2026-01-22)</small>
+
+* fix(sync): exclude project-specific steering files from sync (#27) ([3d21b07](https://github.com/palpito-hunch/ai-rules/commit/3d21b07)), closes [#27](https://github.com/palpito-hunch/ai-rules/issues/27)
+
 ## 1.10.0 (2026-01-21)
 
 * feat(global): add debugging and rca guidelines (#26) ([127fa7c](https://github.com/palpito-hunch/ai-rules/commit/127fa7c)), closes [#26](https://github.com/palpito-hunch/ai-rules/issues/26)

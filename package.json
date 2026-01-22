@@ -1,6 +1,6 @@
 {
   "name": "ai-rules",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "description": "AI coding standards and rules for organization projects",
   "private": true,
   "scripts": {
