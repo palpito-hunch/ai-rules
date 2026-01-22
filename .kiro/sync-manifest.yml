@@ -15,6 +15,9 @@ templates:
       - steering/nextjs-standards.md
       # Frontend-specific security
       - standards/security/frontend-security.md
+      # Project-specific (defined by implementing project)
+      - steering/tech.md
+      - steering/product.md
 
   frontend:
     description: 'Next.js + React frontend projects'
@@ -24,6 +27,9 @@ templates:
       - steering/prisma-standards.md
       # Backend-specific security
       - standards/security/api-security.md
+      # Project-specific (defined by implementing project)
+      - steering/tech.md
+      - steering/product.md
 
 # Shared files (synced to ALL templates):
 # ─────────────────────────────────────────
