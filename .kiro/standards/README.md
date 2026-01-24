@@ -12,7 +12,8 @@ standards/
 │   ├── priority-framework.md   # Decision rules, KISS, Boy Scout Rule
 │   ├── when-not-to-apply.md    # When NOT to use patterns (SOLID, DRY, etc.)
 │   ├── ai-behavior.md          # AI interaction guidelines
-│   └── debugging-rca.md        # Debugging and root cause analysis approach
+│   ├── debugging-rca.md        # Debugging and root cause analysis approach
+│   └── linear-mcp-rules.md     # Linear MCP integration workflow
 │
 ├── typescript/                 # TypeScript-specific standards
 │   ├── style.md                # Style rules (complements ESLint)
@@ -100,6 +101,17 @@ Structured approach for debugging and root cause analysis:
 - Checklists for each phase
 
 **Use when:** Investigating bugs, troubleshooting incidents, or diagnosing issues.
+
+### 6. Linear MCP Integration (`core/linear-mcp-rules.md`)
+
+Rules for AI agents integrating with Linear issue tracking via MCP:
+
+- Status update workflow (In Progress -> Done)
+- Error handling when MCP is unavailable
+- What work requires Linear tracking vs. what doesn't
+- Commit message conventions for fallback scenarios
+
+**Use when:** Working on tasks that have corresponding Linear issues.
 
 ## 🔷 TypeScript Standards
 
