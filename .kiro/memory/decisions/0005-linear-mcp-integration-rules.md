@@ -1,155 +1,175 @@
 # ADR-0005: Linear MCP Integration Rules
 
 **Date**: 2025-01
-**Status**: Accepted
+**Status**: Draft
 
 ## Context
 
-The organization uses Linear for issue tracking and has integrated Linear's MCP server to enable AI agents to update issue statuses during development. The question is how strictly to enforce Linear status updates during agent task execution.
+### Organizational Context
 
-An initial proposal mandated:
-- **ALL** task execution must update Linear status
-- Agents must update to "In Progress" before writing any code
-- Agents must update to "Done" immediately after completing code
+- **Fully distributed team** - No synchronous visibility into what others are working on
+- **Small team** - Can't afford manual overhead or process ceremony
+- **Spec-driven development** - Using Kiro IDE with specs (`tasks.md`, feature specs) that drive AI agent development
+- **Heavy AI agent usage** - Agents do the majority of implementation work
+
+### The Problem
+
+With spec-driven development, work happens inside repositories:
+1. Developer creates a spec in `.kiro/specs/`
+2. AI agent works on tasks defined in the spec
+3. Code gets written, commits happen, PRs get created
+4. **Linear issues sit untouched** - no one updates them
+
+This creates a visibility gap:
+- Linear shows issues as "To Do" while work is actively happening
+- Team members can't see what's in progress without checking each repo
+- Work completes without Linear ever reflecting the state change
+- Sprint planning and capacity tracking become unreliable
+
+### The Goal
+
+**Linear as the single source of truth** with 1:1 state management:
+- Every planned task has a Linear issue
+- Issue status reflects actual work state in real-time
+- Automation handles updates, not humans remembering to update
+- Distributed team has visibility without asking "what are you working on?"
+
+### Original Proposal
+
+An initial proposal mandated strict enforcement:
+- ALL task execution must update Linear status
+- Update to "In Progress" before writing any code
+- Update to "Done" immediately after completing code
 - Violations constitute "incorrect agent behavior"
 
-While well-intentioned, this absolutist approach creates brittleness in real-world scenarios.
+### Concerns with Strict Enforcement
 
-### Problems with Strict Enforcement
+While the goal (1:1 sync) is correct, the original rules had implementation gaps:
 
-1. **Assumes 1:1 task-to-issue mapping** - Not all work has a corresponding Linear issue. Quick fixes, exploratory work, and ad-hoc requests often bypass formal issue creation.
-
-2. **No error handling** - If the MCP call fails (network issues, auth expiry, Linear outage), the agent has no guidance. Should it block all work? That's too disruptive.
-
-3. **No escape hatch** - Urgent hotfixes shouldn't be blocked by ceremony. Production incidents need fast action, not status dance.
-
-4. **False precision** - Marking something "In Progress" implies work is underway. But agents may read files, think, and not write code. Status changes should reflect meaningful state transitions.
-
-5. **Over-broad scope** - "ALL task execution" captures trivial changes (typo fixes, formatting) that don't warrant tracking overhead.
+1. **No error handling** - What happens when MCP fails? Block all work?
+2. **Missing linking mechanism** - How do specs reference Linear issues?
+3. **Unclear automation boundary** - Agent-driven vs GitHub Actions vs hooks?
+4. **Status mapping undefined** - What Linear statuses map to what workflow states?
 
 ## Decision
 
-Adopt a **pragmatic Linear integration** approach that maintains workflow discipline while handling edge cases gracefully.
+**[PENDING - Requires resolution of open questions below]**
 
-### Core Rules
+### Design Principles
 
-1. **When a Linear issue exists for the work:**
-   - Update status to "In Progress" before beginning implementation
-   - Update status to "Done" after completing implementation
-   - Verify status updates succeeded before proceeding
+1. **Linear is source of truth** - All planned work has a Linear issue
+2. **1:1 state sync** - Repo state and Linear state stay synchronized
+3. **Automation over memory** - Don't rely on humans/agents remembering
+4. **Graceful degradation** - Failures are logged, not blocking
 
-2. **When Linear MCP is unavailable:**
-   - Note the intended status change in the commit message
-   - Continue with the work (don't block on MCP failures)
-   - Create/update the issue when MCP connectivity is restored
+### Open Questions
 
-3. **When no Linear issue exists:**
-   - For substantial work: Create an issue first, then follow rule 1
-   - For trivial changes (typos, formatting, one-line fixes): Proceed without Linear tracking
+#### 1. Issue Creation Flow
 
-4. **Error handling:**
-   - Retry status updates once on transient failures
-   - On persistent failure, log the intended action and continue
-   - Never block development work due to Linear API issues
+Who creates issues first?
 
-### What Constitutes "Substantial Work"
+| Option | Pros | Cons |
+|--------|------|------|
+| **Linear first** - Issues created in Linear, specs reference them | Linear is clearly source of truth | Requires discipline to create issues before specs |
+| **Spec first** - Specs auto-create Linear issues | Lower friction for developers | Risk of orphaned issues, sync complexity |
+| **Hybrid** - Major work in Linear, agents can create issues for discovered subtasks | Flexible | More complex rules |
 
-Work requires Linear tracking when:
-- It implements a feature or user story
-- It fixes a bug reported by users
-- It takes more than a few minutes to complete
-- It changes behavior observable to users
-- It's part of a planned sprint or project
+#### 2. Linking Mechanism
 
-Work does NOT require Linear tracking when:
-- It's a typo fix or formatting change
-- It's exploratory (spiking, investigating)
-- It's a one-line configuration change
-- It's documentation-only (unless the docs are the deliverable)
-
-## Implementation
-
-### MCP Configuration
-
-Add instructions to `.mcp.json`:
-
-```json
-"linear": {
-  "command": "npx",
-  "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"],
-  "description": "Access Linear issues, projects, and team workflows",
-  "instructions": "Before starting substantial development work, update the corresponding Linear issue status to 'In Progress'. After completing work, update to 'Done'. If no issue exists for trivial changes, proceed without Linear tracking. On MCP failures, note the intended status in commit messages and continue."
-}
-```
-
-### CLAUDE.md Section
-
-Add to global or project `CLAUDE.md`:
+How should specs reference Linear issues?
 
 ```markdown
-## Linear Integration
+<!-- Option A: Inline reference -->
+## Task 1: Implement export [PROJ-123]
 
-When working on tasks with a corresponding Linear issue:
+<!-- Option B: Frontmatter -->
+---
+linear: PROJ-123
+---
 
-1. **Starting work**: Update issue status to "In Progress" before coding
-2. **Completing work**: Update issue status to "Done" after coding
-3. **Verification**: Confirm status updates succeeded before proceeding
-
-If Linear MCP is unavailable or no issue exists:
-- Note it in the commit message (e.g., `[Linear unavailable]` or `[No issue]`)
-- Continue with the work
-- Create/update the issue when MCP is restored
-
-### Exceptions
-
-- Trivial fixes (typos, formatting) don't require Linear tracking
-- Exploratory work doesn't require status updates
-- Never block work due to Linear API failures
+<!-- Option C: Dedicated field -->
+## Task 1: Implement export
+- **Linear Issue**: PROJ-123
 ```
 
-### Commit Message Convention
+#### 3. Status Mapping
 
-When Linear tracking is skipped:
+What Linear statuses map to workflow states?
 
-```
-fix(auth): correct token expiration check [No Linear issue]
+| Workflow State | Linear Status | Trigger |
+|----------------|---------------|---------|
+| Spec created | ? | ? |
+| Agent starts work | In Progress | Agent reads task from spec |
+| Code committed | ? | git commit |
+| PR created | In Review | `gh pr create` |
+| PR merged | Done | PR merge |
 
-One-line fix for off-by-one error in token validation.
+#### 4. Automation Approach
 
-Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
-```
+Where should automation live?
 
-When Linear is unavailable:
+| Approach | When to Use | Implementation |
+|----------|-------------|----------------|
+| **MCP calls from agents** | Real-time status during work | Agent rules in CLAUDE.md |
+| **GitHub Actions** | PR lifecycle events | `.github/workflows/` |
+| **Git hooks** | Commit-time validation | `.husky/` or similar |
+| **Combination** | Full coverage | All of the above |
 
-```
-feat(dashboard): add export button [Linear unavailable - intended: PROJ-123 -> Done]
+#### 5. Error Handling Strategy
 
-Implemented CSV export functionality for dashboard data.
+When Linear MCP is unavailable:
 
-Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
-```
+| Option | Behavior |
+|--------|----------|
+| **Block** | Agent stops, waits for MCP | Ensures sync but blocks work |
+| **Continue + Log** | Work proceeds, intended status logged | Work continues, may drift |
+| **Continue + Retry** | Background retry with eventual consistency | Complex but resilient |
+
+## Proposed Implementation
+
+**[To be finalized after resolving open questions]**
+
+### Phase 1: Agent-Driven Updates (MCP)
+
+Agents update Linear status during task execution:
+- Read spec → find linked Linear issue
+- Update to "In Progress" before coding
+- Update to "Done" after completing
+
+### Phase 2: GitHub Actions (PR Lifecycle)
+
+Automated status updates on PR events:
+- PR opened → "In Review"
+- PR merged → "Done"
+- PR closed without merge → Back to "To Do"?
+
+### Phase 3: Validation
+
+Ensure specs and Linear stay linked:
+- CI check: specs must reference valid Linear issues
+- Weekly report: orphaned issues, stale specs
 
 ## Consequences
 
 **Positive:**
-- Linear remains source of truth for planned work
-- Agents maintain workflow discipline without fragility
-- Failures degrade gracefully (work continues, tracking catches up)
-- Commit messages provide audit trail when MCP fails
-- Trivial work doesn't incur unnecessary overhead
+- Distributed team has real-time visibility into work state
+- No manual status updates required
+- Linear becomes reliable for planning and tracking
+- Audit trail of state changes
 
 **Negative:**
-- Requires agent judgment on "substantial" vs "trivial" work
-- Status may temporarily lag during MCP outages
-- Some work may slip through without Linear tracking
+- Upfront investment in automation infrastructure
+- Specs must include Linear references (new requirement)
+- Debugging sync issues requires understanding the full pipeline
 
-**Mitigations:**
-- Clear examples of what requires tracking reduce ambiguity
-- Commit message conventions ensure traceability
-- Periodic review of commits without Linear references catches gaps
+**Risks:**
+- Over-automation may create noise (too many status changes)
+- MCP reliability becomes critical path
+- Edge cases (multiple issues per spec, spec spans multiple PRs) need handling
 
 ## References
 
 - Linear MCP documentation: https://linear.app/docs/mcp
 - `.mcp.json` - MCP server configuration
 - `CLAUDE.md` - Agent behavior rules
+- `.kiro/specs/` - Spec-driven development location
