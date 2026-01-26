@@ -13,6 +13,8 @@ These are organization-wide preferences for Claude Code that apply to all reposi
 
 No exceptions, even for small changes.
 
+**Note:** Downstream projects (backend, frontend) use a promotion-based flow (`develop → uat → main`). See project-specific CLAUDE.md for details.
+
 ## Commit Messages
 
 Use conventional commits format:
