@@ -161,56 +161,11 @@ Benefits of `--template`:
 
 ## Git Workflow (Mandatory)
 
-**NEVER commit directly to protected branches.** This project uses a promotion-based flow:
+**NEVER commit directly to main.** All changes must go through a feature branch and PR:
 
-```
-feature/* → develop → uat → main → develop (sync)
-```
-
-### Branch Purposes
-
-| Branch    | Purpose                          | Deploys To  |
-| --------- | -------------------------------- | ----------- |
-| `develop` | Integration branch for features  | Development |
-| `uat`     | User acceptance testing/staging  | Staging     |
-| `main`    | Production-ready code            | Production  |
-
-### Workflow Steps
-
-1. **Create feature branch from develop:**
-   ```bash
-   git checkout develop && git pull origin develop
-   git checkout -b feature/description
-   ```
-
-2. **Develop and commit to feature branch**
-
-3. **Create PR to develop:**
-   ```bash
-   gh pr create --base develop
-   ```
-
-4. **Promote develop → uat** (when ready for testing):
-   ```bash
-   gh pr create --base uat --head develop --title "chore: promote develop to uat"
-   ```
-
-5. **Promote uat → main** (when UAT passes):
-   ```bash
-   gh pr create --base main --head uat --title "chore: promote uat to main"
-   ```
-
-6. **Sync main back to develop** (after production release):
-   ```bash
-   gh pr create --base develop --head main --title "chore: sync main to develop"
-   ```
-
-### Branch Protection
-
-CI enforces allowed PR directions via `.github/workflows/branch-flow.yml`:
-- Feature branches → `develop` only
-- `develop` → `uat` only
-- `uat` → `main` only
-- `main` → `develop` only (sync back)
+1. Create a feature branch: `git checkout -b feature/description`
+2. Make changes and commit to the branch
+3. Push and create a PR: `gh pr create`
+4. Merge via PR after approval: `gh pr merge --squash --delete-branch`
 
 No exceptions, even for small changes.
