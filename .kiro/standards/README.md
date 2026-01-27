@@ -12,7 +12,10 @@ standards/
 │   ├── priority-framework.md   # Decision rules, KISS, Boy Scout Rule
 │   ├── when-not-to-apply.md    # When NOT to use patterns (SOLID, DRY, etc.)
 │   ├── ai-behavior.md          # AI interaction guidelines
-│   └── debugging-rca.md        # Debugging and root cause analysis approach
+│   ├── debugging-rca.md        # Debugging and root cause analysis approach
+│   ├── linear-mcp-rules.md     # Linear MCP integration overview
+│   ├── linear-mcp-spec-to-project.md  # Spec to Linear project creation
+│   └── linear-mcp-task-development.md # Task development workflow (MANDATORY)
 │
 ├── typescript/                 # TypeScript-specific standards
 │   ├── style.md                # Style rules (complements ESLint)
@@ -100,6 +103,21 @@ Structured approach for debugging and root cause analysis:
 - Checklists for each phase
 
 **Use when:** Investigating bugs, troubleshooting incidents, or diagnosing issues.
+
+### 6. Linear MCP Integration (`core/linear-mcp-*.md`)
+
+Rules for integrating with Linear via MCP (Model Context Protocol):
+
+- **`linear-mcp-rules.md`** - Overview and quick reference for both workflows
+- **`linear-mcp-spec-to-project.md`** - Creating Linear projects and issues from spec files
+- **`linear-mcp-task-development.md`** - **MANDATORY** four-phase task development workflow
+
+**Key workflows:**
+
+1. **Project Creation**: Reading specs → Creating projects → Creating issues → Linking and labeling
+2. **Task Development**: In Progress → Testing → Commit → Done (mandatory for all agents)
+
+**Use when:** Working with Linear for project management, creating issues from specs, or developing tasks.
 
 ## 🔷 TypeScript Standards
 
