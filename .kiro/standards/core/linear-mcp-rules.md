@@ -85,6 +85,14 @@ See: `.kiro/standards/core/linear-mcp-product-to-projects.md`
 - **Thorough**: Resolve ambiguities before development starts
 - **Quality gate**: Both PM and Engineering must sign off before Step 3
 
+**IMPORTANT:** AI agents MUST use `AskUserQuestion` tool extensively to:
+- Probe for edge cases and failure modes
+- Clarify ambiguous requirements
+- Explore trade-offs and alternatives
+- Ensure completeness of acceptance criteria
+
+Deep questioning produces better specs and reduces rework.
+
 ---
 
 ### Step 3: Populating Projects with Issues from Specs

@@ -172,6 +172,7 @@ Follow the six-phase product development workflow defined in **ADR-0005**.
 2. **Spec Creation / Feature Refinement** — Owner: PM + Engineering
    - Collaborative refinement session (like super-charged Scrum refinement)
    - Create specs (requirements.md, design.md, tasks.md) with AI assistance
+   - **IMPORTANT:** AI must use `AskUserQuestion` extensively to probe edge cases, clarify ambiguities, and ensure completeness
    - Quality gate: PM and Engineering sign off before proceeding
 
 3. **Spec-to-Project** — Owner: AI

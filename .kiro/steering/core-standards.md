@@ -54,9 +54,10 @@ How AI should interact with this codebase:
 - Collaborative refinement session (like super-charged Scrum refinement)
 - Create specs (requirements.md, design.md, tasks.md) with AI assistance
 - PM brings product context, Engineering brings technical feasibility
+- **AI MUST use `AskUserQuestion` tool extensively** to probe edge cases, clarify ambiguities, explore trade-offs, and ensure completeness
 - Quality gate: PM and Engineering sign off before proceeding
 
-**Key Principle:** Collaborative, AI-assisted, thorough. Resolve ambiguities before development.
+**Key Principle:** Collaborative, AI-assisted, thorough. Deep questioning produces better specs.
 
 ### Phase 3: Spec-to-Project — Owner: AI
 

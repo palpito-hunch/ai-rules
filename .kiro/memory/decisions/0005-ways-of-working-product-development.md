@@ -128,6 +128,18 @@ For creating detailed specification files from the Linear project/feature defini
 - **Thorough refinement**: Resolve ambiguities before development starts
 - **No rushing**: Quality specs prevent rework during development
 
+**IMPORTANT - Deep Refinement with AskUserQuestion:**
+
+AI agents MUST use the `AskUserQuestion` tool extensively during this phase to:
+- Probe for edge cases that may not be immediately obvious
+- Clarify ambiguous requirements before they become implementation problems
+- Explore alternative approaches and trade-offs
+- Validate assumptions about user behavior and system constraints
+- Identify potential failure modes and error scenarios
+- Ensure completeness of acceptance criteria
+
+This deep questioning process is essential for producing well-defined specs that minimize rework during development. The goal is to surface and resolve issues during refinement, not during coding.
+
 **Quality Gate:** Both PM and Engineering must sign off on specs before proceeding to Phase 3.
 
 ---
