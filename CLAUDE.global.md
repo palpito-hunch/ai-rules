@@ -150,3 +150,33 @@ This ensures the same class of bug doesn't recur and builds organizational knowl
 - **AI Rules**: https://github.com/palpito-hunch/ai-rules
 - **Backend Template**: https://github.com/palpito-hunch/backend-template
 - **Frontend Template**: https://github.com/palpito-hunch/frontend-template
+---
+
+## Linear MCP Integration
+
+When working with Linear project management via MCP, reference the dedicated skill file:
+
+**Skill Location**: `~/.claude/skills/linear-project-management.md`
+
+### Quick Reference
+
+**Creating Projects**:
+1. Always read the skill file first: `view ~/.claude/skills/linear-project-management.md`
+2. Follow project creation rules (naming, icons, priorities)
+3. Verify all required fields before calling `Linear:create_project`
+
+**Key Rules**:
+- Project names: Title Case, no emojis (use icons instead)
+- Summaries: Required, 1-2 sentences, deliverable-focused
+- Icons: Use shortcode format (`:lock:`, `:gear:`, etc.)
+- Priority: 2=High, 3=Medium, 4=Low (avoid 1=Urgent)
+- State: Default to "backlog" for new projects
+- Scope: Sprint-sized (1-2 weeks of work)
+
+**Before Creating Projects**:
+```bash
+# Always reference the skill first
+view ~/.claude/skills/linear-project-management.md
+```
+
+**Pattern**: When user requests Linear project work, immediately read the skill file to ensure compliance with all guidelines.
