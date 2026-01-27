@@ -732,3 +732,153 @@ Verify all tests pass before proceeding to next module.
 | Skip flaky test | Fix root cause | Hides real bugs |
 | Weak assertions (toBeDefined) | Assert specific values | False confidence |
 | No commit after GREEN | Commit at each GREEN | Preserve progress |
+
+## AI Agent Guidelines
+
+AI agents have specific tendencies that can undermine TDD. These guidelines address common failure modes.
+
+### Minimality Constraint (GREEN Phase)
+
+AI agents tend to over-implement. During GREEN phase:
+
+| Rule | Rationale |
+|------|-----------|
+| Write ONLY enough code to pass the failing test | TDD's design benefit comes from incremental growth |
+| No error handling unless the test requires it | Error handling is a behavior—test it first |
+| No edge cases unless a test covers them | Untested code is unverified code |
+| No "while I'm here" improvements | Scope creep defeats the feedback loop |
+
+**Self-check:** If implementation exceeds ~20 lines for a single test, the test may be too broad or you're over-implementing.
+
+### One Test at a Time
+
+Do not batch test cases before implementing.
+
+```markdown
+# ❌ Batching (AI tendency)
+- [ ] Write tests for user creation
+  - Test valid input succeeds
+  - Test duplicate rejected
+  - Test invalid email rejected
+- [ ] Implement user creation  ← Implements 3 behaviors at once
+
+# ✅ Incremental (correct TDD)
+- [ ] Write test: creation succeeds with valid input
+- [ ] Implement creation (minimal)
+- [ ] Write test: creation rejects duplicate
+- [ ] Handle duplicate check
+- [ ] Write test: creation rejects invalid email
+- [ ] Add email validation
+```
+
+Batching tests leads to batch implementation, which defeats TDD's design feedback loop.
+
+### Fast Feedback Configuration
+
+Slow test execution kills TDD efficiency. Configure for speed:
+
+```bash
+# ✅ Run single test file (fast)
+npm test -- path/to/service.test.ts
+
+# ✅ Filter to specific test (fastest)
+npm test -- --grep "succeeds with valid input"
+
+# ✅ Watch mode (immediate feedback)
+npm test -- --watch
+
+# ❌ Full suite every time (slow)
+npm test
+```
+
+**Target:** < 2 seconds per RED/GREEN cycle. If tests take longer, run only the relevant file during development.
+
+### Refactor Scope Lock
+
+AI agents expand refactor scope beyond what's necessary. Strict boundaries:
+
+| Allowed in REFACTOR | NOT Allowed in REFACTOR |
+|---------------------|-------------------------|
+| Rename variables/functions you just wrote | Modify unrelated code |
+| Extract methods from code you just wrote | Add new functionality |
+| Remove duplication in code you just wrote | "Improve" adjacent files |
+| Simplify conditionals you just wrote | Add comments/docs to other code |
+| | Refactor code from previous tasks |
+
+**Rule:** If you didn't write it in this RED/GREEN cycle, don't touch it in REFACTOR.
+
+### Verification Checkpoints
+
+Before proceeding to the next test, verify:
+
+- [ ] Current test passes
+- [ ] ALL previous tests still pass (run full file)
+- [ ] No unrelated changes introduced
+- [ ] Implementation does ONLY what tests require
+
+If any check fails, stop and fix before continuing.
+
+### AI-Specific Anti-Patterns
+
+| Anti-Pattern | Why It Happens | Mitigation |
+|--------------|----------------|------------|
+| Implementation before test | Training on non-TDD code | Explicit RED-first checkpoint in task |
+| Over-implementing in GREEN | Training on "complete" code | Minimality constraint + line count check |
+| Scope creep in REFACTOR | "While I'm here" optimization | Scope lock rule |
+| Batching tests | Efficiency instinct | One-test-at-a-time rule |
+| Skipping RED verification | Assuming test will fail | Must see actual failure output |
+| Gaming tests | Writing code that passes test but misses intent | Review test quality before GREEN |
+| Adding "helpful" extras | Tendency to be thorough | Only implement what's tested |
+| Premature abstraction | Pattern recognition from training | No abstractions until duplication exists |
+
+### Gaming Tests
+
+AI agents may write implementation that technically passes the test but misses the intent.
+
+```typescript
+// Test
+it('returns user count', async () => {
+  await createUser({ name: 'Alice' })
+  await createUser({ name: 'Bob' })
+  const count = await service.getUserCount()
+  expect(count).toBe(2)
+})
+
+// ❌ Gaming the test
+getUserCount() {
+  return 2  // Passes test but wrong
+}
+
+// ✅ Correct implementation
+getUserCount() {
+  return this.db.user.count()
+}
+```
+
+**Mitigation:** After GREEN, ask: "Would this implementation work for ANY valid input, or just the test case?"
+
+### Context Management
+
+Long TDD sessions accumulate context. Manage it:
+
+| Trigger | Action |
+|---------|--------|
+| Every 5 RED/GREEN cycles | Summarize progress in task list |
+| After each checkpoint | Note completed behaviors |
+| When context feels heavy | Review what's done vs remaining |
+| Before complex implementation | Re-read the specific test being satisfied |
+
+### Prompt Patterns for TDD
+
+When instructing AI agents, use explicit TDD language:
+
+```markdown
+# ✅ Explicit TDD instruction
+Write a failing test for [behavior]. Run it to confirm RED.
+Then write minimal code to pass. Run all tests to confirm GREEN.
+
+# ❌ Vague instruction
+Implement [behavior] with tests.
+```
+
+The explicit version enforces the RED/GREEN sequence. The vague version allows implementation-first.
