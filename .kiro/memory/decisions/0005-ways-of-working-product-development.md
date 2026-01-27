@@ -235,6 +235,61 @@ For verifying and reviewing the completed feature before initiating the formal P
 
 ---
 
+### 6. Release Tracking / Environment Promotion (TODO)
+
+For tracking the project/feature through the PR and deployment pipeline, with status reflected in Linear.
+
+**When to use:** After feature verification (Phase 5), through production deployment.
+
+**Owners:** Engineering (with PM visibility)
+
+**Promotion Flow:**
+```
+Feature Branch → Develop → UAT → Production
+     ↓              ↓        ↓        ↓
+  PR Created    PR Merged  PR Merged  PR Merged
+     ↓              ↓        ↓        ↓
+ Linear: "In Review" → "In Develop" → "In UAT" → "Released"
+```
+
+**Process:**
+1. **Feature → Develop**: Create PR from feature branch to develop
+   - Linear Project status: "In Review"
+   - PR review and approval
+   - Squash merge to develop
+   - Linear Project status: "In Develop"
+
+2. **Develop → UAT**: Promote to UAT branch
+   - Create PR from develop to UAT
+   - Linear Project status: "In UAT"
+   - QA/acceptance testing in staging environment
+   - PM sign-off on UAT
+
+3. **UAT → Production**: Promote to main/production
+   - Create PR from UAT to main
+   - Final approval
+   - Merge to production
+   - Linear Project status: "Released"
+   - Tag release version
+
+**Linear Project Status Progression:**
+
+| Stage | Linear Status | Environment | Gate |
+|-------|---------------|-------------|------|
+| After Phase 5 | "In Review" | - | Feature verified |
+| Merged to develop | "In Develop" | Dev server | PR approved |
+| Merged to UAT | "In UAT" | Staging server | QA testing |
+| Merged to main | "Released" | Production | Final approval |
+
+**TODO - Implementation Required:**
+- [ ] Define Linear project statuses for each environment stage
+- [ ] Create automation to update Linear status on PR merge events
+- [ ] Define rollback procedures and Linear status handling
+- [ ] Document hotfix flow and Linear tracking
+- [ ] Integrate with CI/CD pipeline notifications
+
+---
+
 ### Source of Truth Model (Bidirectional)
 
 | Aspect | Authoritative Source |
