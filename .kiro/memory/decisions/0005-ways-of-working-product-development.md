@@ -249,12 +249,12 @@ Feature Branch → Develop → UAT → Production
      ↓              ↓        ↓        ↓
   PR Created    PR Merged  PR Merged  PR Merged
      ↓              ↓        ↓        ↓
- Linear: "In Review" → "In Develop" → "In UAT" → "Released"
+ Linear: "Final Review" → "In Develop" → "In UAT" → "Released"
 ```
 
 **Process:**
 1. **Feature → Develop**: Create PR from feature branch to develop
-   - Linear Project status: "In Review"
+   - Linear Project status: "Final Review"
    - PR review and approval
    - Squash merge to develop
    - Linear Project status: "In Develop"
@@ -276,7 +276,7 @@ Feature Branch → Develop → UAT → Production
 
 | Stage | Linear Status | Environment | Gate |
 |-------|---------------|-------------|------|
-| After Phase 5 | "In Review" | - | Feature verified |
+| After Phase 5 | "Final Review" | - | Feature verified |
 | Merged to develop | "In Develop" | Dev server | PR approved |
 | Merged to UAT | "In UAT" | Staging server | QA testing |
 | Merged to main | "Released" | Production | Final approval |
