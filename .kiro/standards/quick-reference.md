@@ -613,6 +613,22 @@ const calculator = new RealCalculator();
 
 ---
 
+## 🔗 Linear MCP Integration (MANDATORY)
+
+**Linear MCP has two workflows:**
+
+1. **Task Development** (MANDATORY FOR ALL AGENTS)
+2. **Project Creation** (CONTEXTUAL)
+
+**SINGLE SOURCE OF TRUTH:** All Linear MCP rules are defined in:
+- `.kiro/standards/core/linear-mcp-task-development.md` - Task workflow (MANDATORY)
+- `.kiro/standards/core/linear-mcp-spec-to-project.md` - Spec to project population
+- `.kiro/standards/core/linear-mcp-rules.md` - Overview
+
+**Violation of the task development workflow constitutes incorrect agent behavior.**
+
+---
+
 ## 🎯 Kiro IDE Quick Commands
 
 ```bash
@@ -688,6 +704,9 @@ Before creating PR to develop:
 - `quick-reference.md` - One-page consolidated reference (this file)
 - `priority-framework.md` - Decision rules when standards conflict
 - `when-not-to-apply.md` - When to skip patterns (SOLID, DRY, etc.)
+- `linear-mcp-rules.md` - Linear MCP integration overview
+- `linear-mcp-task-development.md` - Task development workflow (MANDATORY)
+- `linear-mcp-spec-to-project.md` - Spec to project creation
 
 **Domain Standards**
 
