@@ -28,23 +28,56 @@ How AI should interact with this codebase:
 
 #[[file:.kiro/standards/core/ai-behavior.md]]
 
-## Linear MCP Integration (MANDATORY)
+## Product Development Workflow (MANDATORY)
 
-**CRITICAL: Linear MCP has two workflows with different rules.**
+**CRITICAL: Product development has six phases, executed in order.**
 
-**All Linear MCP rules are the SINGLE SOURCE OF TRUTH in `.kiro/standards/core/`:**
+**All workflow rules are the SINGLE SOURCE OF TRUTH in `.kiro/standards/core/`:**
 
-### Workflow 1: Task Development (MANDATORY FOR ALL AGENTS)
+### Phase 0: Product Brief Creation (FOUNDATION) — Owner: PM
+
+- PM identifies problem/requirement/opportunity
+- PM drafts brief with AI assistance
+- PM curates extensively for clarity and completeness
+- Quality gate: Brief must be approved before proceeding
+
+**Key Principle:** AI-assisted, PM-curated. Depth over speed. No ambiguity.
+
+### Phase 1: Product Brief → Projects — Owner: PM + AI
+
+#[[file:.kiro/standards/core/linear-mcp-product-to-projects.md]]
+
+**Use after a product brief is approved to break it down into sprint-sized Linear projects.**
+
+### Phase 2: Spec Creation / Feature Refinement — Owner: PM + Engineering
+
+- Collaborative refinement session (like super-charged Scrum refinement)
+- Create specs (requirements.md, design.md, tasks.md) with AI assistance
+- PM brings product context, Engineering brings technical feasibility
+- Quality gate: PM and Engineering sign off before proceeding
+
+**Key Principle:** Collaborative, AI-assisted, thorough. Resolve ambiguities before development.
+
+### Phase 3: Spec-to-Project — Owner: AI
+
+#[[file:.kiro/standards/core/linear-mcp-spec-to-project.md]]
+
+**Use after specs are approved to populate the Linear project with issues.**
+
+### Phase 4: Task Development (MANDATORY FOR ALL AGENTS) — Owner: AI
 
 #[[file:.kiro/standards/core/linear-mcp-task-development.md]]
 
 **This workflow is non-negotiable and applies to ALL task development.**
 
-### Workflow 2: Project Creation (CONTEXTUAL)
+### Phase 5: Feature Verification — Owner: PM + Engineering
 
-#[[file:.kiro/standards/core/linear-mcp-spec-to-project.md]]
+- PM reviews completed feature against requirements
+- Engineering demonstrates implementation
+- Verify all acceptance criteria are met
+- Quality gate: Sign off before PR review begins
 
-**Use when populating an existing Linear project with requirements, design, and tasks from spec files.**
+**Key Principle:** Validate feature completeness before formal code review.
 
 ### Overview
 

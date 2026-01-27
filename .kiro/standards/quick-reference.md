@@ -613,16 +613,33 @@ const calculator = new RealCalculator();
 
 ---
 
-## 🔗 Linear MCP Integration (MANDATORY)
+## 🔗 Product Development Workflow (MANDATORY)
 
-**Linear MCP has two workflows:**
+**Product development has six phases (execute in order):**
 
-1. **Task Development** (MANDATORY FOR ALL AGENTS)
-2. **Project Creation** (CONTEXTUAL)
+| Phase | Name | Owner | Description |
+|-------|------|-------|-------------|
+| 0 | Product Brief Creation | PM | Create well-defined brief with AI assistance |
+| 1 | Product Brief → Projects | PM + AI | Break down brief into Linear projects |
+| 2 | Spec Creation / Refinement | PM + Engineering | Create specs with AI (super-charged Scrum refinement) |
+| 3 | Spec-to-Project | AI | Populate project with issues from approved specs |
+| 4 | Task Development | AI | Develop tasks with status tracking (MANDATORY) |
+| 5 | Feature Verification | PM + Engineering | Verify feature before PR review |
 
-**SINGLE SOURCE OF TRUTH:** All Linear MCP rules are defined in:
+**Key Concept**: Problem → Product Brief → Projects → Specs → Issues → Development → Verification → PR Review.
+
+**Quality Gates:**
+- Phase 0 → 1: Product brief approved
+- Phase 1 → 2: Projects created in Linear
+- Phase 2 → 3: PM and Engineering sign off on specs
+- Phase 3 → 4: Issues created in Linear
+- Phase 4 → 5: All tasks completed
+- Phase 5 → PR: PM and Engineering verify feature
+
+**SINGLE SOURCE OF TRUTH:** All workflow rules are defined in:
+- `.kiro/standards/core/linear-mcp-product-to-projects.md` - Product brief → projects
+- `.kiro/standards/core/linear-mcp-spec-to-project.md` - Spec files → issues
 - `.kiro/standards/core/linear-mcp-task-development.md` - Task workflow (MANDATORY)
-- `.kiro/standards/core/linear-mcp-spec-to-project.md` - Spec to project population
 - `.kiro/standards/core/linear-mcp-rules.md` - Overview
 
 **Violation of the task development workflow constitutes incorrect agent behavior.**
@@ -705,8 +722,9 @@ Before creating PR to develop:
 - `priority-framework.md` - Decision rules when standards conflict
 - `when-not-to-apply.md` - When to skip patterns (SOLID, DRY, etc.)
 - `linear-mcp-rules.md` - Linear MCP integration overview
+- `linear-mcp-product-to-projects.md` - Product brief → projects (FIRST STEP)
+- `linear-mcp-spec-to-project.md` - Spec files → issues
 - `linear-mcp-task-development.md` - Task development workflow (MANDATORY)
-- `linear-mcp-spec-to-project.md` - Spec to project creation
 
 **Domain Standards**
 

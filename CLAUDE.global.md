@@ -152,31 +152,64 @@ This ensures the same class of bug doesn't recur and builds organizational knowl
 - **Frontend Template**: https://github.com/palpito-hunch/frontend-template
 ---
 
-## Linear MCP Integration
+## Product Development Workflow
 
-When working with Linear project management via MCP, reference the dedicated skill file:
+Follow the six-phase product development workflow defined in **ADR-0005**.
 
-**Skill Location**: `~/.claude/skills/linear-project-management.md`
+**ADR**: `.kiro/memory/decisions/0005-ways-of-working-product-development.md`
+
+### Six Phases (Execute in Order)
+
+0. **Product Brief Creation** (FOUNDATION) — Owner: PM
+   - PM identifies problem/requirement, drafts brief with AI assistance
+   - PM curates extensively for clarity and completeness
+   - Quality gate: Brief must be approved before proceeding
+
+1. **Product Brief → Projects** — Owner: PM + AI
+   - Break down product brief into sprint-sized Linear projects
+   - Rules: `.kiro/standards/core/linear-mcp-product-to-projects.md`
+
+2. **Spec Creation / Feature Refinement** — Owner: PM + Engineering
+   - Collaborative refinement session (like super-charged Scrum refinement)
+   - Create specs (requirements.md, design.md, tasks.md) with AI assistance
+   - Quality gate: PM and Engineering sign off before proceeding
+
+3. **Spec-to-Project** — Owner: AI
+   - Populate project with issues from approved spec files
+   - Rules: `.kiro/standards/core/linear-mcp-spec-to-project.md`
+
+4. **Task Development** (MANDATORY) — Owner: AI
+   - Develop tasks with status tracking
+   - Rules: `.kiro/standards/core/linear-mcp-task-development.md`
+
+5. **Feature Verification** — Owner: PM + Engineering
+   - PM reviews completed feature against requirements
+   - Engineering demonstrates implementation
+   - Quality gate: Sign off before PR review begins
 
 ### Quick Reference
 
-**Creating Projects**:
-1. Always read the skill file first: `view ~/.claude/skills/linear-project-management.md`
-2. Follow project creation rules (naming, icons, priorities)
-3. Verify all required fields before calling `Linear:create_project`
+**Key Concept**: Problem → Product Brief → Projects → Specs → Issues → Development → Verification → PR Review.
 
-**Key Rules**:
-- Project names: Title Case, no emojis (use icons instead)
+**Project Creation Rules**:
+- Names: Title Case, no emojis (use icons instead)
 - Summaries: Required, 1-2 sentences, deliverable-focused
 - Icons: Use shortcode format (`:lock:`, `:gear:`, etc.)
-- Priority: 2=High, 3=Medium, 4=Low (avoid 1=Urgent)
+- Priority: 2=High, 3=Medium, 4=Low (never 1=Urgent)
 - State: Default to "backlog" for new projects
 - Scope: Sprint-sized (1-2 weeks of work)
 
-**Before Creating Projects**:
+**Task Development Rules**:
+- Four phases: In Progress → Testing → Commit → Done
+- Development comment AFTER coding
+- Testing allows fix/retest loops with documented results
+- Commit ONLY after tests pass
+- See task development rules for full workflow
+
+**Before Any Linear Work**:
 ```bash
-# Always reference the skill first
-view ~/.claude/skills/linear-project-management.md
+# Read the overview file
+view .kiro/standards/core/linear-mcp-rules.md
 ```
 
-**Pattern**: When user requests Linear project work, immediately read the skill file to ensure compliance with all guidelines.
+**Pattern**: When user requests Linear work, identify which workflow applies and read the corresponding rules file.
