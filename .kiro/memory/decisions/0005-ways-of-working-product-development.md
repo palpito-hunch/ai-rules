@@ -282,7 +282,6 @@ Feature Branch → Develop → UAT → Production
 | Merged to main | "Released" | Production | Final approval |
 
 **TODO - Implementation Required:**
-- [ ] Define Linear project statuses for each environment stage
 - [ ] Create automation to update Linear status on PR merge events
 - [ ] Define rollback procedures and Linear status handling
 - [ ] Document hotfix flow and Linear tracking
