@@ -73,8 +73,10 @@ Common documentation touchpoints:
 
 - **Files:** kebab-case (`user-service.ts`, `user-profile.tsx`)
 - **Components:** PascalCase (`UserProfile.tsx`)
-- **Functions/Variables:** camelCase
+- **Functions/Variables:** snake_case (all languages)
 - **Constants:** UPPER_SNAKE_CASE
+
+**Note:** Use snake_case for all custom code. Follow framework conventions when calling 3rd party APIs (e.g., `useState`, `onClick` in React).
 
 ## Red Flags (Never Generate)
 
