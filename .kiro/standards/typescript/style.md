@@ -662,6 +662,8 @@ import { UserService, type User } from './user';
 | Event handlers | `handle_` + event | `handle_click`, `handle_submit` |
 | Async functions | verb describing action | `fetch_user`, `save_order` |
 
+**Note on 3rd party frameworks:** Use snake_case for all custom code. When interacting with framework APIs, follow their conventions (e.g., React's `useState`, `onClick`, Express's `req.body`). This means your custom functions are snake_case, but framework callbacks and props use framework conventions.
+
 ---
 
 ## Error Classes
