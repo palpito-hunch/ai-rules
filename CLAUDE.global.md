@@ -98,6 +98,7 @@ Common documentation touchpoints:
 2. **Fail explicitly** - Descriptive errors with context, never silent failures
 3. **One pattern at a time** - Don't combine patterns unnecessarily
 4. **Measure before optimizing** - No premature optimization
+5. **Epistemic honesty** - Cite sources, flag gaps, don't speculate from specs
 
 ## Debugging & RCA Approach
 
