@@ -112,9 +112,14 @@ Common documentation touchpoints:
 ## Conventions
 
 - **Files:** kebab-case (`user-service.ts`)
-- **Functions/Variables:** camelCase
 - **Constants:** UPPER_SNAKE_CASE
 - **Commits:** Conventional commits format
+
+### Functions and Variables
+
+- **Domain layer** (services, repositories, domain models): snake_case (`calculate_total`, `user_id`, `get_market_price`)
+- **Framework layer** (controllers, middleware, route handlers): camelCase (`getUserById`, `handleRequest`, `validateInput`)
+- **Boundary rule**: snake_case stops at the framework boundary
 
 Full conventions: `.kiro/conventions.yml`
 
