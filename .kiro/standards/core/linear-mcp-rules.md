@@ -164,6 +164,25 @@ See: `.kiro/standards/core/linear-mcp-task-development.md`
 
 ---
 
+## GitHub URL Branch Management
+
+**Key Rule:** GitHub URLs in Linear must point to the correct branch based on development phase.
+
+| Phase | Branch for URLs | Reason |
+|-------|-----------------|--------|
+| During development (before PR) | Feature branch | Links remain valid while work is in progress |
+| After PR merge | Main branch | Feature branch may be deleted; main is permanent |
+
+**Process:**
+1. **Step 3 (Spec-to-Project):** Use feature branch URLs when creating issues
+2. **Step 5 (Feature Verification) or after PR merge:** Update URLs to point to main
+
+See detailed rules in:
+- `linear-mcp-spec-to-project.md` — Rule B1-B4 (branch targeting when creating issues)
+- `linear-mcp-task-development.md` — Rule G1-G4 (post-merge URL updates)
+
+---
+
 ## Agent Behavior Summary
 
 - **Product Brief** (Step 0) defines high-level product scope (PM-owned, AI-assisted)
@@ -172,7 +191,7 @@ See: `.kiro/standards/core/linear-mcp-task-development.md`
 - **Spec-to-Project** (Step 3) creates issues from approved specs (AI-owned)
 - **Task Development** (Step 4) follows mandatory four-phase workflow (AI-owned)
 - **Feature Verification** (Step 5) validates feature before PR review (PM + Engineering)
-- GitHub hosts canonical documents
+- GitHub hosts canonical documents (branch-aware URLs)
 - Linear tracks execution
 - **Development comment AFTER coding** (mandatory)
 - **Testing allows fix/retest loops** with documented results

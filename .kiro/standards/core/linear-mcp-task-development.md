@@ -166,29 +166,30 @@ When working on a task, the agent MUST follow this strict sequence:
 ### **Phase 1: Development**
 1. **Find Linear issue** → Use `list_issues()` to find the task
 2. **Update status to "In Progress"** → Call `update_issue()`
-3. **Verify update** → Confirm the status change succeeded
-4. **Write code** → Complete all code changes for the task
-5. **Add development comment** → Call `create_comment()` with implementation summary
+3. **Mark task as WIP in tasks.md** → Change `[ ]` to `[-]`
+4. **Verify update** → Confirm the status change succeeded
+5. **Write code** → Complete all code changes for the task
+6. **Add development comment** → Call `create_comment()` with implementation summary
 
 ### **Phase 2: Testing**
-6. **Update status to "Testing"** → Call `update_issue()`
-7. **Verify update** → Confirm the status change succeeded
-8. **Run tests** → Execute relevant tests
-9. **Add first test results comment** → Call `create_comment()` with test results
-10. **If tests FAIL** → Fix code → Run tests again → Repeat until passing
-11. **Add final testing comment** → Call `create_comment()` with fixes (if any) + final results
+7. **Update status to "Testing"** → Call `update_issue()`
+8. **Verify update** → Confirm the status change succeeded
+9. **Run tests** → Execute relevant tests
+10. **Add first test results comment** → Call `create_comment()` with test results
+11. **If tests FAIL** → Fix code → Run tests again → Repeat until passing
+12. **Add final testing comment** → Call `create_comment()` with fixes (if any) + final results
 
 ### **Phase 3: Commit**
-12. **Stage changes** → Use `git add` to stage all relevant files (only after tests pass)
-13. **Commit changes** → Create commit with descriptive message following conventional commits format
-14. **Verify commit** → Confirm the commit succeeded
+13. **Stage changes** → Use `git add` to stage all relevant files (only after tests pass)
+14. **Commit changes** → Create commit with descriptive message following conventional commits format
+15. **Verify commit** → Confirm the commit succeeded
 
 ### **Phase 4: Completion**
-15. **Update status to "Done"** → Call `update_issue()`
-16. **Verify update** → Confirm the status change succeeded
-17. **Add final comment** → Call `create_comment()` with commit info + final summary
-18. **Update tasks.md** → Change checkbox from `[ ]` to `[x]`
-19. **Move to next task** → Only proceed after all steps complete
+16. **Update status to "Done"** → Call `update_issue()`
+17. **Verify update** → Confirm the status change succeeded
+18. **Add final comment** → Call `create_comment()` with commit info + final summary
+19. **Update tasks.md** → Change checkbox from `[-]` to `[x]`
+20. **Move to next task** → Only proceed after all steps complete
 
 **This sequence MUST NOT be reversed or parallelized.**
 
@@ -361,6 +362,8 @@ const statuses = await list_issue_statuses({ team: "playground" });
 
 The agent MUST NOT:
 - Start writing code before updating Linear status to "In Progress"
+- Start writing code before marking the task as WIP `[-]` in tasks.md
+- Start working on a task already marked as WIP `[-]` by another agent
 - Skip the development comment after coding is complete
 - Move to "Testing" without first adding the development comment
 - Run tests before updating Linear status to "Testing"
@@ -394,18 +397,19 @@ Phase 4: Done → Final Comment (commit info + summary) → Update tasks.md → 
 ```
 1. Find Issue
 2. Update to "In Progress" → Verify
-3. Code
-4. Add Development Comment (what was implemented)
-5. Update to "Testing" → Verify
-6. Run Tests
-7. Add First Test Results Comment
-8. If tests FAIL: Fix code → Retest → Repeat until passing
-9. Add Final Testing Comment (what was fixed + final results)
-10. Git Add → Git Commit → Verify
-11. Update to "Done" → Verify
-12. Add Final Comment (commit info + summary)
-13. Update tasks.md → Next Task
-14. If ALL tasks complete: Update Project to "Final Review" → Verify → Notify User
+3. Mark tasks.md as WIP: [ ] → [-]
+4. Code
+5. Add Development Comment (what was implemented)
+6. Update to "Testing" → Verify
+7. Run Tests
+8. Add First Test Results Comment
+9. If tests FAIL: Fix code → Retest → Repeat until passing
+10. Add Final Testing Comment (what was fixed + final results)
+11. Git Add → Git Commit → Verify
+12. Update to "Done" → Verify
+13. Add Final Comment (commit info + summary)
+14. Update tasks.md: [-] → [x] → Next Task
+15. If ALL tasks complete: Update Project to "Final Review" → Verify → Notify User
 ```
 
 **Key Points:**
@@ -427,11 +431,48 @@ Phase 4: Done → Final Comment (commit info + summary) → Update tasks.md → 
 
 ---
 
+## GitHub URL Updates After PR Merge
+
+**Rule G1 — Post-Merge URL Updates**
+- After a feature PR is merged to main, all GitHub URLs in the Linear Project and Issues SHOULD be updated to point to the main branch.
+- This ensures long-term link validity after the feature branch is deleted.
+
+**Rule G2 — When to Update URLs**
+- URL updates should occur during Phase 5 (Feature Verification) or immediately after PR merge.
+- The agent SHOULD update the Project description first, then any Issues with spec links.
+
+**Rule G3 — URL Update Process**
+1. After PR is merged to main, identify all Linear artifacts with feature branch URLs
+2. Update Project description to use main branch URLs
+3. Update any Issue descriptions that contain spec links
+4. Use `update_project()` and `update_issue()` to apply changes
+
+**Rule G4 — URL Format Change**
+```
+# Before PR merge (feature branch):
+https://github.com/{org}/{repo}/blob/{feature-branch}/.kiro/specs/{feature}/...
+
+# After PR merge (main branch):
+https://github.com/{org}/{repo}/blob/main/.kiro/specs/{feature}/...
+```
+
+---
+
 ## Integration with tasks.md
 
-**Rule T1 — Update tasks.md Checkbox**
+**Rule T0 — Mark Task as Work-In-Progress (MANDATORY)**
+- When starting work on a task (updating Linear to "In Progress"), the agent MUST also update the corresponding checkbox in `.kiro/specs/[feature]/tasks.md`.
+- Change `- [ ]` to `- [-]` to indicate work-in-progress.
+- This prevents other agents from starting work on the same task.
+- The WIP marker MUST be set at the same time as the Linear "In Progress" status update.
+- Checkbox states:
+  - `[ ]` = Pending (not started)
+  - `[-]` = Work-in-progress (agent is actively working)
+  - `[x]` = Completed (tests passed, code committed)
+
+**Rule T1 — Update tasks.md Checkbox on Completion**
 - After marking an issue as "Done" in Linear, the agent MUST update the corresponding checkbox in `.kiro/specs/[feature]/tasks.md`.
-- Change `- [ ]` to `- [x]` for the completed task.
+- Change `- [-]` to `- [x]` for the completed task.
 - This keeps the spec file in sync with Linear status.
 - This MUST only happen after tests pass and status is "Done".
 

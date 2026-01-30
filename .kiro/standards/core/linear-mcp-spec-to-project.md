@@ -54,6 +54,34 @@ All references to these documents MUST point to their **canonical GitHub reposit
 
 ---
 
+## GitHub URL Branch Targeting Rules
+
+**Rule B1 — Feature Branch URLs During Development**
+- When creating issues during Phase 3 (Spec-to-Project), all GitHub URLs MUST point to the **feature branch**, not main.
+- This ensures links remain valid during development before the PR is merged.
+- URL format: `https://github.com/{org}/{repo}/blob/{feature-branch}/.kiro/specs/{feature}/...`
+
+**Rule B2 — Determine Current Branch**
+- Before creating issues, the agent MUST determine the current feature branch name.
+- Use `git branch --show-current` or check the git status to identify the branch.
+- The branch name MUST be used in all GitHub URLs.
+
+**Rule B3 — URL Format Examples**
+```
+# During development (feature branch):
+https://github.com/palpito-hunch/platform-main/blob/feature/user-profile-data-storage-design/.kiro/specs/user-profile-data-storage/requirements.md
+
+# After PR merge (main branch):
+https://github.com/palpito-hunch/platform-main/blob/main/.kiro/specs/user-profile-data-storage/requirements.md
+```
+
+**Rule B4 — Post-Merge URL Updates**
+- After the feature PR is merged to main, GitHub URLs in Linear SHOULD be updated to point to main.
+- This is typically done during Phase 5 (Feature Verification) or after PR merge.
+- See `linear-mcp-task-development.md` for post-merge update rules.
+
+---
+
 ## Linear Object Mapping Rules
 
 ### 1. Project
@@ -67,9 +95,24 @@ The Project description MUST contain:
 - Goal (1–2 sentences)
 - Non-negotiable invariants (bulleted)
 - Success criteria (bulleted)
-- Links to:
+- **Specification Documents section** with links to:
   - requirements.md (GitHub URL)
   - design.md (GitHub URL)
+  - tasks.md (GitHub URL)
+- **Related ADRs section** (if applicable) with links to relevant ADRs
+
+Example format:
+```markdown
+## Specification Documents
+
+- [Requirements](https://github.com/org/repo/blob/feature-branch/.kiro/specs/feature/requirements.md)
+- [Design](https://github.com/org/repo/blob/feature-branch/.kiro/specs/feature/design.md)
+- [Tasks](https://github.com/org/repo/blob/feature-branch/.kiro/specs/feature/tasks.md)
+
+## Related ADRs
+
+- [ADR-010: Relevant Decision](https://github.com/org/repo/blob/main/.kiro/memory/decisions/0010-relevant-decision.md)
+```
 
 The Project description MUST NOT:
 - Reproduce full requirements
@@ -101,11 +144,17 @@ The Project description MUST NOT:
 Issue titles MUST:
 - Be imperative and outcome-oriented
 - Describe *what becomes true when done*
-- Include the task number from tasks.md (e.g., "1. Create core notification card components")
+- **Include the task number prefix** from tasks.md in the format `Task N: <title>`
 
 Examples:
-- "1. Implement single-notification state management"
-- "2. Add keyboard-accessible dismiss behavior"
+- "Task 1: Set up module structure and path aliases"
+- "Task 2: Implement types and constants"
+- "Task 11: Write unit tests"
+
+The task number prefix provides:
+- Clear traceability to tasks.md
+- Easy identification of task sequence
+- Consistent naming across all projects
 
 **Rule I3 — Issue Description Requirements**
 Each Issue description MUST include:
@@ -226,15 +275,49 @@ The agent MUST create Issues in the proper order as defined above.
 
 ## Project Update Rules
 
-**Rule U1 — Initial Project Update**
-- Once all Projects and Issues are created and linked, the agent MUST provide a Project update over the chat.
+**Rule U1 — Initial Project Update Required**
+- Once all Projects and Issues are created and linked, the agent MUST provide a formatted Project Update summary.
+- This summary is intended for the user to copy and paste into Linear's "Write project update" feature.
+- The agent MUST explicitly tell the user this is for posting in Linear.
 
-**Rule U2 — Project Update Content**
+**Rule U2 — Project Update Format**
+The update MUST be formatted for direct copy-paste into Linear's project update field:
+
+```
+**Status:** On Track 🟢 / At Risk 🟡 / Off Track 🔴
+
+**[Phase Name] Complete — [Brief Status]**
+
+Completed This Phase:
+• [Milestone 1]
+• [Milestone 2]
+• [Milestone 3]
+
+Next Steps:
+1. [First action item]
+2. [Second action item]
+
+Blockers: [List blockers or "None"]
+
+Notes:
+• [Any relevant context, decisions, or dependencies]
+```
+
+**Formatting Rules for Linear Compatibility:**
+- Use `**bold**` for headers (not ## markdown headers)
+- Use bullet points (•) instead of markdown dashes (-)
+- Use numbered lists (1. 2. 3.) for sequential steps
+- Keep structure flat (no nested headers)
+- Avoid markdown checkboxes (- [ ]) in updates
+
+**Rule U3 — Project Update Content Requirements**
 The update MUST include:
-- High-level project status
-- Summary of scope loaded into Linear
-- Confirmation of traceability to requirements and design
-- Any notable risks, dependencies, or open questions
+- **Status indicator**: On Track 🟢, At Risk 🟡, or Off Track 🔴
+- **Completed milestones**: What was accomplished (specs approved, issues created, etc.)
+- **Scope summary**: Number of tasks, story points, issue range (e.g., PLAT-23 to PLAT-36)
+- **Next steps**: Immediate actions to begin development
+- **Blockers**: Any blocking issues or dependencies
+- **Notes**: Relevant decisions, ADRs created, or context
 
 ---
 
