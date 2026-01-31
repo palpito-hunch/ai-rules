@@ -1,24 +1,34 @@
 # .kiro/steering.yml
 project:
-  name: 'My Kiro Project'
-  description: 'Project description goes here'
+  name: 'Pálpito'
+  description: 'Crypto-native prediction markets for LATAM'
   version: '1.0.0'
 
 context:
-  domain: 'web-application'
+  domain: 'fintech-prediction-markets'
   stack:
-    - 'React'
     - 'TypeScript'
+    - 'React'
+    - 'Next.js'
     - 'Node.js'
-    - 'Tailwind CSS'
+    - 'Prisma'
+    - 'Solana'
+  chain: 'Solana'
+  currency: 'USDC'
+  model: 'self-custody with delegated authority'
 
 preferences:
   code_style: 'functional'
-  testing_framework: 'jest'
+  testing_framework: 'vitest'
   state_management: 'react-hooks'
   documentation: 'inline-and-markdown'
+  priority_order: 'Safety → Correctness → Maintainability → Performance'
 
 standards:
   location: '.kiro/standards/'
   auto_load_core: true
   config_file: '.kiro/standards-config.yml'
+
+squad:
+  definition: 'palpito-squad-claude-code.md'
+  personas: '.kiro/personas.yml'

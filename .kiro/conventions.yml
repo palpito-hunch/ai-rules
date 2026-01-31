@@ -2,19 +2,20 @@
 naming:
   files: 'kebab-case'
   components: 'PascalCase'
-  functions: 'camelCase'
   constants: 'UPPER_SNAKE_CASE'
   types: 'PascalCase'
+  # Domain vs Framework boundary rule
+  domain_layer: 'snake_case'  # services, repositories, domain models
+  framework_layer: 'camelCase'  # React components, hooks, handlers, controllers
 
 structure:
   component_colocation: true
   test_placement: 'adjacent'
   import_order:
-    - 'react'
+    - 'node-builtins'
     - 'external-libraries'
-    - 'internal-modules'
+    - 'internal-aliases'
     - 'relative-imports'
-    - 'styles'
 
 patterns:
   react:
@@ -23,11 +24,18 @@ patterns:
     - 'Keep components small and focused'
 
   typescript:
-    - 'Explicit return types for functions'
-    - "Avoid 'any' type"
+    - 'Explicit return types for public functions'
+    - "Never use 'any' type"
     - 'Use strict mode'
+    - 'No floating promises'
 
   testing:
-    - 'Test user behavior, not implementation'
-    - 'Arrange-Act-Assert pattern'
-    - 'Meaningful test descriptions'
+    - 'TDD: RED → GREEN → REFACTOR'
+    - 'Test behavior, not implementation'
+    - 'One test = one behavior'
+
+  security:
+    - 'Prisma/parameterized queries only'
+    - 'No hardcoded secrets'
+    - 'Auth middleware on every endpoint'
+    - 'Validate ownership on resource access'
