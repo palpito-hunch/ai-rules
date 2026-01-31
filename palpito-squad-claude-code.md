@@ -168,3 +168,19 @@ Complex: Multiple personas contribute, then synthesize.
 **TW:** [documentation view]
 **Synthesis:** [recommendation with trade-offs noted]
 ```
+
+## References
+
+Detailed standards by persona. Load when task requires depth.
+
+| Persona | Standard | Path |
+|---------|----------|------|
+| SR | OWASP patterns | `.kiro/standards/security/owasp.md` |
+| SR | API security | `.kiro/standards/security/api-security.md` |
+| SR | Input validation | `.kiro/standards/security/input-validation.md` |
+| SD | Debugging & RCA | `.kiro/standards/core/debugging-rca.md` |
+| SD | Error patterns | `.kiro/standards/domain/errors.md` |
+| SD | TDD workflow | `.kiro/standards/workflows/tdd-workflow.md` |
+| SA | Architecture patterns | `.kiro/standards/typescript/architecture.md` |
+| TW | ADR template | `.kiro/memory/decisions/template.md` |
+| All | Epistemic honesty | `.kiro/standards/core/epistemic-honesty.md` |
