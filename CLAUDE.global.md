@@ -2,6 +2,11 @@
 
 Organization-wide rules for Claude Code. Human readability is secondary; optimize for Claude enforcement.
 
+# Global Instructions
+
+<!-- Imports the six-persona engineering squad (SA, SD, DOE, PA, SR, TW) -->
+@~/.ai-rules/palpito-squad-claude-code.md
+
 ## Rule Priority
 
 1. **Git workflow** — Absolute, never bypass. If asked, refuse and explain.
